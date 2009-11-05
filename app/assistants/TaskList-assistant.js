@@ -36,16 +36,20 @@ TaskListAssistant.prototype.getListInfo = function() {
 		model: {
 			items: [
 				{
-					data: $L("Time Bandits")
+					name: $L("Shopping - do"),
+					date: $L("Today")
 				},
 				{
-					data: $L("Brazil")
+					name: $L("MB - Set up project and do stuff over several lines"),
+					date: $L("Today")
 				},
 				{
-					data: $L("The Adventures of Baron Munchausen and his band of unlikely friends")
+					name: $L("Write up notes"),
+					date: $L("Fri")
 				},
 				{
-					data: $L("12 Monkeys")
+					name: $L("Model costs"),
+					date: $L("27 Nov")
 				}
 			]
 		},
