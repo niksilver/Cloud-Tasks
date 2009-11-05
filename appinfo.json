@@ -1,0 +1,9 @@
+{
+	"id": "org.pigsaw.simplertm",
+	"version": "1.0.0",
+	"vendor": "Pigsaw Global Commodities plc",
+	"type": "web",
+	"main": "index.html",
+	"title": "Simple RTM",
+	"icon": "icon.png"
+}

@@ -1,0 +1,81 @@
+<head>
+<script type="text/javascript">
+	var testCases = [];
+</script>
+
+<script src="file:///C:/Program Files/Palm/SDK/share/refcode/webos-framework/200.18/mojo.js" type="text/javascript" x-mojo-version="1"></script>
+<script src="file:///C:/Program Files/Palm/SDK/share/refcode/webos-framework/200.18/javascripts/log.js" type="text/javascript" x-mojo-version="1"></script>
+
+<script src="testOne.js" type="text/javascript"></script>
+
+<script src="../app/assistants/FeedList-assistant.js" type="text/javascript"></script>
+<script src="test-FeedList-assistant.js" type="text/javascript"></script>
+
+<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>
+<style type="text/css">
+	.yui-skin-sam .yui-console-entry-pass .yui-console-entry-cat {
+	    background: #0f0;
+	    color: #fff;
+	}
+	.yui-skin-sam .yui-console-entry-fail .yui-console-entry-cat {
+	    background: #f00;
+	    color: #fff;
+	}
+
+</style>
+</head>
+<body class="yui-skin-sam">
+	<div id="testLogger"></div>
+	<script type="text/javascript">
+		// Create new YUI instance, and populate it with the required modules
+
+		YUI().use("console", "test", function(Y) { 
+
+			// Add the test cases
+			
+			for (var i = 0; i < testCases.length; i++) {
+				var testCase = testCases[i];
+				Y.Test.Runner.add( testCase(Y) );
+			}
+		 			
+			var testCount = 0;
+			var passCount = 0;
+			var failureCount = 0;
+
+			Y.Test.Runner.on('pass', function(e) {
+				++passCount;
+				++testCount;
+			});
+			Y.Test.Runner.on('fail', function(e) {
+				++failureCount;
+				++testCount;
+			});
+			Y.Test.Runner.on('complete', function(e) {
+				var category = (failureCount > 0) ? 'fail' : 'pass';
+				Y.log(passCount + "/" + testCount + " passed", category, "");
+			});
+
+			var console = new Y.Console({
+				verbose: true,
+				newestOnTop: false,
+				style: 'block',
+				height: '500px',
+				width: '800px'
+			});
+			
+			console.render('#testLogger');
+			console.on('entry', function(e) {
+				var category = e.message.category;
+				if (category != "pass" && category != "fail") {
+					e.preventDefault();
+				}
+			});
+			
+			Y.Test.Runner.run();
+			
+			
+			
+		});
+	</script>
+
+</body>
