@@ -1,6 +1,8 @@
 var Mojo = {
 	Log: {
-		info: function() {}
+		info: function() {},
+		warn: function() {},
+		error: function() {}
 	}
 	
 };

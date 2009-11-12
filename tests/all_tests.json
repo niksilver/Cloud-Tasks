@@ -1,7 +1,0 @@
-[
-	{
-		"title": "Basic Mojo testing",
-		"source": "tests/simpleMojoTest.js",
-		"testFunction": "SimpleMojoTest"
-	}
-]

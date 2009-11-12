@@ -19,11 +19,18 @@ TaskListAssistant.prototype.setup = function() {
 	this.total = 0;
 	this.controller.get("count").update(this.total);
 	
-	var listInfo = this.getListInfo();
+	var rtm = new RTM();
+	rtm.callMethod("rtm.test.echo", { param1: 'hello', param2: 'world'}, function(response) {
+		Mojo.Log.info("JSON.rsp.param1: " + response.responseJSON.rsp.param1);
+		Mojo.Log.info("JSON.rsp.err.msg: " + response.responseJSON.rsp.param2);
+	})
+	
+	/* var listInfo = this.getListInfo();
 	
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
 	
 	Mojo.Event.listen(this.controller.get("MyList"), Mojo.Event.listTap, this.handleListTap.bind(this));
+	*/
 	
 }
 
