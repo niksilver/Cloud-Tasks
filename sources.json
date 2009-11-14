@@ -1,6 +1,7 @@
 [
     {"source": "app/assistants/stage-assistant.js"},
 	{"source": "app/assistants/Secrets.js"},
+	{"source": "app/assistants/MD5.js"},
     {"source": "app/assistants/RTM.js"},
     {
         "scenes": "TaskList",
