@@ -41,6 +41,34 @@ testCases.push( function(Y) {
 			);
 		},
 		
+		testGetMethodErrorMessageWithSuccess: function() {
+			var rtm = new RTM();
+			var response = {
+				status: 200,
+				responseJSON: {
+					"rsp": {
+						"stat": "ok",
+						"api_key": API_KEY,
+						"format": "json",
+						"method": "rtm.test.echo",
+					// Echoed parameters go here
+					}
+				}
+			};
+			var msg = rtm.getMethodErrorMessage(response);
+			Y.Assert.isNull(msg, "Message is not null");
+		},
+		
+		testGetMethodErrorMessageWithError: function() {
+			var rtm = new RTM();
+			var response = {
+				status: 200,
+				responseJSON: {"rsp":{"stat":"fail","err":{"code":"97","msg":"Missing signature"}}}
+			};
+			var msg = rtm.getMethodErrorMessage(response);
+			Y.Assert.areEqual("RTM error 97: Missing signature", msg, "Incorrect error message");
+		},
+		
 		testOrderAndConcatenate: function() {
 			var rtm = new RTM();
 			var ordered_params = rtm.orderAndConcatenate({

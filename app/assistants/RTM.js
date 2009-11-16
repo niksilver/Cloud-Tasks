@@ -7,29 +7,60 @@ function RTM() {
 	this.sharedSecret = SHARED_SECRET;
 }
 
+RTM.prototype.AjaxRequest = function(url, options) {
+	new Ajax.Request(url, options);
+}
+
 /** Call an RTM method.
  * @param {Object} method_name  Method name to call
  * @param {Object} param_object  Parameters as an object
- * @param {Object} callback   The Ajax.Response object
+ * @param {Object} successCallback   Success callback with the Ajax.Response object
+ * @param {Object} failureCallback   Failure callback with an error string
  */
-RTM.prototype.callMethod = function(method_name, param_object, callback) {
+RTM.prototype.callMethod = function(method_name, param_object, successCallback, failureCallback) {
 
 	var request_params = param_object;
 	request_params.method = method_name;
 	request_params.format = 'json';
 	request_params.api_key = API_KEY;
 	request_params.api_sig = this.getAPISig(request_params);
-	new Ajax.Request(this._SERVICE_URL
+	this.AjaxRequest(this._SERVICE_URL
 		+ "?" + Object.toQueryString(request_params),
 		{
 			evalJSON: 'force',
-			onComplete: function(response) {
-				callback(response);
+			onSuccess: function(response) {
+				successCallback(response);
+			},
+			onFailure: function(response) {
+				var msg = "HTTP error " + response.status + ": " + response.statusText;
+				Mojo.log.warn(msg);
+				failureCallback(msg);
 			},
 			onException: function(response, ex) {
-				Mojo.Log.warn("RTM.callMethod exception " + ex.name + ": " + ex.message);
+				var msg = "RTM.callMethod exception " + ex.name + ": " + ex.message;
+				Mojo.Log.warn(msg);
+				failureCallback(msg);
 			}
 		});
+}
+
+RTM.prototype.getMethodErrorMessage = function(response) {
+	if (response
+		&& response.responseJSON
+		&& response.responseJSON.rsp
+		&& response.responseJSON.rsp.stat
+		&& response.responseJSON.rsp.stat == "fail") {
+			var err = response.responseJSON.rsp.err;
+			if (!err) {
+				return "Unknown";
+			}
+			else {
+				return "RTM error " + err.code + ": " + err.msg;
+			}
+	}
+	else {
+		return null;
+	}
 }
 
 RTM.prototype.orderAndConcatenate = function(param_object) {
