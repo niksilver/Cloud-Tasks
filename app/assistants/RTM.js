@@ -7,7 +7,7 @@ function RTM() {
 	this.sharedSecret = SHARED_SECRET;
 }
 
-RTM.prototype.AjaxRequest = function(url, options) {
+RTM.prototype.ajaxRequest = function(url, options) {
 	new Ajax.Request(url, options);
 }
 
@@ -24,20 +24,27 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 	request_params.format = 'json';
 	request_params.api_key = API_KEY;
 	request_params.api_sig = this.getAPISig(request_params);
-	this.AjaxRequest(this._SERVICE_URL
+	var rtm = this;
+	this.ajaxRequest(this._SERVICE_URL
 		+ "?" + Object.toQueryString(request_params),
 		{
 			evalJSON: 'force',
 			onSuccess: function(response) {
-				successCallback(response);
+				var err_msg = rtm.getMethodErrorMessage(response);
+				if (err_msg) {
+					failureCallback(err_msg);
+				}
+				else {
+					successCallback(response);
+				}
 			},
 			onFailure: function(response) {
 				var msg = "HTTP error " + response.status + ": " + response.statusText;
-				Mojo.log.warn(msg);
+				Mojo.Log.warn(msg);
 				failureCallback(msg);
 			},
 			onException: function(response, ex) {
-				var msg = "RTM.callMethod exception " + ex.name + ": " + ex.message;
+				var msg = "Exception " + ex.name + ": " + ex.message;
 				Mojo.Log.warn(msg);
 				failureCallback(msg);
 			}

@@ -8,13 +8,27 @@ testCases.push( function(Y) {
 
 		testCallMethodWithSuccess: function() {
 			var rtm = new RTM();
-			this.stubCallMethod(rtm);
+			var successfulResponse = {
+				status: 200,
+				responseJSON: {
+					"rsp": {
+						"stat": "ok",
+						"api_key": API_KEY,
+						"format": "json",
+						"method": "rtm.test.echo",
+						"param1": "Hello",
+						"param2": "World"
+					}
+				}
+			};
+			rtm.ajaxRequest = function(url, options) {
+				options.onSuccess(successfulResponse);
+			}
 			var response;
-			rtm.callMethod("rtm.test.echo", {
-					param1: "Hello",
-					param2: "World"
-				},
-				function(resp){ response = resp });
+			rtm.callMethod("rtm.test.echo",
+				{},
+				function(resp){ response = resp },
+				null);
 			this.wait(
 				function() {
 					Y.Assert.areEqual('Hello', response.responseJSON.rsp.param1, "Param1 was not Hello");
@@ -23,19 +37,47 @@ testCases.push( function(Y) {
 				1000
 			);
 		},
+		testCallMethodWithRTMError: function() {
+			var rtm = new RTM();
+			var responseWithRTMError = {
+				status: 200,
+				responseJSON: {"rsp":{"stat":"fail","err":{"code":"97","msg":"Missing signature"}}}
+			};
+			rtm.ajaxRequest = function(url, options) {
+				options.onSuccess(responseWithRTMError);
+			}
+			var message;
+			rtm.callMethod("rtm.error.method",
+				{},
+				null,
+				function(msg){ message = msg; });
+			this.wait(
+				function() {
+					Y.Assert.areEqual("RTM error 97: Missing signature", message, "Incorrect error message");
+				},
+				1000
+			);
+		},
 
 		testCallMethodWithFailure: function() {
 			var rtm = new RTM();
-			this.stubCallMethod(rtm);
+			var failureResponse = {
+				status: 500,
+				statusText: "Internal error"
+			};
+			rtm.ajaxRequest = function(url, options) {
+				options.onFailure(failureResponse);
+			};
 			var message;
 			rtm.callMethod("my.failing.method",
-				null,
+				{},
 				null,
 				function(msg) { message = msg; });
 			this.wait(
 				function() {
 					Y.Assert.isString(message, "Message should be a string");
-					Y.assert( message.length > 0, "Message should be non-empty");
+					Y.assert( message.indexOf("500") >= 0, "Status code should appear in message");
+					Y.assert( message.indexOf("Internal error") >= 0, "Status text should appear in message");
 				},
 				1000
 			);
@@ -90,44 +132,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('82044aae4dd676094f23f1ec152159ba',
 				api_sig,
 				"Ordering of params is wrong");
-		},
-		
-		stubCallMethod: function(rtm){
-			rtm.callMethod = function(method_name, param_object, successCallback, failureCallback){
-				var fake_methods = [];
-				fake_methods['rtm.test.echo'] = function(param_object) {
-					var response = {
-						status: 200,
-						responseJSON: {
-							"rsp": {
-								"stat": "ok",
-								"api_key": API_KEY,
-								"format": "json",
-								"method": "rtm.test.echo",
-							// Echoed parameters go here
-							}
-						}
-					};
-					for (param_name in param_object) {
-						response.responseJSON.rsp[param_name] = param_object[param_name];
-					}
-					return successCallback(response);
-				};
-				
-				fake_methods['my.failing.method'] = function(param_object){
-					failureCallback("My failure message");
-				};
-				
-				if (fake_methods[method_name]) {
-					fake_methods[method_name](param_object);
-				}
-				else {
-					throw "No such method named '" + method_name + "'";
-				}
-				
-			}
 		}
-
+		
 	});
-
 } );
