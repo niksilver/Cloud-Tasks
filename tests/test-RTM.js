@@ -6,8 +6,9 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
-		testCallMethod: function() {
+		testCallMethodWithSuccess: function() {
 			var rtm = new RTM();
+			this.stubCallMethod(rtm);
 			var response;
 			rtm.callMethod("rtm.test.echo", {
 					param1: "Hello",
@@ -18,6 +19,23 @@ testCases.push( function(Y) {
 				function() {
 					Y.Assert.areEqual('Hello', response.responseJSON.rsp.param1, "Param1 was not Hello");
 					Y.Assert.areEqual('World', response.responseJSON.rsp.param2, "Param1 was not World");
+				},
+				1000
+			);
+		},
+
+		testCallMethodWithFailure: function() {
+			var rtm = new RTM();
+			this.stubCallMethod(rtm);
+			var message;
+			rtm.callMethod("my.failing.method",
+				null,
+				null,
+				function(msg) { message = msg; });
+			this.wait(
+				function() {
+					Y.Assert.isString(message, "Message should be a string");
+					Y.assert( message.length > 0, "Message should be non-empty");
 				},
 				1000
 			);
@@ -44,6 +62,42 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('82044aae4dd676094f23f1ec152159ba',
 				api_sig,
 				"Ordering of params is wrong");
+		},
+		
+		stubCallMethod: function(rtm){
+			rtm.callMethod = function(method_name, param_object, successCallback, failureCallback){
+				var fake_methods = [];
+				fake_methods['rtm.test.echo'] = function(param_object) {
+					var response = {
+						status: 200,
+						responseJSON: {
+							"rsp": {
+								"stat": "ok",
+								"api_key": API_KEY,
+								"format": "json",
+								"method": "rtm.test.echo",
+							// Echoed parameters go here
+							}
+						}
+					};
+					for (param_name in param_object) {
+						response.responseJSON.rsp[param_name] = param_object[param_name];
+					}
+					return successCallback(response);
+				};
+				
+				fake_methods['my.failing.method'] = function(param_object){
+					failureCallback("My failure message");
+				};
+				
+				if (fake_methods[method_name]) {
+					fake_methods[method_name](param_object);
+				}
+				else {
+					throw "No such method named '" + method_name + "'";
+				}
+				
+			}
 		}
 
 	});

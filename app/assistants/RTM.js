@@ -49,31 +49,3 @@ RTM.prototype.getAPISig = function(param_object) {
 	return MD5(ordered_key_value_pairs);
 }
 
-RTM.prototype.callMethod = function(method_name, param_object, callback) {
-	var fake_methods = [];
-	fake_methods['rtm.test.echo'] = function(param_object, callback){
-		var responseJSON = {
-			"rsp": {
-				"stat": "ok",
-				"api_key": API_KEY,
-				"format": "json",
-				"method": "rtm.test.echo",
-			// Echoed parameters go here
-			}
-		};
-		for (param_name in param_object) {
-			responseJSON.rsp[param_name] = param_object[param_name];
-		}
-		return responseJSON;
-	};
-
-	if (fake_methods[method_name]) {
-		callback({
-			"status": 200,
-			"responseJSON": fake_methods[method_name](param_object)
-		});
-	} else {
-		throw "No such method named '" + method_name + "'";
-	}
-
-}
