@@ -112,7 +112,9 @@ RTM.prototype.getAPISig = function(param_object) {
  * @param {Object} failureCallBack  With error message as parameter
  */
 RTM.prototype.getFrob = function(successCallback, failureCallBack) {
-	this.callAuth(
+	this.callMethod(
+		'rtm.auth.getFrob',
+		{},
 		function(response) {
 			successCallback(response.responseJSON.rsp.frob);
 		},

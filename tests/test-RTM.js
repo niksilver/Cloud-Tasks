@@ -187,7 +187,7 @@ testCases.push( function(Y) {
 				1000);
 		},
 		
-		testGetFrobCallsAuthService: function() {
+		testGetFrobCallsCorrectMethod: function() {
 			var rtm = new RTM();
 			var called_url;
 			rtm.ajaxRequest = function(url, options) {
@@ -197,7 +197,8 @@ testCases.push( function(Y) {
 			this.wait(
 				function() {
 					Y.Assert.isString(called_url, "No URL string called");
-					Y.assert(called_url.indexOf('/auth/?') >= 0, "Didn't call auth service");
+					Y.assert(called_url.indexOf('/rest/?') >= 0, "Didn't call REST service");
+					Y.assert(called_url.indexOf('method=rtm.auth.getFrob') >= 0, "Didn't call getFrob method");
 				},
 				1000);
 		}
