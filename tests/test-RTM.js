@@ -132,7 +132,59 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('82044aae4dd676094f23f1ec152159ba',
 				api_sig,
 				"Ordering of params is wrong");
-		}
+		},
 		
+		testGetFrobSuccessfully: function() {
+			var rtm = new RTM();
+			rtm.ajaxRequest = function(url, options) {
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'ok',
+							frob: '12345'
+						}
+					}
+				})
+			};
+			var got_frob;
+			rtm.getFrob(
+				function(frob) { got_frob = frob },
+				null);
+			this.wait(
+				function() {
+					Y.Assert.areEqual("12345", got_frob, "Frob is not correct");
+				},
+				1000);
+		},
+		
+		testGetFrobUnsuccessfully: function() {
+			var rtm = new RTM();
+			rtm.ajaxRequest = function(url, options) {
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'fail',
+							err: {
+								code: 11,
+								msg: "Funny failure message"
+							}
+						}
+					}
+				})
+			};
+			var got_message;
+			rtm.getFrob(
+				null,
+				function(msg) { got_message = msg; });
+			this.wait(
+				function() {
+					Y.Assert.isString(got_message, "Frob error not a string");
+					Y.assert( got_message.indexOf('11') >= 0, "Frob error code not found");
+					Y.assert( got_message.indexOf('Funny failure message') >= 0, "Frob error text not found");
+				},
+				1000);
+		}
 	});
 } );

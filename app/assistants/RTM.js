@@ -3,7 +3,8 @@
  */
 
 function RTM() {
-	this._SERVICE_URL = "http://api.rememberthemilk.com/services/rest/";
+	this._REST_URL = "http://api.rememberthemilk.com/services/rest/";
+	this._AUTH_URL = "http://api.rememberthemilk.com/services/auth/";
 	this.sharedSecret = SHARED_SECRET;
 }
 
@@ -11,22 +12,20 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	new Ajax.Request(url, options);
 }
 
-/** Call an RTM method.
- * @param {Object} method_name  Method name to call
+/** Call an RTM URL. Automatically added parameters are: format (json), API key and API sig.
+ * @param {String} base_url  Base URL to call
  * @param {Object} param_object  Parameters as an object
- * @param {Object} successCallback   Success callback with the Ajax.Response object
- * @param {Object} failureCallback   Failure callback with an error string
+ * @param {Function} successCallback   Success callback with the Ajax.Response object
+ * @param {Function} failureCallback   Failure callback with an error string
  */
-RTM.prototype.callMethod = function(method_name, param_object, successCallback, failureCallback) {
+RTM.prototype.callURL = function(base_url, param_object, successCallback, failureCallback) {
 
 	var request_params = param_object;
-	request_params.method = method_name;
 	request_params.format = 'json';
 	request_params.api_key = API_KEY;
 	request_params.api_sig = this.getAPISig(request_params);
 	var rtm = this;
-	this.ajaxRequest(this._SERVICE_URL
-		+ "?" + Object.toQueryString(request_params),
+	this.ajaxRequest(base_url + "?" + Object.toQueryString(request_params),
 		{
 			evalJSON: 'force',
 			onSuccess: function(response) {
@@ -50,6 +49,26 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 			}
 		});
 }
+
+/** Call an RTM method.
+ * @param {Object} method_name  Method name to call
+ * @param {Object} param_object  Parameters as an object
+ * @param {Object} successCallback   Success callback with the Ajax.Response object
+ * @param {Object} failureCallback   Failure callback with an error string
+ */
+RTM.prototype.callMethod = function(method_name, param_object, successCallback, failureCallback){
+	param_object.method = method_name
+	this.callURL(this._REST_URL, param_object, successCallback, failureCallback);
+}
+
+/** Call the auth service
+ * @param {Object} successCallback   Success callback with the Ajax.Response object
+ * @param {Object} failureCallback   Failure callback with an error string
+ */
+RTM.prototype.callAuth = function(successCallback, failureCallback){
+	this.callURL(this._AUTH_URL, {}, successCallback, failureCallback);
+}
+
 
 RTM.prototype.getMethodErrorMessage = function(response) {
 	if (response
@@ -87,3 +106,18 @@ RTM.prototype.getAPISig = function(param_object) {
 	return MD5(ordered_key_value_pairs);
 }
 
+/**
+ * Get a frob
+ * @param {Object} successCallback  With frob as parameter
+ * @param {Object} failureCallBack  With error message as parameter
+ */
+RTM.prototype.getFrob = function(successCallback, failureCallBack) {
+	this.callAuth(
+		function(response) {
+			successCallback(response.responseJSON.rsp.frob);
+		},
+		function(err_msg) {
+			failureCallBack(err_msg);
+		}
+	);
+}
