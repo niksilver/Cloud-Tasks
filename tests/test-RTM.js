@@ -185,6 +185,22 @@ testCases.push( function(Y) {
 					Y.assert( got_message.indexOf('Funny failure message') >= 0, "Frob error text not found");
 				},
 				1000);
+		},
+		
+		testGetFrobCallsAuthService: function() {
+			var rtm = new RTM();
+			var called_url;
+			rtm.ajaxRequest = function(url, options) {
+				called_url = url;
+			}
+			rtm.getFrob(function(){}, function(){});
+			this.wait(
+				function() {
+					Y.Assert.isString(called_url, "No URL string called");
+					Y.assert(called_url.indexOf('/auth/?') >= 0, "Didn't call auth service");
+				},
+				1000);
 		}
+		
 	});
 } );
