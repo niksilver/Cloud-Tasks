@@ -201,7 +201,22 @@ testCases.push( function(Y) {
 					Y.assert(called_url.indexOf('method=rtm.auth.getFrob') >= 0, "Didn't call getFrob method");
 				},
 				1000);
+		},
+		
+		testGetAuthURL: function() {
+			var rtm = new RTM();
+			var frob = '12345';
+			var url = rtm.getAuthURL(frob);
+			Y.Assert.isString(url, "Auth URL is not a string");
+			Y.assert(url.indexOf('http://www.rememberthemilk.com/services/auth/?') == 0, "Auth URL does not point to auth service");
+			Y.assert(url.indexOf('frob=12345') >= 0, "Auth URL does not include frob");
+			Y.assert(url.indexOf('perms=delete') >= 0, "Auth URL does not request delete permission");
+			Y.assert(url.indexOf('api_key=' + API_KEY) >= 0, "Auth URL does include API key");
+			Y.assert(url.indexOf('api_sig=') >= 0, "Auth URL does not include API sig");
 		}
 		
+		// TO DO:
+		// - Make the above test work
+		// - Tidy RTM.js to sensible functions now that callAuth is no longer needed
 	});
 } );

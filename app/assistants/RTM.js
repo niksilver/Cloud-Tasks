@@ -4,7 +4,7 @@
 
 function RTM() {
 	this._REST_URL = "http://api.rememberthemilk.com/services/rest/";
-	this._AUTH_URL = "http://api.rememberthemilk.com/services/auth/";
+	this._AUTH_URL = "http://www.rememberthemilk.com/services/auth/";
 	this.sharedSecret = SHARED_SECRET;
 }
 
@@ -19,12 +19,8 @@ RTM.prototype.ajaxRequest = function(url, options) {
  * @param {Function} failureCallback   Failure callback with an error string
  */
 RTM.prototype.callURL = function(base_url, param_object, successCallback, failureCallback) {
-
-	var request_params = param_object;
-	request_params.format = 'json';
-	request_params.api_key = API_KEY;
-	request_params.api_sig = this.getAPISig(request_params);
 	var rtm = this;
+	var request_params = this.addStandardParams(param_object);
 	this.ajaxRequest(base_url + "?" + Object.toQueryString(request_params),
 		{
 			evalJSON: 'force',
@@ -50,6 +46,17 @@ RTM.prototype.callURL = function(base_url, param_object, successCallback, failur
 		});
 }
 
+/**
+ * Take a parameter object and add key/value pairs for format (JSON), API key and API sig.
+ * @param {Object} param_object
+ */
+RTM.prototype.addStandardParams = function(param_object) {
+	param_object.format = 'json';
+	param_object.api_key = API_KEY;
+	param_object.api_sig = this.getAPISig(param_object);
+	return param_object;
+}
+
 /** Call an RTM method.
  * @param {Object} method_name  Method name to call
  * @param {Object} param_object  Parameters as an object
@@ -61,14 +68,16 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 	this.callURL(this._REST_URL, param_object, successCallback, failureCallback);
 }
 
-/** Call the auth service
- * @param {Object} successCallback   Success callback with the Ajax.Response object
- * @param {Object} failureCallback   Failure callback with an error string
+/** Get the URL for authentication with a frob
+ * @param {String} frob  The frob to use
  */
-RTM.prototype.callAuth = function(successCallback, failureCallback){
-	this.callURL(this._AUTH_URL, {}, successCallback, failureCallback);
+RTM.prototype.getAuthURL = function(frob) {
+	var params = this.addStandardParams({
+		frob: frob,
+		perms: 'delete'
+	});
+	return this._AUTH_URL + '?' + Object.toQueryString(params);
 }
-
 
 RTM.prototype.getMethodErrorMessage = function(response) {
 	if (response
@@ -123,3 +132,4 @@ RTM.prototype.getFrob = function(successCallback, failureCallBack) {
 		}
 	);
 }
+
