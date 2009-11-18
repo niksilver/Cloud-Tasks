@@ -4,6 +4,8 @@
 
 testCases.push( function(Y) {
 
+	var WAIT_TIMEOUT = 500;
+	
 	return new Y.Test.Case({
 
 		testCallMethodWithSuccess: function() {
@@ -34,7 +36,7 @@ testCases.push( function(Y) {
 					Y.Assert.areEqual('Hello', response.responseJSON.rsp.param1, "Param1 was not Hello");
 					Y.Assert.areEqual('World', response.responseJSON.rsp.param2, "Param1 was not World");
 				},
-				1000
+				WAIT_TIMEOUT
 			);
 		},
 		testCallMethodWithRTMError: function() {
@@ -55,7 +57,7 @@ testCases.push( function(Y) {
 				function() {
 					Y.Assert.areEqual("RTM error 97: Missing signature", message, "Incorrect error message");
 				},
-				1000
+				WAIT_TIMEOUT
 			);
 		},
 
@@ -79,7 +81,7 @@ testCases.push( function(Y) {
 					Y.assert( message.indexOf("500") >= 0, "Status code should appear in message");
 					Y.assert( message.indexOf("Internal error") >= 0, "Status text should appear in message");
 				},
-				1000
+				WAIT_TIMEOUT
 			);
 		},
 		
@@ -155,7 +157,8 @@ testCases.push( function(Y) {
 				function() {
 					Y.Assert.areEqual("12345", got_frob, "Frob is not correct");
 				},
-				1000);
+				WAIT_TIMEOUT
+			);
 		},
 		
 		testGetFrobUnsuccessfully: function() {
@@ -184,7 +187,8 @@ testCases.push( function(Y) {
 					Y.assert( got_message.indexOf('11') >= 0, "Frob error code not found");
 					Y.assert( got_message.indexOf('Funny failure message') >= 0, "Frob error text not found");
 				},
-				1000);
+				WAIT_TIMEOUT
+			);
 		},
 		
 		testGetFrobCallsCorrectMethod: function() {
@@ -200,7 +204,8 @@ testCases.push( function(Y) {
 					Y.assert(called_url.indexOf('/rest/?') >= 0, "Didn't call REST service");
 					Y.assert(called_url.indexOf('method=rtm.auth.getFrob') >= 0, "Didn't call getFrob method");
 				},
-				1000);
+				WAIT_TIMEOUT
+			);
 		},
 		
 		testGetAuthURL: function() {
@@ -249,7 +254,7 @@ testCases.push( function(Y) {
 					Y.assert(url_used.indexOf('frob=12345') >= 0, "Frob not used in URL");
 					Y.Assert.areEqual(token, token_returned, "Incorrect token returned");
 				},
-				1000
+				WAIT_TIMEOUT
 			);
 		},
 
@@ -282,7 +287,8 @@ testCases.push( function(Y) {
 					Y.assert( got_message.indexOf('22') >= 0, "Token error code not found");
 					Y.assert( got_message.indexOf("Couldn't get token") >= 0, "Token error text not found");
 				},
-				1000);
+				WAIT_TIMEOUT
+			);
 		}
 
 	});

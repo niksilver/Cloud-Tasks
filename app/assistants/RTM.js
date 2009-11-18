@@ -129,6 +129,12 @@ RTM.prototype.getFrob = function(successCallback, failureCallback) {
 	);
 }
 
+/**
+ * Get the auth token using a frob, and handle the response in callbacks. 
+ * @param {String} frob
+ * @param {Function} successCallback  With token as parameter
+ * @param {Function} failureCallback  With error message as parameter
+ */
 RTM.prototype.getToken = function(frob, successCallback, failureCallback) {
 	this.callMethod(
 		'rtm.auth.getToken',

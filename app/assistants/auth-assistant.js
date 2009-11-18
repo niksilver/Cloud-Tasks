@@ -29,6 +29,7 @@ AuthAssistant.prototype.handleGoTap = function(event){
 	this.rtm.getFrob(
 		function(frob){
 			Mojo.Log.info("AuthAssistant.handleGoTap: Got frob");
+			auth_assistant.frob = frob;
 			var auth_url = auth_assistant.rtm.getAuthURL(frob);
 			auth_assistant.makeAuthRequest(auth_url);
 		}, function(err_msg){
@@ -52,7 +53,19 @@ AuthAssistant.prototype.makeAuthRequest = function(auth_url) {
 }
 
 AuthAssistant.prototype.handleFinishTap = function(event){
-	// TO DO!
+	Mojo.Log.info("AuthAssistant.handleFinishTap: Entering");
+	var auth_assistant = this;
+	this.rtm.getToken(
+		this.frob,
+		function(token){
+			Mojo.Log.info("AuthAssistant.handleFinishTap: Got token " + token);
+			// TO DO:
+			// - Store token
+		}, function(err_msg){
+			Mojo.Log.info("AuthAssistant.handleFinishTap: " + err_msg);
+			// HANDLE ERROR MESSAGE
+		}
+	);
 };
 
 AuthAssistant.prototype.activate = function(event) {
