@@ -34,7 +34,7 @@ AuthAssistant.prototype.handleGoTap = function(event){
 			auth_assistant.makeAuthRequest(auth_url);
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleGoTap: " + err_msg);
-			// HANDLE ERROR MESSAGE
+			Mojo.Controller.errorDialog(err_msg);
 		}
 	);
 }
@@ -63,7 +63,7 @@ AuthAssistant.prototype.handleFinishTap = function(event){
 			// - Store token
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: " + err_msg);
-			// HANDLE ERROR MESSAGE
+			Mojo.Controller.errorDialog(err_msg);
 		}
 	);
 };
