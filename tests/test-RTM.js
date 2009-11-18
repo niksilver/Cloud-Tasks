@@ -213,10 +213,77 @@ testCases.push( function(Y) {
 			Y.assert(url.indexOf('perms=delete') >= 0, "Auth URL does not request delete permission");
 			Y.assert(url.indexOf('api_key=' + API_KEY) >= 0, "Auth URL does include API key");
 			Y.assert(url.indexOf('api_sig=') >= 0, "Auth URL does not include API sig");
-		}
+		},
 		
-		// TO DO:
-		// - Make the above test work
-		// - Tidy RTM.js to sensible functions now that callAuth is no longer needed
+		testGetTokenSuccessfully: function() {
+			var rtm = new RTM();
+			var url_used;
+			var frob = '12345';
+			var token = '410c57262293e9d937ee5be75eb7b0128fd61b61';
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'ok',
+							auth: {
+								token: token,
+								perms: 'delete',
+								user: {	id: 1, username: 'bob', fullname: 'Bob T. Monkey' }
+							}
+						}
+					}
+				})
+			};
+			var token_returned;
+			rtm.getToken(frob,
+				function(token) {
+					token_returned = token;
+				},
+				null
+			);
+			this.wait(
+				function() {
+					Y.Assert.isString(url_used, "URL used isn't a string");
+					Y.assert(url_used.indexOf('frob=12345') >= 0, "Frob not used in URL");
+					Y.Assert.areEqual(token, token_returned, "Incorrect token returned");
+				},
+				1000
+			);
+		},
+
+		
+		testGetTokenUnsuccessfully: function() {
+			var rtm = new RTM();
+			var url_used;
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'fail',
+							err: { code: 22, msg: "Couldn't get token" }
+						}
+					}
+				})
+			};
+			var got_message;
+			rtm.getToken(
+				'12345',
+				null,
+				function(msg) { got_message = msg; });
+			this.wait(
+				function() {
+					Y.Assert.isString(url_used, "URL used is not a string");
+					Y.assert(url_used.indexOf('frob=12345') > 0, "Frob not used in URL to get token");
+					Y.Assert.isString(got_message, "Token error not a string");
+					Y.assert( got_message.indexOf('22') >= 0, "Token error code not found");
+					Y.assert( got_message.indexOf("Couldn't get token") >= 0, "Token error text not found");
+				},
+				1000);
+		}
+
 	});
 } );
