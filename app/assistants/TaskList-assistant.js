@@ -1,11 +1,11 @@
-function TaskListAssistant(param_object) {
+function TaskListAssistant() {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	Mojo.Log.info("TaskListAssistant: Entering constructor");
-	this.rtm = param_object.rtm;
+	this.rtm = new RTM();
 }
 
 TaskListAssistant.prototype.setup = function() {
@@ -27,7 +27,8 @@ TaskListAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.appMenu, {}, {
 		visible: true,
 		items: [
-			{ label: "Authorise...", command: 'do-authorise' }
+			{ label: "Authorise...", command: 'do-authorise' },
+			{ label: "Deauthorise", command: 'do-deauthorise' }
 		]
 	});	
 	
@@ -86,7 +87,12 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-authorise");
 				Mojo.Controller.stageController.pushScene('auth');
 				break;
+			case 'do-deauthorise':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-deauthorise");
+				this.rtm.deleteToken();
+				break;
 			default:
+				Mojo.Log.info("TaskListAssistant.handleCommand: Unrecognised event command");
 				break;
 		}
 	}
