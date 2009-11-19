@@ -9,6 +9,7 @@ function RTM() {
 }
 
 RTM.prototype.ajaxRequest = function(url, options) {
+	Mojo.Log.info("RTM.ajaxRequest using URL " + url);
 	new Ajax.Request(url, options);
 }
 
@@ -22,6 +23,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 	param_object.method = method_name
 	var rtm = this;
 	var request_params = this.addStandardParams(param_object);
+	
 	this.ajaxRequest(this._REST_URL + "?" + Object.toQueryString(request_params),
 		{
 			evalJSON: 'force',
@@ -48,12 +50,20 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 }
 
 /**
- * Take a parameter object and add key/value pairs for format (JSON), API key and API sig.
+ * Take a parameter object and add key/value pairs for
+ *     format (JSON),
+ *     API key,
+ *     API sig, and
+ *     auth token (if set).
  * @param {Object} param_object
  */
 RTM.prototype.addStandardParams = function(param_object) {
 	param_object.format = 'json';
 	param_object.api_key = API_KEY;
+	var token = this.getToken();
+	if (token) {
+		param_object.auth_token = token;
+	}
 	param_object.api_sig = this.getAPISig(param_object);
 	return param_object;
 }

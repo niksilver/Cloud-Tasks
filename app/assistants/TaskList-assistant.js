@@ -37,7 +37,6 @@ TaskListAssistant.prototype.setup = function() {
 	var listInfo = this.getListInfo();
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
 	Mojo.Event.listen(this.controller.get("MyList"), Mojo.Event.listTap, this.handleListTap.bind(this));
-	this.syncList();
 	
 }
 
@@ -109,12 +108,24 @@ TaskListAssistant.prototype.syncList = function() {
 	}
 	
 	Mojo.Log.info("TaskListAssistant.syncList: Token exists, so will sync");
-	// TO DO
+	this.rtm.callMethod('rtm.tasks.getList', {
+			/* filter: 'status:incomplete' */
+		},
+		function(response) {
+			Mojo.Log.info("TaskListAssistant.syncList: Response is good");
+			Mojo.Log.info("TaskListAssistant.syncList: Got tasks: " + response.responseJSON);
+		},
+		function(err_msg) {
+			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
+			Mojo.Controller.errorDialog(err_msg);
+		});
 }
 
 TaskListAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+
+	this.syncList();
 }
 
 

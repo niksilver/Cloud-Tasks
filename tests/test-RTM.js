@@ -39,6 +39,7 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		},
+		
 		testCallMethodWithRTMError: function() {
 			var rtm = new RTM();
 			var responseWithRTMError = {
@@ -80,6 +81,47 @@ testCases.push( function(Y) {
 					Y.Assert.isString(message, "Message should be a string");
 					Y.assert( message.indexOf("500") >= 0, "Status code should appear in message");
 					Y.assert( message.indexOf("Internal error") >= 0, "Status text should appear in message");
+				},
+				WAIT_TIMEOUT
+			);
+		},
+		
+		testCallMethodUsesTokenWhenSet: function() {
+			var rtm = new RTM();
+			rtm.setToken('12345');
+			var url_used;
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+			}
+			var response;
+			rtm.callMethod("some.method.name",
+				{},
+				null,
+				null);
+			this.wait(
+				function() {
+					Y.Assert.isString(url_used, 'Ajax not called with URL string');
+					Y.assert(url_used.indexOf('auth_token=12345') >= 0, 'URL does not contain token parameter');
+				},
+				WAIT_TIMEOUT
+			);
+		},
+		
+		testCallMethodDoesNotUseTokenWhenNotSet: function() {
+			var rtm = new RTM();
+			rtm.deleteToken();
+			var url_used;
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+			}
+			rtm.callMethod("some.method.name",
+				{},
+				null,
+				null);
+			this.wait(
+				function() {
+					Y.Assert.isString(url_used, 'Ajax not called with URL string');
+					Y.assert(url_used.indexOf('auth_token=') == -1, 'URL mistkenly contains token parameter');
 				},
 				WAIT_TIMEOUT
 			);
