@@ -289,6 +289,24 @@ testCases.push( function(Y) {
 				},
 				WAIT_TIMEOUT
 			);
+		},
+		
+		testTokenStorage: function() {
+			var rtm = new RTM();
+			
+			/* var cookies = {};
+			rtm.Cookie = function(id) { cookies[id] = null; };
+			rtm.Cookie.get = function(id) { return cookies[id]; };
+			rtm.Cookie.put = function(id, obj) { cookies[id] = obj; };
+			rtm.Cookie.remove = function(id) { delete cookies[id]; }; */
+			
+			Y.assert(!rtm.retrieveToken(), 'Token is not initially false');
+			rtm.saveToken('12345');
+			Y.Assert.areEqual('12345', rtm.retrieveToken(), 'Token does not hold value after being set');
+			Y.assert(rtm.retrieveToken(), 'Token is not true after being set');
+			Y.Assert.areEqual('12345', rtm.retrieveToken(), 'Token is not as set');
+			rtm.removeToken();
+			Y.assert(!rtm.retrieveToken(), 'Token is not false after being removed');
 		}
 
 	});

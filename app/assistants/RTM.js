@@ -148,3 +148,17 @@ RTM.prototype.getToken = function(frob, successCallback, failureCallback) {
 	);
 }
 
+RTM.prototype.saveToken = function(token) {
+	var token_cookie = new Mojo.Model.Cookie('token');
+	token_cookie.put(token);
+}
+
+RTM.prototype.retrieveToken = function(token) {
+	var token_cookie = new Mojo.Model.Cookie('token');
+	return token_cookie.get();
+}
+
+RTM.prototype.removeToken = function(token) {
+	var token_cookie = new Mojo.Model.Cookie('token');
+	return token_cookie.remove();
+}
