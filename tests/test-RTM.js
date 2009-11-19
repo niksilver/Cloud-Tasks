@@ -136,7 +136,7 @@ testCases.push( function(Y) {
 				"Ordering of params is wrong");
 		},
 		
-		testGetFrobSuccessfully: function() {
+		testFetchFrobSuccessfully: function() {
 			var rtm = new RTM();
 			rtm.ajaxRequest = function(url, options) {
 				options.onSuccess({
@@ -149,19 +149,19 @@ testCases.push( function(Y) {
 					}
 				})
 			};
-			var got_frob;
-			rtm.getFrob(
-				function(frob) { got_frob = frob },
+			var fetched_frob;
+			rtm.fetchFrob(
+				function(frob) { fetched_frob = frob },
 				null);
 			this.wait(
 				function() {
-					Y.Assert.areEqual("12345", got_frob, "Frob is not correct");
+					Y.Assert.areEqual("12345", fetched_frob, "Frob is not correct");
 				},
 				WAIT_TIMEOUT
 			);
 		},
 		
-		testGetFrobUnsuccessfully: function() {
+		testFetchFrobUnsuccessfully: function() {
 			var rtm = new RTM();
 			rtm.ajaxRequest = function(url, options) {
 				options.onSuccess({
@@ -178,7 +178,7 @@ testCases.push( function(Y) {
 				})
 			};
 			var got_message;
-			rtm.getFrob(
+			rtm.fetchFrob(
 				null,
 				function(msg) { got_message = msg; });
 			this.wait(
@@ -191,13 +191,13 @@ testCases.push( function(Y) {
 			);
 		},
 		
-		testGetFrobCallsCorrectMethod: function() {
+		testFetchFrobCallsCorrectMethod: function() {
 			var rtm = new RTM();
 			var called_url;
 			rtm.ajaxRequest = function(url, options) {
 				called_url = url;
 			}
-			rtm.getFrob(function(){}, function(){});
+			rtm.fetchFrob(function(){}, function(){});
 			this.wait(
 				function() {
 					Y.Assert.isString(called_url, "No URL string called");
@@ -220,7 +220,7 @@ testCases.push( function(Y) {
 			Y.assert(url.indexOf('api_sig=') >= 0, "Auth URL does not include API sig");
 		},
 		
-		testGetTokenSuccessfully: function() {
+		testFetchTokenSuccessfully: function() {
 			var rtm = new RTM();
 			var url_used;
 			var frob = '12345';
@@ -242,7 +242,7 @@ testCases.push( function(Y) {
 				})
 			};
 			var token_returned;
-			rtm.getToken(frob,
+			rtm.fetchToken(frob,
 				function(token) {
 					token_returned = token;
 				},
@@ -259,7 +259,7 @@ testCases.push( function(Y) {
 		},
 
 		
-		testGetTokenUnsuccessfully: function() {
+		testFetchTokenUnsuccessfully: function() {
 			var rtm = new RTM();
 			var url_used;
 			rtm.ajaxRequest = function(url, options) {
@@ -269,23 +269,23 @@ testCases.push( function(Y) {
 					responseJSON: {
 						rsp: {
 							stat: 'fail',
-							err: { code: 22, msg: "Couldn't get token" }
+							err: { code: 22, msg: "Couldn't fetch token" }
 						}
 					}
 				})
 			};
 			var got_message;
-			rtm.getToken(
+			rtm.fetchToken(
 				'12345',
 				null,
 				function(msg) { got_message = msg; });
 			this.wait(
 				function() {
 					Y.Assert.isString(url_used, "URL used is not a string");
-					Y.assert(url_used.indexOf('frob=12345') > 0, "Frob not used in URL to get token");
+					Y.assert(url_used.indexOf('frob=12345') > 0, "Frob not used in URL to fetch token");
 					Y.Assert.isString(got_message, "Token error not a string");
 					Y.assert( got_message.indexOf('22') >= 0, "Token error code not found");
-					Y.assert( got_message.indexOf("Couldn't get token") >= 0, "Token error text not found");
+					Y.assert( got_message.indexOf("Couldn't fetch token") >= 0, "Token error text not found");
 				},
 				WAIT_TIMEOUT
 			);
@@ -294,19 +294,13 @@ testCases.push( function(Y) {
 		testTokenStorage: function() {
 			var rtm = new RTM();
 			
-			/* var cookies = {};
-			rtm.Cookie = function(id) { cookies[id] = null; };
-			rtm.Cookie.get = function(id) { return cookies[id]; };
-			rtm.Cookie.put = function(id, obj) { cookies[id] = obj; };
-			rtm.Cookie.remove = function(id) { delete cookies[id]; }; */
-			
-			Y.assert(!rtm.retrieveToken(), 'Token is not initially false');
-			rtm.saveToken('12345');
-			Y.Assert.areEqual('12345', rtm.retrieveToken(), 'Token does not hold value after being set');
-			Y.assert(rtm.retrieveToken(), 'Token is not true after being set');
-			Y.Assert.areEqual('12345', rtm.retrieveToken(), 'Token is not as set');
-			rtm.removeToken();
-			Y.assert(!rtm.retrieveToken(), 'Token is not false after being removed');
+			Y.assert(!rtm.getToken(), 'Token is not initially false');
+			rtm.setToken('12345');
+			Y.Assert.areEqual('12345', rtm.getToken(), 'Token does not hold value after being set');
+			Y.assert(rtm.getToken(), 'Token is not true after being set');
+			Y.Assert.areEqual('12345', rtm.getToken(), 'Token is not as set');
+			rtm.deleteToken();
+			Y.assert(!rtm.getToken(), 'Token is not false after being deleted');
 		}
 
 	});

@@ -2,6 +2,9 @@ function StageAssistant() {
 }
 
 StageAssistant.prototype.setup = function() {
-	this.controller.pushScene("auth");
-	//this.controller.pushScene("TaskList");
+	var rtm = new RTM();
+	//this.controller.pushScene("auth");
+	this.controller.pushScene("TaskList", {
+		rtm: rtm
+	});
 }

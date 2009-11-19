@@ -116,7 +116,7 @@ RTM.prototype.getAPISig = function(param_object) {
  * @param {Object} successCallback  With frob as parameter
  * @param {Object} failureCallBack  With error message as parameter
  */
-RTM.prototype.getFrob = function(successCallback, failureCallback) {
+RTM.prototype.fetchFrob = function(successCallback, failureCallback) {
 	this.callMethod(
 		'rtm.auth.getFrob',
 		{},
@@ -135,7 +135,7 @@ RTM.prototype.getFrob = function(successCallback, failureCallback) {
  * @param {Function} successCallback  With token as parameter
  * @param {Function} failureCallback  With error message as parameter
  */
-RTM.prototype.getToken = function(frob, successCallback, failureCallback) {
+RTM.prototype.fetchToken = function(frob, successCallback, failureCallback) {
 	this.callMethod(
 		'rtm.auth.getToken',
 		{ frob: frob },
@@ -148,17 +148,17 @@ RTM.prototype.getToken = function(frob, successCallback, failureCallback) {
 	);
 }
 
-RTM.prototype.saveToken = function(token) {
+RTM.prototype.setToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	token_cookie.put(token);
 }
 
-RTM.prototype.retrieveToken = function(token) {
+RTM.prototype.getToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	return token_cookie.get();
 }
 
-RTM.prototype.removeToken = function(token) {
+RTM.prototype.deleteToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	return token_cookie.remove();
 }

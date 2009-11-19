@@ -3,7 +3,8 @@ function AuthAssistant() {
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
-	  
+
+	  Mojo.Log.info("AuthAssistant: Entering");	  
 	  this.rtm = new RTM();
 }
 
@@ -33,7 +34,7 @@ AuthAssistant.prototype.handleGoTap = function(event){
 			var auth_url = auth_assistant.rtm.getAuthURL(frob);
 			auth_assistant.makeAuthRequest(auth_url);
 		}, function(err_msg){
-			Mojo.Log.info("AuthAssistant.handleGoTap: " + err_msg);
+			Mojo.Log.info("AuthAssistant.handleGoTap: Error: " + err_msg);
 			Mojo.Controller.errorDialog(err_msg);
 		}
 	);
@@ -59,10 +60,9 @@ AuthAssistant.prototype.handleFinishTap = function(event){
 		this.frob,
 		function(token){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Got token " + token);
-			// TO DO:
-			// - Store token
+			auth_assistant.saveToken(token);
 		}, function(err_msg){
-			Mojo.Log.info("AuthAssistant.handleFinishTap: " + err_msg);
+			Mojo.Log.info("AuthAssistant.handleFinishTap: Error: " + err_msg);
 			Mojo.Controller.errorDialog(err_msg);
 		}
 	);

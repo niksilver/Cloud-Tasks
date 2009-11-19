@@ -1,8 +1,11 @@
-function TaskListAssistant() {
+function TaskListAssistant(param_object) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
+	  
+	Mojo.Log.info("TaskListAssistant: Entering constructor");
+	this.rtm = param_object.rtm;
 }
 
 TaskListAssistant.prototype.setup = function() {
@@ -14,23 +17,18 @@ TaskListAssistant.prototype.setup = function() {
 	
 	/* add event handlers to listen to events from widgets */
 	
-	Mojo.Log.info("Setting up...");
+	Mojo.Log.info("TaskListAssistant.setup: Entering");
 	
-	this.total = 0;
-	this.controller.get("count").update(this.total);
+	/* this.total = 0;
+	this.controller.get("count").update(this.total); */
 	
-	var rtm = new RTM();
-	rtm.callMethod("rtm.test.echo", { param1: 'hello', param2: 'world'}, function(response) {
-		Mojo.Log.info("JSON.rsp.param1: " + response.responseJSON.rsp.param1);
-		Mojo.Log.info("JSON.rsp.err.msg: " + response.responseJSON.rsp.param2);
-	})
-	
-	/* var listInfo = this.getListInfo();
+	var listInfo = this.getListInfo();
 	
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
 	
 	Mojo.Event.listen(this.controller.get("MyList"), Mojo.Event.listTap, this.handleListTap.bind(this));
-	*/
+	
+	this.syncList();
 	
 }
 
@@ -66,6 +64,18 @@ TaskListAssistant.prototype.getListInfo = function() {
 	};
 };
 
+TaskListAssistant.prototype.handleListTap = function(event) {
+	/* this.total++;
+	this.controller.get("count").update(this.total); */
+}
+
+/**
+ * Sync the local task list with the one from RTM, if we have authorisation. 
+ */
+TaskListAssistant.prototype.syncList = function() {
+	// TO DO
+}
+
 TaskListAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
@@ -80,9 +90,4 @@ TaskListAssistant.prototype.deactivate = function(event) {
 TaskListAssistant.prototype.cleanup = function(event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
-}
-
-TaskListAssistant.prototype.handleListTap = function(event) {
-	this.total++;
-	this.controller.get("count").update(this.total);
 }
