@@ -113,7 +113,6 @@ TaskListAssistant.prototype.syncList = function() {
 		},
 		function(response) {
 			Mojo.Log.info("TaskListAssistant.syncList: Response is good");
-			Mojo.Log.info("TaskListAssistant.syncList: Got tasks: " + response.responseJSON);
 		},
 		function(err_msg) {
 			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
