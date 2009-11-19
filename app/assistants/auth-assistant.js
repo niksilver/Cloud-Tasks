@@ -27,7 +27,7 @@ AuthAssistant.prototype.setup = function() {
 AuthAssistant.prototype.handleGoTap = function(event){
 	Mojo.Log.info("AuthAssistant.handleGoTap: Entering");
 	var auth_assistant = this;
-	this.rtm.getFrob(
+	this.rtm.fetchFrob(
 		function(frob){
 			Mojo.Log.info("AuthAssistant.handleGoTap: Got frob");
 			auth_assistant.frob = frob;
@@ -56,11 +56,12 @@ AuthAssistant.prototype.makeAuthRequest = function(auth_url) {
 AuthAssistant.prototype.handleFinishTap = function(event){
 	Mojo.Log.info("AuthAssistant.handleFinishTap: Entering");
 	var auth_assistant = this;
-	this.rtm.getToken(
+	this.rtm.fetchToken(
 		this.frob,
 		function(token){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Got token " + token);
-			auth_assistant.saveToken(token);
+			auth_assistant.rtm.setToken(token);
+			Mojo.Controller.stageController.popScene();
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Error: " + err_msg);
 			Mojo.Controller.errorDialog(err_msg);

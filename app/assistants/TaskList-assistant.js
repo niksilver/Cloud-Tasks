@@ -21,13 +21,21 @@ TaskListAssistant.prototype.setup = function() {
 	
 	/* this.total = 0;
 	this.controller.get("count").update(this.total); */
+
+	// Set up the app menu
 	
+	this.controller.setupWidget(Mojo.Menu.appMenu, {}, {
+		visible: true,
+		items: [
+			{ label: "Authorise...", command: 'do-authorise' }
+		]
+	});	
+	
+	// Set up the task list
+
 	var listInfo = this.getListInfo();
-	
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
-	
 	Mojo.Event.listen(this.controller.get("MyList"), Mojo.Event.listTap, this.handleListTap.bind(this));
-	
 	this.syncList();
 	
 }
@@ -69,10 +77,32 @@ TaskListAssistant.prototype.handleListTap = function(event) {
 	this.controller.get("count").update(this.total); */
 }
 
+TaskListAssistant.prototype.handleCommand = function(event) {
+	Mojo.Log.info("TaskListAssistant.handleCommand: Entering");
+	if (event.type == Mojo.Event.command) {
+		Mojo.Log.info("TaskListAssistant.handleCommand: Event command is '" + event.command + "'");
+		switch (event.command) {
+			case 'do-authorise':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-authorise");
+				Mojo.Controller.stageController.pushScene('auth');
+				break;
+			default:
+				break;
+		}
+	}
+}
+
 /**
  * Sync the local task list with the one from RTM, if we have authorisation. 
  */
 TaskListAssistant.prototype.syncList = function() {
+	Mojo.Log.info("TaskListAssistant.syncList: Entering");
+	if (!this.rtm.getToken()) {
+		Mojo.Log.info("TaskListAssistant.syncList: No token so won't sync");
+		return;
+	}
+	
+	Mojo.Log.info("TaskListAssistant.syncList: Token exists, so will sync");
 	// TO DO
 }
 
