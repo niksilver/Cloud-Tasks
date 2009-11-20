@@ -109,10 +109,15 @@ TaskListAssistant.prototype.syncList = function() {
 	
 	Mojo.Log.info("TaskListAssistant.syncList: Token exists, so will sync");
 	this.rtm.callMethod('rtm.tasks.getList', {
-			/* filter: 'status:incomplete' */
+			filter: 'status:incomplete'
 		},
 		function(response) {
 			Mojo.Log.info("TaskListAssistant.syncList: Response is good");
+			var text = Object.toJSON(response.responseJSON);
+			for (var i = 0; i < text.length; i += 800) {
+				Mojo.Log.info("TaskListAssistant.syncList: " + text.substr(i, 800));
+			}
+
 		},
 		function(err_msg) {
 			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
