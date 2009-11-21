@@ -26,6 +26,12 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 		});
 
 	});
+	
+	_remote_tasks.sort(function(a, b) {
+		if (a == b) { return 0; }
+		if (a < b) { return -1; }
+		return 1;
+	});
 }
 
 TaskListModel.prototype.getRemoteTasks = function() {

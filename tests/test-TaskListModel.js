@@ -62,6 +62,19 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('66459582', task_hash['66459582'].task_id, "Test 3.3");
 		},
 		
+		testGetRemoteTasksIsSorted: function() {
+			var model = new TaskListModel();
+			model.setRemoteJSON(this.big_remote_json);
+			var tasks = model.getRemoteTasks();
+			var last_date = tasks[0].due;
+			
+			for (var i = 0; i < tasks.length; i++) {
+				var this_date = tasks[i].due;
+				Y.assert(last_date <= this_date, "Date for task[" + i + "] is " + this_date + " but comes after " + last_date);
+				last_date = this_date;
+			}
+		},
+		
 		setUp: function() {
 			this.setUpBigRemoteJSON();
 			this.setUpRemoteJSONWithTwoLists();
@@ -307,7 +320,7 @@ testCases.push( function(Y) {
 			                  ],
 			                  "task":{
 			                     "id":"78909702",
-			                     "due":"20 09-11-23T00:00:00Z",
+			                     "due":"2009-11-23T00:00:00Z",
 			                     "has_due_time":"0",
 			                     "added":"2009-11-16T00:01:32Z",
 			                     "completed":"",

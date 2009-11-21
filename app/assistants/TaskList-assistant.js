@@ -1,12 +1,13 @@
-function TaskListAssistant() {
+function TaskListAssistant(tools) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	Mojo.Log.info("TaskListAssistant: Entering constructor");
-	this.rtm = new RTM();
-	this.taskListModel = new TaskListModel();
+	this.tools = tools;
+	this.rtm = tools.rtm;
+	this.taskListModel = tools.taskListModel;
 	this.taskListWidgetModel = { items: [] };
 }
 
@@ -67,7 +68,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 		switch (event.command) {
 			case 'do-authorise':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-authorise");
-				Mojo.Controller.stageController.pushScene('auth');
+				Mojo.Controller.stageController.pushScene('auth', this.tools);
 				break;
 			case 'do-deauthorise':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-deauthorise");
@@ -97,11 +98,9 @@ TaskListAssistant.prototype.syncList = function() {
 		},
 		function(response) {
 			Mojo.Log.info("TaskListAssistant.syncList: Response is good");
-			var text = Object.toJSON(response.responseJSON);
-			for (var i = 0; i < text.length; i += 800) {
-				Mojo.Log.info("TaskListAssistant.syncList: " + text.substr(i, 800));
-			}
-			inst.taskListModel.setRemoteJSON(response.responseJSON);
+			var json = response.responseJSON;
+			Mojo.Log.info("TaskListAssistant.syncList: " + Object.toJSON(json).substr(0, 50) + "...");
+			inst.taskListModel.setRemoteJSON(json);
 			inst.taskListWidgetModel.items = inst.taskListModel.getRemoteTasks();
 			inst.controller.modelChanged(inst.taskListWidgetModel);
 		},
