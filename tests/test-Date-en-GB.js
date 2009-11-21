@@ -9,7 +9,7 @@ testCases.push( function(Y) {
 
 		testISO8601ToDue: function() {
 			var utc_2009_12_01 = "2009-12-01T00:00:00Z";
-			Y.Assert.areEqual('Tue', Date.parse(utc_2009_12_01).toString('ddd'), "Bad MD5");
+			Y.Assert.areEqual('Tue', Date.parse(utc_2009_12_01).toString('ddd'), "1st Dec 2009 should be a Tuesday");
 		}
 
 	});
