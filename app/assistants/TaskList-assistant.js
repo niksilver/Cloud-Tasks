@@ -6,6 +6,8 @@ function TaskListAssistant() {
 	  
 	Mojo.Log.info("TaskListAssistant: Entering constructor");
 	this.rtm = new RTM();
+	this.taskListModel = new TaskListModel();
+	this.taskListWidgetModel = { items: [] };
 }
 
 TaskListAssistant.prototype.setup = function() {
@@ -36,7 +38,7 @@ TaskListAssistant.prototype.setup = function() {
 
 	var listInfo = this.getListInfo();
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
-	Mojo.Event.listen(this.controller.get("MyList"), Mojo.Event.listTap, this.handleListTap.bind(this));
+	Mojo.Event.listen(this.controller.get(listInfo.elementId), Mojo.Event.listTap, this.handleListTap.bind(this));
 	
 }
 
@@ -46,27 +48,8 @@ TaskListAssistant.prototype.getListInfo = function() {
 			itemTemplate: "TaskList/TaskList-item",
 			listTemplate: "TaskList/TaskList-container"
 		},
-		model: {
-			items: [
-				{
-					name: $L("Shopping - do"),
-					date: $L("Today")
-				},
-				{
-					name: $L("MB - Set up project and do stuff over several lines"),
-					date: $L("Today")
-				},
-				{
-					name: $L("Write up notes"),
-					date: $L("Fri")
-				},
-				{
-					name: $L("Model costs"),
-					date: $L("27 Nov")
-				}
-			]
-		},
-		elementId: "MyList",
+		model: this.taskListWidgetModel,
+		elementId: "TaskList",
 		event: Mojo.Event.listTap,
 		handler: this.handleListTap
 	};
@@ -107,6 +90,7 @@ TaskListAssistant.prototype.syncList = function() {
 		return;
 	}
 	
+	var inst = this;
 	Mojo.Log.info("TaskListAssistant.syncList: Token exists, so will sync");
 	this.rtm.callMethod('rtm.tasks.getList', {
 			filter: 'status:incomplete'
@@ -117,7 +101,9 @@ TaskListAssistant.prototype.syncList = function() {
 			for (var i = 0; i < text.length; i += 800) {
 				Mojo.Log.info("TaskListAssistant.syncList: " + text.substr(i, 800));
 			}
-
+			inst.taskListModel.setRemoteJSON(response.responseJSON);
+			inst.taskListWidgetModel.items = inst.taskListModel.getRemoteTasks();
+			inst.controller.modelChanged(inst.taskListWidgetModel);
 		},
 		function(err_msg) {
 			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);

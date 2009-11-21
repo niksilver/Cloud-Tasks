@@ -1,1 +1,7 @@
 /* Put Application specific CSS here. */
+
+#TaskList .title {
+	font-size: 15px;
+	padding-top: 6px;
+	padding-bottom: 7px;
+}

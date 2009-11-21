@@ -3,6 +3,7 @@
     {"source": "app/assistants/Secrets.js"},
     {"source": "app/assistants/MD5.js"},
     {"source": "app/assistants/RTM.js"},
+	{"source": "app/models/TaskListModel.js"},
     {
         "scenes": "TaskList",
         "source": "app/assistants/TaskList-assistant.js"
