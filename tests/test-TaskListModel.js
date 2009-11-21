@@ -75,6 +75,29 @@ testCases.push( function(Y) {
 			}
 		},
 		
+		testDueDateFormatter: function() {
+			var model = new TaskListModel();
+			model.today = function() {
+				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+			};
+			
+			// Various forms of today (Tue)
+			Y.Assert.areEqual('Today', model.dueDateFormatter('2009-12-01T00:00:00Z'), 'Test today 1');
+			Y.Assert.areEqual('Today', model.dueDateFormatter('2009-12-01T13:27:08Z'), 'Test today 2');
+			
+			// Various forms of tomorrow (Wed)
+			Y.Assert.areEqual('Tomorrow', model.dueDateFormatter('2009-12-02T00:00:00Z'), 'Test tomorrow 1');
+			Y.Assert.areEqual('Tomorrow', model.dueDateFormatter('2009-12-02T14:54:22Z'), 'Test tomorrow 2');
+			
+			// Dates within the next week (Thu to Mon)
+			Y.Assert.areEqual('Thu', model.dueDateFormatter('2009-12-03T14:54:22Z'), 'Test Thu');
+			Y.Assert.areEqual('Fri', model.dueDateFormatter('2009-12-04T14:54:22Z'), 'Test Fri');
+			Y.Assert.areEqual('Sat', model.dueDateFormatter('2009-12-05T14:54:22Z'), 'Test Sat');
+			Y.Assert.areEqual('Sun', model.dueDateFormatter('2009-12-06T14:54:22Z'), 'Test Sun');
+			Y.Assert.areEqual('Mon', model.dueDateFormatter('2009-12-07T14:54:22Z'), 'Test Mon');
+			
+		},
+		
 		setUp: function() {
 			this.setUpBigRemoteJSON();
 			this.setUpRemoteJSONWithTwoLists();

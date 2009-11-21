@@ -17,6 +17,12 @@ testCases.push( function(Y) {
 			var nov_30th = Date.parse('30 Nov 2009');
 			Y.assert(dec_1st.isAfter(nov_30th), "isAfter doesn't work as expected. " + dec_1st + " is not after " + nov_30th);
 			Y.assert(nov_30th.isBefore(dec_1st), "isBefore doesn't work as expected. " + nov_30th + " is not before " + dec_1st);
+		},
+		
+		testEquals: function() {
+			var today = Date.today();
+			var also_today = Date.today();
+			Y.assert(Date.equals(today, also_today), "Different copies of today aren't equal");
 		}
 
 	});

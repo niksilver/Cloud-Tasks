@@ -37,3 +37,28 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 TaskListModel.prototype.getRemoteTasks = function() {
 	return this._remote_tasks;
 }
+
+TaskListModel.prototype.today = function(){
+	return Date.today(); // Midnight today
+}
+
+TaskListModel.prototype.dueDateFormatter = function(utc_string) {
+	var utc_date = Date.parse(utc_string).set({ hour: 0, minute: 0, second: 0});
+
+	var today = this.today();
+	if (Date.equals(today, utc_date)) {
+		return 'Today';
+	}
+	
+	var tomorrow = today.clone().add({ days: 1 });
+	if (Date.equals(tomorrow, utc_date)) {
+		return 'Tomorrow';
+	}
+	
+	var end_of_week = today.clone().add({ days: 6 });
+	if (utc_date.between(today, end_of_week)) {
+		return utc_date.toString('ddd');
+	}
+
+	return "Some day";
+}
