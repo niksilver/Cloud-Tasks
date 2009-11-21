@@ -59,6 +59,11 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	if (utc_date.between(today, end_of_week)) {
 		return utc_date.toString('ddd');
 	}
+	
+	var end_of_12_months = today.clone().add({ years: 1, days: -1 });
+	if (utc_date.between(today, end_of_12_months)) {
+		return utc_date.toString('ddd d MMM');
+	}
 
-	return "Some day";
+	return utc_date.toString('ddd d MMM yyyy');
 }
