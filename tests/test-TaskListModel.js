@@ -105,6 +105,12 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Wed 1 Dec 2010', model.dueDateFormatter('2010-12-01T14:54:22Z'), 'Test over year 1');
 			Y.Assert.areEqual('Thu 2 Dec 2010', model.dueDateFormatter('2010-12-02T14:54:22Z'), 'Test over year 2');
 			Y.Assert.areEqual('Fri 25 Feb 2011', model.dueDateFormatter('2011-02-25T14:54:22Z'), 'Test over year 3');
+			
+			// Anything else should give 'None'
+			Y.Assert.areEqual('None', model.dueDateFormatter(''), 'Test other 1');
+			Y.Assert.areEqual('None', model.dueDateFormatter('xxx'), 'Test other 2');
+			Y.Assert.areEqual('None', model.dueDateFormatter({}), 'Test other 3');
+			Y.Assert.areEqual('None', model.dueDateFormatter(), 'Test other 4');
 		},
 		
 		setUp: function() {

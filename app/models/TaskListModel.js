@@ -7,6 +7,7 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 	var _remote_tasks = this._remote_tasks;
 	var tasks_obj = remote_json.rsp.tasks;
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
+	var inst = this;
 	list_array.each(function(list_obj) {
 		var list_id = list_obj.id;
 		var taskseries_array = Object.isArray(list_obj.taskseries) ? list_obj.taskseries : [list_obj.taskseries];
@@ -21,7 +22,8 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 				taskseries_id: taskseries_id,
 				task_id: task_id,
 				name: name,
-				due: due
+				due: due,
+				dueFormatted: inst.dueDateFormatter(due)
 			});
 		});
 
@@ -43,7 +45,11 @@ TaskListModel.prototype.today = function(){
 }
 
 TaskListModel.prototype.dueDateFormatter = function(utc_string) {
-	var utc_date = Date.parse(utc_string).set({ hour: 0, minute: 0, second: 0});
+	var utc_date = Date.parse(utc_string);
+	if (utc_date == null) {
+		return 'None';
+	}
+	utc_date.set({ hour: 0, minute: 0, second: 0});
 
 	var today = this.today();
 	if (Date.equals(today, utc_date)) {

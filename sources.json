@@ -3,6 +3,7 @@
     {"source": "app/lib/Secrets.js"},
     {"source": "app/lib/MD5.js"},
     {"source": "app/lib/RTM.js"},
+	{"source": "app/lib/Date-en-GB.js"},
 	{"source": "app/models/TaskListModel.js"},
     {
         "scenes": "TaskList",
