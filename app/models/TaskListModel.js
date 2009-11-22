@@ -22,8 +22,7 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 				taskseries_id: taskseries_id,
 				task_id: task_id,
 				name: name,
-				due: due,
-				dueFormatted: inst.dueDateFormatter(due)
+				due: due
 			});
 		});
 
