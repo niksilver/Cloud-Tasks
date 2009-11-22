@@ -6,6 +6,10 @@
 	padding-bottom: 7px;
 }
 
+#TaskList .due-false .title {
+	color: #666;
+}
+
 #TaskList .label {
 	text-transform: none;
 }
