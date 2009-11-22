@@ -24,6 +24,7 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 				task_id: task_id,
 				name: name,
 				due: due,
+				is_due: inst.isDue(due),
 				is_overdue: inst.isOverdue(due)
 			});
 		});
@@ -35,6 +36,17 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 		if (a.due < b.due) { return -1; }
 		return 1;
 	});
+}
+
+TaskListModel.prototype.isDue = function(utc_string) {
+	var utc_date = Date.parse(utc_string);
+	if (utc_date == null) {
+		return true;
+	}
+	if (utc_date.isAfter(this.today())) {
+		return false;
+	}
+	return true;
 }
 
 TaskListModel.prototype.isOverdue = function(utc_string) {

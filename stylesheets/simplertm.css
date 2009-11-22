@@ -6,6 +6,10 @@
 	padding-bottom: 7px;
 }
 
+#TaskList .label {
+	text-transform: none;
+}
+
 #TaskList .overdue-true .label {
 	color: #c00;
 }
