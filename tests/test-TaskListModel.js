@@ -75,6 +75,44 @@ testCases.push( function(Y) {
 			}
 		},
 		
+		testIsOverdue: function() {
+			var model = new TaskListModel();
+			model.today = function() {
+				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+			};
+
+			Y.Assert.areEqual(false, model.isOverdue(''), "Empty string shouldn't be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue(), "Undefined shouldn't be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue({}), "Object shouldn't be flagged overdue");
+			Y.Assert.areEqual(true, model.isOverdue('2009-11-01T14:54:22Z'), "Yesterday should be flagged overdue");
+			Y.Assert.areEqual(true, model.isOverdue('2009-08-16T14:54:22Z'), "A while back (this year) should be flagged overdue");
+			Y.Assert.areEqual(true, model.isOverdue('2008-01-26T00:00:00Z'), "A while back (last year) should be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue('2009-12-01T14:54:22Z'), "Today shouldn't be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue('2009-12-01T00:00:00Z'), "Today midnight shouldn't be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue('2009-12-02T14:54:22Z'), "Tomorrow shouldn't be flagged overdue");
+			Y.Assert.areEqual(false, model.isOverdue('2010-08-13T14:54:22Z'), "Some time next year shouldn't be flagged overdue");
+		},
+
+		testOverdueTasksFlagged: function() {
+
+			var model = new TaskListModel();
+			model.setRemoteJSON(this.remote_json_with_overdue_tasks);
+			model.today = function() {
+				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+			};
+			var tasks = model.getRemoteTasks();
+
+			var task_hash = {};			
+			tasks.each(function(task) {
+				task_hash[task.task_id] = task;
+			});
+			
+			Y.Assert.areEqual(false, task_hash['79648346'].is_overdue, "Test 1");
+			Y.Assert.areEqual(true, task_hash['75724449'].is_overdue, "Test 2");
+			Y.Assert.areEqual(false, task_hash['66459582'].is_overdue, "Test 3");
+			Y.Assert.areEqual(false, task_hash['11223344'].is_overdue, "Test 4");
+		},
+		
 		testDueDateFormatter: function() {
 			var model = new TaskListModel();
 			model.today = function() {
@@ -106,16 +144,21 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Thu 2 Dec 2010', model.dueDateFormatter('2010-12-02T14:54:22Z'), 'Test over year 2');
 			Y.Assert.areEqual('Fri 25 Feb 2011', model.dueDateFormatter('2011-02-25T14:54:22Z'), 'Test over year 3');
 			
-			// Anything else should give 'None'
-			Y.Assert.areEqual('None', model.dueDateFormatter(''), 'Test other 1');
-			Y.Assert.areEqual('None', model.dueDateFormatter('xxx'), 'Test other 2');
-			Y.Assert.areEqual('None', model.dueDateFormatter({}), 'Test other 3');
-			Y.Assert.areEqual('None', model.dueDateFormatter(), 'Test other 4');
+			// Non-times should give 'None'
+			Y.Assert.areEqual('None', model.dueDateFormatter(''), 'Test none-time 1');
+			Y.Assert.areEqual('None', model.dueDateFormatter('xxx'), 'Test none-time 2');
+			Y.Assert.areEqual('None', model.dueDateFormatter({}), 'Test none-time 3');
+			Y.Assert.areEqual('None', model.dueDateFormatter(), 'Test none-time 4');
+			
+			// Overdue dates
+			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
+			Y.Assert.areEqual('Mon 2 Jun', model.dueDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
 		},
 		
 		setUp: function() {
 			this.setUpBigRemoteJSON();
 			this.setUpRemoteJSONWithTwoLists();
+			this.setUpRemoteJSONWithOverdueTasks();
 		},
 		
 		setUpBigRemoteJSON: function() {
@@ -748,6 +791,136 @@ testCases.push( function(Y) {
 			                  "created":"2009-08-06T08:42:04Z",
 			                  "modified":"2009-09-03T13:43:00Z",
 			                  "name":"MB - Plans for Richard Pope?",
+			                  "source":"js",
+			                  "url":"",
+			                  "location_id":"",
+			                  "tags":[
+			
+			                  ],
+			                  "participants":[
+			
+			                  ],
+			                  "notes":[
+			
+			                  ],
+			                  "task":{
+			                     "id":"66459582",
+			                     "due":"2010-01-08T00:00:00Z",
+			                     "has_due_time":"0",
+			                     "added":"2009-08-06T08:42:04Z",
+			                     "completed":"",
+			                     "deleted":"",
+			                     "priority":"N",
+			                     "postponed":"6",
+			                     "estimate":""
+			                  }
+		           		   } // Close taskseries
+	                  	] // Close array of taskseries
+		           	 } // Close that list
+		          ] // Close all lists
+		       } // Close tasks object
+	        } // Close rsp
+		  }; // remote_json_with_two_lists
+
+
+		},
+
+		setUpRemoteJSONWithOverdueTasks: function() {
+			this.remote_json_with_overdue_tasks = {
+			   "rsp":{
+			      "stat":"ok",
+			      "tasks":{
+			         "list": [{
+					 	"id": "11122940",
+						"taskseries": {
+							"id": "55630580",
+							"created": "2009-11-20T21:11:26Z",
+							"modified": "2009-11-20T21:11:26Z",
+							"name": "Do something with no due date",
+							"source": "js",
+							"url": "",
+							"location_id": "",
+							"tags": [],
+							"participants": [],
+							"notes": [],
+							"task": {
+								"id": "79648346",
+								"due": "",
+								"has_due_time": "0",
+								"added": "2009-11-20T21:11:26Z",
+								"completed": "",
+								"deleted": "",
+								"priority": "N",
+								"postponed": "0",
+								"estimate": ""
+							}
+						}},
+					 	{
+			            "id":"2637966",
+			            "taskseries":[
+			               {
+			                  "id":"52954009",
+			                  "created":"2009-10-22T20:49:48Z",
+			                  "modified":"2009-10-22T20:49:48Z",
+			                  "name":"Do something that's overdue",
+			                  "source":"js",
+			                  "url":"",
+			                  "location_id":"",
+			                  "tags":[
+			
+			                  ],
+			                  "participants":[
+			
+			                  ],
+			                  "notes":[
+			
+			                  ],
+			                  "task":{
+			                     "id":"75724449",
+			                     "due":"2008-01-26T00:00:00Z",
+			                     "has_due_time":"0",
+			                     "added":"2009-10-22T20:49:48Z",
+			                     "completed":"",
+			                     "deleted":"",
+			                     "priority":"N",
+			                     "postponed":"0",
+			                     "estimate":""
+			                  }
+			               },
+			               {
+			                  "id":"12345678",
+			                  "created":"2009-08-06T08:42:04Z",
+			                  "modified":"2009-09-03T13:43:00Z",
+			                  "name":"Do something today",
+			                  "source":"js",
+			                  "url":"",
+			                  "location_id":"",
+			                  "tags":[
+			
+			                  ],
+			                  "participants":[
+			
+			                  ],
+			                  "notes":[
+			
+			                  ],
+			                  "task":{
+			                     "id":"11223344",
+			                     "due":"2009-12-01T00:00:00Z",
+			                     "has_due_time":"0",
+			                     "added":"2009-08-06T08:42:04Z",
+			                     "completed":"",
+			                     "deleted":"",
+			                     "priority":"N",
+			                     "postponed":"6",
+			                     "estimate":""
+			                  }
+		           		   },
+			               {
+			                  "id":"46489199",
+			                  "created":"2009-08-06T08:42:04Z",
+			                  "modified":"2009-09-03T13:43:00Z",
+			                  "name":"Do something in the future",
 			                  "source":"js",
 			                  "url":"",
 			                  "location_id":"",

@@ -17,12 +17,14 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 			var task_obj = taskseries_obj.task;
 			var task_id = task_obj.id;
 			var due = task_obj.due;
+			var today = inst.today();
 			_remote_tasks.push({
 				list_id: list_id,
 				taskseries_id: taskseries_id,
 				task_id: task_id,
 				name: name,
-				due: due
+				due: due,
+				is_overdue: inst.isOverdue(due)
 			});
 		});
 
@@ -33,6 +35,14 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 		if (a < b) { return -1; }
 		return 1;
 	});
+}
+
+TaskListModel.prototype.isOverdue = function(utc_string) {
+	var utc_date = Date.parse(utc_string);
+	if (utc_date == null) {
+		return false;
+	}
+	return utc_date.isBefore(this.today());
 }
 
 TaskListModel.prototype.getRemoteTasks = function() {
@@ -67,6 +77,11 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	
 	var end_of_12_months = today.clone().add({ years: 1, days: -1 });
 	if (utc_date.between(today, end_of_12_months)) {
+		return utc_date.toString('ddd d MMM');
+	}
+	
+	// Overdue dates
+	if (utc_date.isBefore(today)) {
 		return utc_date.toString('ddd d MMM');
 	}
 
