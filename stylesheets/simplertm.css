@@ -1,12 +1,18 @@
 /* Put Application specific CSS here. */
 
-#TaskList .title {
+#TaskList .task {
+	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
+	background-image: url(../images/list-separator-light.png);
+}
+
+#TaskList .task-title {
 	font-size: 15px;
+	vertical-align: middle;
 	padding-top: 6px;
 	padding-bottom: 7px;
 }
 
-#TaskList .due-false .title {
+#TaskList .due-false .task-title {
 	color: #666;
 }
 
@@ -14,11 +20,13 @@
 	display: table;
 }
 
-#TaskList .label {
+#TaskList .task-label {
+	font-size: 15px;
+	vertical-align: middle;
 	margin: 0px 12px 0px 6px;
 	text-transform: none;
 }
 
-#TaskList .overdue-true .label {
+#TaskList .overdue-true .task-label {
 	color: #c00;
 }
