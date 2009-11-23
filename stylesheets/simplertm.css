@@ -10,7 +10,12 @@
 	color: #666;
 }
 
+#tasklist-container {
+	display: table;
+}
+
 #TaskList .label {
+	margin: 0px 12px 0px 6px;
 	text-transform: none;
 }
 

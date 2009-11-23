@@ -1,10 +1,9 @@
-<div class="palm-row task due-#{is_due} overdue-#{is_overdue}" x-mojo-tap-highlight='momentary'>
-	<div class="palm-row-wrapper">
-		<div class="label">
-			#{dueFormatted}
-		</div>
-		<div class="title">
-			<span class="task-name">#{name}</span>
-		</div>
-	</div>
-</div>
+<tr class="palm-row task due-#{is_due} overdue-#{is_overdue} palm-row-wrapper"
+	x-mojo-tap-highlight='momentary'>
+	<td class="title">
+		<div class="task-name">#{name}</div>
+	</td>
+	<td class="label">
+		<div class="label-content">#{dueFormatted}</div>
+	</td>
+</tr>
