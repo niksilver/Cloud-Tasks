@@ -2,7 +2,7 @@
 
 #TaskList .task {
 	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
-	background-image: url(../images/list-separator-light.png);
+	/* background-image: url(../images/list-separator-light.png); */
 }
 
 #TaskList .task-title {
@@ -11,6 +11,14 @@
 	padding-top: 6px;
 	padding-bottom: 7px;
 }
+
+
+#TaskList .task.selected {
+	x-border: none;
+	x-background: url(../images/selection-gradient-default.png);
+	background: #666;
+}
+
 
 #TaskList .due-false .task-title {
 	color: #666;
@@ -21,7 +29,9 @@
 }
 
 #TaskList .task-label {
-	font-size: 15px;
+	color: #1f75bf;
+	text-shadow: #ffffff 0px 1px 0px;
+	font-size: 14px;
 	vertical-align: middle;
 	margin: 0px 12px 0px 6px;
 	text-transform: none;

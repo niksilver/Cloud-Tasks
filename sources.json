@@ -3,8 +3,8 @@
     {"source": "app/lib/Secrets.js"},
     {"source": "app/lib/MD5.js"},
     {"source": "app/lib/RTM.js"},
-	{"source": "app/lib/Date-en-GB.js"},
-	{"source": "app/models/TaskListModel.js"},
+    {"source": "app/lib/Date-en-GB.js"},
+    {"source": "app/models/TaskListModel.js"},
     {
         "scenes": "TaskList",
         "source": "app/assistants/TaskList-assistant.js"
@@ -12,5 +12,9 @@
     {
         "scenes": "auth",
         "source": "app/assistants/auth-assistant.js"
+    },
+    {
+        "scenes": "EditTask",
+        "source": "app/assistants/EditTask-assistant.js"
     }
 ]

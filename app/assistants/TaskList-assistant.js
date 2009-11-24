@@ -58,8 +58,9 @@ TaskListAssistant.prototype.getListInfo = function() {
 };
 
 TaskListAssistant.prototype.handleListTap = function(event) {
-	/* this.total++;
-	this.controller.get("count").update(this.total); */
+	Mojo.Log.info("TaskListAssistant.handleListTap: Entering");
+	Mojo.Log.info("TaskListAssistant.handleListTap: event name is ", event.item.name);
+	Mojo.Controller.stageController.pushScene('EditTask', this.tools);
 }
 
 TaskListAssistant.prototype.handleCommand = function(event) {
