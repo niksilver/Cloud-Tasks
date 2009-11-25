@@ -3,6 +3,9 @@ function EditTaskAssistant() {
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
+
+	Mojo.Log.info("EditTaskAssistant: Entering constructor");
+	this.model = { value: '' };
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -13,6 +16,20 @@ EditTaskAssistant.prototype.setup = function() {
 	/* setup widgets here */
 	
 	/* add event handlers to listen to events from widgets */
+	
+	var task_name_attributes = {
+		modelProperty: 'value',
+		hintText: 'Hit Enter to confirm',
+		multiline: true,
+		autoFocus: true,
+		enterSubmits: true
+	};
+	this.controller.setupWidget('TaskName', task_name_attributes, this.model);
+	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.taskNameEventHandler.bind(this));
+}
+
+EditTaskAssistant.prototype.taskNameEventHandler = function() {
+	
 }
 
 EditTaskAssistant.prototype.activate = function(event) {

@@ -21,9 +21,6 @@ TaskListAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 	
 	Mojo.Log.info("TaskListAssistant.setup: Entering");
-	
-	/* this.total = 0;
-	this.controller.get("count").update(this.total); */
 
 	// Set up the app menu
 	
