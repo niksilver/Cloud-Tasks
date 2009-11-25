@@ -57,7 +57,12 @@ TaskListAssistant.prototype.getListInfo = function() {
 TaskListAssistant.prototype.handleListTap = function(event) {
 	Mojo.Log.info("TaskListAssistant.handleListTap: Entering");
 	Mojo.Log.info("TaskListAssistant.handleListTap: event name is ", event.item.name);
-	Mojo.Controller.stageController.pushScene('EditTask', this.tools);
+	var task_config = {
+		rtm: this.rtm,
+		taskListModel: this.taskListModel,
+		task: Object.clone(event.item)
+	};
+	Mojo.Controller.stageController.pushScene('EditTask', task_config);
 }
 
 TaskListAssistant.prototype.handleCommand = function(event) {

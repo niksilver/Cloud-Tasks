@@ -1,11 +1,11 @@
-function EditTaskAssistant() {
+function EditTaskAssistant(config) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 
 	Mojo.Log.info("EditTaskAssistant: Entering constructor");
-	this.model = { value: '' };
+	this.config = config;
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -18,18 +18,20 @@ EditTaskAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 	
 	var task_name_attributes = {
-		modelProperty: 'value',
-		hintText: 'Hit Enter to confirm',
+		modelProperty: 'name',
+		hintText: 'Enter task name',
 		multiline: true,
 		autoFocus: true,
-		enterSubmits: true
+		enterSubmits: true,
+		requiresEnterKey: true
 	};
-	this.controller.setupWidget('TaskName', task_name_attributes, this.model);
-	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.taskNameEventHandler.bind(this));
+	this.controller.setupWidget('TaskName', task_name_attributes, this.config.task);
+	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
 }
 
-EditTaskAssistant.prototype.taskNameEventHandler = function() {
-	
+EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
+	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
 }
 
 EditTaskAssistant.prototype.activate = function(event) {
