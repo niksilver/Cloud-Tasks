@@ -1,43 +1,44 @@
 /* Put Application specific CSS here. */
 
-#TaskList .task {
-	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
-	/* background-image: url(../images/list-separator-light.png); */
-}
-
-#TaskList .task-title {
-	font-size: 15px;
-	vertical-align: middle;
-	padding-top: 6px;
-	padding-bottom: 7px;
-}
-
-
-#TaskList .task.selected {
-	x-border: none;
-	x-background: url(../images/selection-gradient-default.png);
-	background: #666;
-}
-
-
-#TaskList .due-false .task-title {
-	color: #666;
-}
-
 #tasklist-container {
 	display: table;
 }
 
-#TaskList .task-label {
+#TaskList .task-due {
 	color: #1f75bf;
-	text-shadow: #ffffff 0px 1px 0px;
 	font-size: 14px;
 	vertical-align: middle;
-	margin: 0px 12px 0px 6px;
-	text-transform: none;
+	padding: 6px 12px 7px 6px;
+	text-align: left;
 }
 
-#TaskList .overdue-true .task-label {
+#TaskList .task {
+	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
+}
+
+#TaskList .task-name {
+	font-size: 15px;
+	vertical-align: middle;
+	padding: 6px 6px 7px 12px;
+}
+
+/* ----------------- Due and overdue tasks -------------- */
+
+#TaskList .due-false .task-name {
+	color: #666;
+}
+
+#TaskList .overdue-true .task-due {
 	color: #c00;
 }
 
+/* ---------------- When a task is tapped ------------- */
+
+#TaskList .task.selected {
+	background-image: url(../images/selection-gradient-default.png);
+}
+
+#TaskList .task.selected .task-name,
+#TaskList .task.selected .task-due {
+	color: #fff;
+}
