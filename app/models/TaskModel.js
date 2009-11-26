@@ -1,0 +1,3 @@
+function TaskModel() {
+	// Setup here
+}
