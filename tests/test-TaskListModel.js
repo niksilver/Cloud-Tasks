@@ -153,48 +153,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_hash['11223344'].is_overdue, "Test 4: Today");
 		},
 		
-		testDueDateFormatter: function() {
-			var model = new TaskListModel();
-			model.today = function() {
-				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
-			};
-			
-			// Various forms of today (Tue)
-			Y.Assert.areEqual('Today', model.dueDateFormatter('2009-12-01T00:00:00Z'), 'Test today 1');
-			Y.Assert.areEqual('Today', model.dueDateFormatter('2009-12-01T13:27:08Z'), 'Test today 2');
-			
-			// Various forms of tomorrow (Wed)
-			Y.Assert.areEqual('Tomorrow', model.dueDateFormatter('2009-12-02T00:00:00Z'), 'Test tomorrow 1');
-			Y.Assert.areEqual('Tomorrow', model.dueDateFormatter('2009-12-02T14:54:22Z'), 'Test tomorrow 2');
-			
-			// Dates within the next week (Thu to Mon)
-			Y.Assert.areEqual('Thu', model.dueDateFormatter('2009-12-03T14:54:22Z'), 'Test Thu');
-			Y.Assert.areEqual('Fri', model.dueDateFormatter('2009-12-04T14:54:22Z'), 'Test Fri');
-			Y.Assert.areEqual('Sat', model.dueDateFormatter('2009-12-05T14:54:22Z'), 'Test Sat');
-			Y.Assert.areEqual('Sun', model.dueDateFormatter('2009-12-06T14:54:22Z'), 'Test Sun');
-			Y.Assert.areEqual('Mon', model.dueDateFormatter('2009-12-07T14:54:22Z'), 'Test Mon');
-			
-			// Dates with the next 12 months
-			Y.Assert.areEqual('Fri 8 Jan', model.dueDateFormatter('2010-01-08T14:54:22Z'), 'Test year 1');
-			Y.Assert.areEqual('Mon 12 Jul', model.dueDateFormatter('2010-07-12T14:54:22Z'), 'Test year 2');
-			Y.Assert.areEqual('Tue 30 Nov', model.dueDateFormatter('2010-11-30T14:54:22Z'), 'Test year 3');
-			
-			// Dates beyond next 12 months
-			Y.Assert.areEqual('Wed 1 Dec 2010', model.dueDateFormatter('2010-12-01T14:54:22Z'), 'Test over year 1');
-			Y.Assert.areEqual('Thu 2 Dec 2010', model.dueDateFormatter('2010-12-02T14:54:22Z'), 'Test over year 2');
-			Y.Assert.areEqual('Fri 25 Feb 2011', model.dueDateFormatter('2011-02-25T14:54:22Z'), 'Test over year 3');
-			
-			// Non-times should give 'None'
-			Y.Assert.areEqual('None', model.dueDateFormatter(''), 'Test none-time 1');
-			Y.Assert.areEqual('None', model.dueDateFormatter('xxx'), 'Test none-time 2');
-			Y.Assert.areEqual('None', model.dueDateFormatter({}), 'Test none-time 3');
-			Y.Assert.areEqual('None', model.dueDateFormatter(), 'Test none-time 4');
-			
-			// Overdue dates
-			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
-			Y.Assert.areEqual('Mon 2 Jun', model.dueDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
-		},
-		
 		setUp: function() {
 			this.setUpBigRemoteJSON();
 			this.setUpRemoteJSONWithTwoLists();
