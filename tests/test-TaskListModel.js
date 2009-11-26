@@ -74,31 +74,10 @@ testCases.push( function(Y) {
 				last_date = this_date;
 			}
 		},
-		
-		testIsDue: function() {
-			var model = new TaskListModel();
-			model.today = function() {
-				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
-			};
-
-			Y.Assert.areEqual(true, model.isDue(''), "Empty string should be flagged due");
-			Y.Assert.areEqual(true, model.isDue(), "Undefined should be flagged due");
-			Y.Assert.areEqual(true, model.isDue({}), "Object should be flagged due");
-			Y.Assert.areEqual(true, model.isDue('2009-11-01T14:54:22Z'), "Yesterday should be flagged due");
-			Y.Assert.areEqual(true, model.isDue('2009-08-16T14:54:22Z'), "A while back (this year) should be flagged due");
-			Y.Assert.areEqual(true, model.isDue('2008-01-26T00:00:00Z'), "A while back (last year) should be flagged due");
-			Y.Assert.areEqual(false, model.isDue('2009-12-01T14:54:22Z'), "Later should not be flagged due is it's now midnight");
-			Y.Assert.areEqual(true, model.isDue('2009-12-01T00:00:00Z'), "Today midnight should be flagged due");
-			Y.Assert.areEqual(false, model.isDue('2009-12-02T14:54:22Z'), "Tomorrow shouldn't be flagged due");
-			Y.Assert.areEqual(false, model.isDue('2010-08-13T14:54:22Z'), "Some time next year shouldn't be flagged due");
-		},
 
 		testDueTasksFlagged: function() {
 
 			var model = new TaskListModel();
-			model.today = function() {
-				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
-			};
 
 			model.setRemoteJSON(this.remote_json_with_overdue_tasks);
 			var tasks = model.getRemoteTasks();
@@ -106,6 +85,10 @@ testCases.push( function(Y) {
 			var task_hash = {};			
 			tasks.each(function(task) {
 				task_hash[task.task_id] = task;
+				task.today = function() {
+					return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+				};
+				task.update();
 			});
 			
 			Y.Assert.areEqual(true, task_hash['79648346'].is_due, "Test 1: No due date");
@@ -114,24 +97,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task_hash['11223344'].is_due, "Test 4: Today");
 		},
 		
-		testIsOverdue: function() {
-			var model = new TaskListModel();
-			model.today = function() {
-				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
-			};
-
-			Y.Assert.areEqual(false, model.isOverdue(''), "Empty string shouldn't be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue(), "Undefined shouldn't be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue({}), "Object shouldn't be flagged overdue");
-			Y.Assert.areEqual(true, model.isOverdue('2009-11-01T14:54:22Z'), "Yesterday should be flagged overdue");
-			Y.Assert.areEqual(true, model.isOverdue('2009-08-16T14:54:22Z'), "A while back (this year) should be flagged overdue");
-			Y.Assert.areEqual(true, model.isOverdue('2008-01-26T00:00:00Z'), "A while back (last year) should be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue('2009-12-01T14:54:22Z'), "Today shouldn't be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue('2009-12-01T00:00:00Z'), "Today midnight shouldn't be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue('2009-12-02T14:54:22Z'), "Tomorrow shouldn't be flagged overdue");
-			Y.Assert.areEqual(false, model.isOverdue('2010-08-13T14:54:22Z'), "Some time next year shouldn't be flagged overdue");
-		},
-
 		testOverdueTasksFlagged: function() {
 
 			var model = new TaskListModel();

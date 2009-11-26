@@ -17,50 +17,22 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 			var task_obj = taskseries_obj.task;
 			var task_id = task_obj.id;
 			var due = task_obj.due;
-			var today = inst.today();
-			_remote_tasks.push({
+			var task = new TaskModel({
 				list_id: list_id,
 				taskseries_id: taskseries_id,
 				task_id: task_id,
 				name: name,
-				due: due,
-				is_due: inst.isDue(due),
-				is_overdue: inst.isOverdue(due)
+				due: due
 			});
+			task.update();
+			_remote_tasks.push(task);
 		});
 
 	});
 	
-	_remote_tasks.sort(function(a, b) {
-		if (a.due == b.due) { return 0; }
-		if (a.due < b.due) { return -1; }
-		return 1;
-	});
-}
-
-TaskListModel.prototype.isDue = function(utc_string) {
-	var utc_date = Date.parse(utc_string);
-	if (utc_date == null) {
-		return true;
-	}
-	if (utc_date.isAfter(this.today())) {
-		return false;
-	}
-	return true;
-}
-
-TaskListModel.prototype.isOverdue = function(utc_string) {
-	var utc_date = Date.parse(utc_string);
-	if (utc_date == null) {
-		return false;
-	}
-	return utc_date.isBefore(this.today());
+	_remote_tasks.sort(TaskModel.sortDue);
 }
 
 TaskListModel.prototype.getRemoteTasks = function() {
 	return this._remote_tasks;
-}
-
-TaskListModel.prototype.today = function(){
-	return Date.today(); // Midnight today
 }

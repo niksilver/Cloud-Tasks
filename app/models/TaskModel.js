@@ -70,3 +70,9 @@ TaskModel.prototype.dueDateFormatter = function(utc_string) {
 
 	return utc_date.toString('ddd d MMM yyyy');
 }
+
+TaskModel.sortDue = function(a, b) {
+	if (a.due == b.due) { return 0; }
+	if (a.due < b.due) { return -1; }
+	return 1;
+};
