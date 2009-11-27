@@ -12,7 +12,7 @@
     },
     {
         "scenes": "auth",
-        "source": "app/assistants/auth-assistant.js"
+        "source": "app/assistants/Auth-assistant.js"
     },
     {
         "scenes": "EditTask",
