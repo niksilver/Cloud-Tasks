@@ -15,7 +15,7 @@ testCases.push( function(Y) {
 				responseJSON: {
 					"rsp": {
 						"stat": "ok",
-						"api_key": API_KEY,
+						"api_key": Secrets.API_KEY,
 						"format": "json",
 						"method": "rtm.test.echo",
 						"param1": "Hello",
@@ -134,7 +134,7 @@ testCases.push( function(Y) {
 				responseJSON: {
 					"rsp": {
 						"stat": "ok",
-						"api_key": API_KEY,
+						"api_key": Secrets.API_KEY,
 						"format": "json",
 						"method": "rtm.test.echo",
 					// Echoed parameters go here
@@ -258,7 +258,7 @@ testCases.push( function(Y) {
 			Y.assert(url.indexOf('http://www.rememberthemilk.com/services/auth/?') == 0, "Auth URL does not point to auth service");
 			Y.assert(url.indexOf('frob=12345') >= 0, "Auth URL does not include frob");
 			Y.assert(url.indexOf('perms=delete') >= 0, "Auth URL does not request delete permission");
-			Y.assert(url.indexOf('api_key=' + API_KEY) >= 0, "Auth URL does include API key");
+			Y.assert(url.indexOf('api_key=' + Secrets.API_KEY) >= 0, "Auth URL does include API key");
 			Y.assert(url.indexOf('api_sig=') >= 0, "Auth URL does not include API sig");
 		},
 		

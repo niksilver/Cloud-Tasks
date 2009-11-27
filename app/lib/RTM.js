@@ -5,7 +5,7 @@
 function RTM() {
 	this._REST_URL = "http://api.rememberthemilk.com/services/rest/";
 	this._AUTH_URL = "http://www.rememberthemilk.com/services/auth/";
-	this.sharedSecret = SHARED_SECRET;
+	this.sharedSecret = Secrets.SHARED_SECRET;
 }
 
 RTM.prototype.ajaxRequest = function(url, options) {
@@ -59,7 +59,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
  */
 RTM.prototype.addStandardParams = function(param_object) {
 	param_object.format = 'json';
-	param_object.api_key = API_KEY;
+	param_object.api_key = Secrets.API_KEY;
 	var token = this.getToken();
 	if (token) {
 		param_object.auth_token = token;
