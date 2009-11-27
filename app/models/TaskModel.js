@@ -1,16 +1,16 @@
 function TaskModel(properties) {
 	if (properties) {
-		this.list_id = properties.list_id;
-		this.taskseries_id = properties.taskseries_id;
-		this.task_id = properties.task_id;
+		this.listID = properties.listID;
+		this.taskseriesID = properties.taskseriesID;
+		this.taskID = properties.taskID;
 		this.name = properties.name;
 		this.due = properties.due;
 	}
 }
 
 TaskModel.prototype.update = function() {
-	this.is_due = this.isDue();
-	this.is_overdue = this.isOverdue();
+	this.isDueFlag = this.isDue();
+	this.isOverdueFlag = this.isOverdue();
 }
 
 TaskModel.prototype.today = function() {

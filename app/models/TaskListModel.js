@@ -7,7 +7,6 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 	var _remote_tasks = this._remote_tasks;
 	var tasks_obj = remote_json.rsp.tasks;
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
-	var inst = this;
 	list_array.each(function(list_obj) {
 		var list_id = list_obj.id;
 		var taskseries_array = Object.isArray(list_obj.taskseries) ? list_obj.taskseries : [list_obj.taskseries];
@@ -18,9 +17,9 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 			var task_id = task_obj.id;
 			var due = task_obj.due;
 			var task = new TaskModel({
-				list_id: list_id,
-				taskseries_id: taskseries_id,
-				task_id: task_id,
+				listID: list_id,
+				taskseriesID: taskseries_id,
+				taskID: task_id,
 				name: name,
 				due: due
 			});

@@ -13,18 +13,18 @@ testCases.push( function(Y) {
 		
 		testConstructorProperties: function() {
 			var task = new TaskModel({
-				list_id: '123456',
-				taskseries_id:'223344',
-				task_id: '667788',
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z',
 				//is_due: inst.isDue(due),
 				//is_overdue: inst.isOverdue(due)
 			});
 			
-			Y.Assert.areEqual('123456', task.list_id, "List ID doesn't get set");
-			Y.Assert.areEqual('223344', task.taskseries_id, "Task series ID doesn't get set");
-			Y.Assert.areEqual('667788', task.task_id, "Task ID doesn't get set");
+			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
+			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID doesn't get set");
+			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
 			Y.Assert.areEqual('My test task', task.name, "Task name doesn't get set");
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Task due date doesn't get set");
 		},
@@ -37,37 +37,37 @@ testCases.push( function(Y) {
 			task = new TaskModel({ due: '2009-11-30T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_due, 'A task from yesterday should be due');
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task from yesterday should be due');
 			
 			// A task for today is due
 			task = new TaskModel({ due: '2009-12-01T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_due, 'A task for today should be due');
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task for today should be due');
 			
 			// A task for tomorrow is not due
 			task = new TaskModel({ due: '2009-12-02T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_due, 'A task for tomorrow should not be due');
+			Y.Assert.areEqual(false, task.isDueFlag, 'A task for tomorrow should not be due');
 			
 			// A task with no due date set is due
 			task = new TaskModel();
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_due, 'A task with no due date should be due');
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task with no due date should be due');
 			
 			// A task with empty due date set is due
 			task = new TaskModel({ due: '' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_due, 'A task with empty due date should be due');
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task with empty due date should be due');
 			
 			// A task with empty object due date set is due
 			task = new TaskModel({ due: {} });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_due, 'A task with empty object due date should be due');
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task with empty object due date should be due');
 		},
 
 		testIsOverdue: function() {
@@ -78,37 +78,37 @@ testCases.push( function(Y) {
 			task = new TaskModel({ due: '2009-11-30T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(true, task.is_overdue, 'A task from yesterday should be overdue');
+			Y.Assert.areEqual(true, task.isOverdueFlag, 'A task from yesterday should be overdue');
 			
 			// A task for today is not overdue
 			task = new TaskModel({ due: '2009-12-01T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_overdue, 'A task for today should not be due');
+			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task for today should not be due');
 			
 			// A task for tomorrow is not overdue
 			task = new TaskModel({ due: '2009-12-02T00:00:00Z' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_overdue, 'A task for tomorrow should not be overdue');
+			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task for tomorrow should not be overdue');
 			
 			// A task with no due date set is not overdue
 			task = new TaskModel();
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_overdue, 'A task with no due date should not be overdue');
+			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task with no due date should not be overdue');
 
 			// A task with empty due date set is not overdue
 			task = new TaskModel({ due: '' });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_overdue, 'A task with empty due date should not be overdue');
+			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task with empty due date should not be overdue');
 			
 			// A task with empty object due date set is not overdue
 			task = new TaskModel({ due: {} });
 			task.today = function() { return today };
 			task.update();
-			Y.Assert.areEqual(false, task.is_overdue, 'A task with empty object due date should not be overdue');
+			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task with empty object due date should not be overdue');
 
 		},
 		

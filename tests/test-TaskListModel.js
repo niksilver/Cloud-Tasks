@@ -22,18 +22,18 @@ testCases.push( function(Y) {
 			var sample_task;
 			for (var i = 0; i < tasks.length; i++) {
 				var task = tasks[i];
-				Y.Assert.isNotUndefined(task.list_id, "Task " + i + " does not have a list_id");
-				Y.Assert.isNotUndefined(task.task_id, "Task " + i + " does not have a task_id");
-				Y.Assert.isNotUndefined(task.taskseries_id, "Task " + i + " does not have a taskseries_id");
+				Y.Assert.isNotUndefined(task.listID, "Task " + i + " does not have a listID");
+				Y.Assert.isNotUndefined(task.taskID, "Task " + i + " does not have a taskID");
+				Y.Assert.isNotUndefined(task.taskseriesID, "Task " + i + " does not have a taskseriesID");
 				Y.Assert.isNotUndefined(task.name, "Task " + i + " does not have a name");
 				Y.Assert.isNotUndefined(task.due, "Task " + i + " does not have a due property");
-				if (task.task_id == '79139889') {
+				if (task.taskID == '79139889') {
 					sample_task = task;
 				}
 			}
 			
-			Y.Assert.areEqual('2637966', sample_task.list_id, "List id not correct");
-			Y.Assert.areEqual('55274651', sample_task.taskseries_id, "Taskseries id not correct");
+			Y.Assert.areEqual('2637966', sample_task.listID, "List id not correct");
+			Y.Assert.areEqual('55274651', sample_task.taskseriesID, "Taskseries id not correct");
 			Y.Assert.areEqual('MB, AB - Update on testing companies', sample_task.name, "Task name not correct");
 			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");			
 		},
@@ -44,22 +44,22 @@ testCases.push( function(Y) {
 			model.setRemoteJSON(this.remote_json_with_two_lists);
 			var tasks = model.getRemoteTasks();
 
-			var task_hash = {};			
+			var task_hash = {};
 			tasks.each(function(task) {
-				task_hash[task.task_id] = task;
+				task_hash[task.taskID] = task;
 			});
 			
-			Y.Assert.areEqual('11122940', task_hash['79648346'].list_id, "Test 1.1");
-			Y.Assert.areEqual('55630580', task_hash['79648346'].taskseries_id, "Test 1.2");
-			Y.Assert.areEqual('79648346', task_hash['79648346'].task_id, "Test 1.3");
+			Y.Assert.areEqual('11122940', task_hash['79648346'].listID, "Test 1.1");
+			Y.Assert.areEqual('55630580', task_hash['79648346'].taskseriesID, "Test 1.2");
+			Y.Assert.areEqual('79648346', task_hash['79648346'].taskID, "Test 1.3");
 			
-			Y.Assert.areEqual('2637966', task_hash['75724449'].list_id, "Test 2.1");
-			Y.Assert.areEqual('52954009', task_hash['75724449'].taskseries_id, "Test 2.2");
-			Y.Assert.areEqual('75724449', task_hash['75724449'].task_id, "Test 2.3");
+			Y.Assert.areEqual('2637966', task_hash['75724449'].listID, "Test 2.1");
+			Y.Assert.areEqual('52954009', task_hash['75724449'].taskseriesID, "Test 2.2");
+			Y.Assert.areEqual('75724449', task_hash['75724449'].taskID, "Test 2.3");
 			
-			Y.Assert.areEqual('2637966', task_hash['66459582'].list_id, "Test 3.1");
-			Y.Assert.areEqual('46489199', task_hash['66459582'].taskseries_id, "Test 3.2");
-			Y.Assert.areEqual('66459582', task_hash['66459582'].task_id, "Test 3.3");
+			Y.Assert.areEqual('2637966', task_hash['66459582'].listID, "Test 3.1");
+			Y.Assert.areEqual('46489199', task_hash['66459582'].taskseriesID, "Test 3.2");
+			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
 		},
 		
 		testGetRemoteTasksIsSorted: function() {
@@ -84,17 +84,17 @@ testCases.push( function(Y) {
 
 			var task_hash = {};			
 			tasks.each(function(task) {
-				task_hash[task.task_id] = task;
+				task_hash[task.taskID] = task;
 				task.today = function() {
 					return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
 				};
 				task.update();
 			});
 			
-			Y.Assert.areEqual(true, task_hash['79648346'].is_due, "Test 1: No due date");
-			Y.Assert.areEqual(true, task_hash['75724449'].is_due, "Test 2: A while back");
-			Y.Assert.areEqual(false, task_hash['66459582'].is_due, "Test 3: The future");
-			Y.Assert.areEqual(true, task_hash['11223344'].is_due, "Test 4: Today");
+			Y.Assert.areEqual(true, task_hash['79648346'].isDueFlag, "Test 1: No due date");
+			Y.Assert.areEqual(true, task_hash['75724449'].isDueFlag, "Test 2: A while back");
+			Y.Assert.areEqual(false, task_hash['66459582'].isDueFlag, "Test 3: The future");
+			Y.Assert.areEqual(true, task_hash['11223344'].isDueFlag, "Test 4: Today");
 		},
 		
 		testOverdueTasksFlagged: function() {
@@ -107,15 +107,15 @@ testCases.push( function(Y) {
 			model.setRemoteJSON(this.remote_json_with_overdue_tasks);
 			var tasks = model.getRemoteTasks();
 
-			var task_hash = {};			
+			var task_hash = {};
 			tasks.each(function(task) {
-				task_hash[task.task_id] = task;
+				task_hash[task.taskID] = task;
 			});
 			
-			Y.Assert.areEqual(false, task_hash['79648346'].is_overdue, "Test 1: No due date");
-			Y.Assert.areEqual(true, task_hash['75724449'].is_overdue, "Test 2: A while back");
-			Y.Assert.areEqual(false, task_hash['66459582'].is_overdue, "Test 3: The future");
-			Y.Assert.areEqual(false, task_hash['11223344'].is_overdue, "Test 4: Today");
+			Y.Assert.areEqual(false, task_hash['79648346'].isOverdueFlag, "Test 1: No due date");
+			Y.Assert.areEqual(true, task_hash['75724449'].isOverdueFlag, "Test 2: A while back");
+			Y.Assert.areEqual(false, task_hash['66459582'].isOverdueFlag, "Test 3: The future");
+			Y.Assert.areEqual(false, task_hash['11223344'].isOverdueFlag, "Test 4: Today");
 		},
 		
 		testDueDateFormatter: function() {
