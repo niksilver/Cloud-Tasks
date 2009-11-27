@@ -172,3 +172,23 @@ RTM.prototype.deleteToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	return token_cookie.remove();
 }
+
+/**
+ * Push a task to the remote server
+ * @param {Object} task  The TaskModel to be pushed.
+ * @param {Object} successCallback  Takes parameter of Ajax.Response
+ * @param {Object} failureCallback  Takes parameter of error message
+ */
+RTM.prototype.push = function(task, successCallback, failureCallback) {
+	this.callMethod(
+		'rtm.tasks.setName',
+		{
+			list_id: task.listID,
+			taskseries_id: task.taskseriesID,
+			task_id: task.taskID,
+			name: task.name
+		},
+		successCallback,
+		failureCallback
+	);
+}

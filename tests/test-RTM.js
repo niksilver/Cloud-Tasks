@@ -6,6 +6,11 @@ testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 500;
 	
+	var assertContains = function(string_to_test, substring_sought, failure_message) {
+		Y.assert(string_to_test.indexOf(substring_sought) >= 0,
+			failure_message + " (string to test is '" + string_to_test + "')");
+	}
+	
 	return new Y.Test.Case({
 
 		testCallMethodWithSuccess: function() {
@@ -300,7 +305,6 @@ testCases.push( function(Y) {
 			);
 		},
 
-		
 		testFetchTokenUnsuccessfully: function() {
 			var rtm = new RTM();
 			var url_used;
@@ -343,7 +347,94 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('12345', rtm.getToken(), 'Token is not as set');
 			rtm.deleteToken();
 			Y.assert(!rtm.getToken(), 'Token is not false after being deleted');
+		},
+
+		testPushCallsRightURL: function() {
+			var rtm = new RTM();
+			var url_used;
+			var good_response = {
+				status: 200,
+				responseJSON: {
+					"rsp": {
+						"stat": "ok",
+						// Other data omitted
+					}
+				}
+			};
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess(good_response);
+			};
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing"
+			});
+			
+			var response_returned;
+			rtm.push(task,
+				function(resp) { response_returned = resp },
+				null
+			);
+			this.wait(
+				function() {
+					assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
+					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
+					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
+				},
+				WAIT_TIMEOUT
+			);
+		},
+		
+		testPushHandlesFailure: function() {
+			var rtm = new RTM();
+			var url_used;
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'fail',
+							err: {
+								code: 11,
+								msg: "Funny failure message"
+							}
+						}
+					}
+				});
+			};
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing"
+			});
+			
+			var err_msg_returned;
+			rtm.push(task,
+				null,
+				function(err_msg) { err_msg_returned = err_msg }
+			);
+			this.wait(
+				function() {
+					assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
+					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
+					Y.Assert.areEqual("RTM error 11: Funny failure message", err_msg_returned, "Didn't return error message");
+				},
+				WAIT_TIMEOUT
+			);
 		}
+
 
 	});
 } );
