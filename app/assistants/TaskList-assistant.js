@@ -110,7 +110,7 @@ TaskListAssistant.prototype.syncList = function() {
 		},
 		function(err_msg) {
 			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
-			Mojo.Controller.errorDialog(err_msg);
+			ErrorHandler.notify(err_msg);
 		});
 }
 

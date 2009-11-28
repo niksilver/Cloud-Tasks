@@ -133,7 +133,6 @@ testCases.push( function(Y) {
 		},
 		
 		testGetMethodErrorMessageWithSuccess: function() {
-			var rtm = new RTM();
 			var response = {
 				status: 200,
 				responseJSON: {
@@ -146,18 +145,46 @@ testCases.push( function(Y) {
 					}
 				}
 			};
-			var msg = rtm.getMethodErrorMessage(response);
+			var msg = RTM.getMethodErrorMessage(response);
 			Y.Assert.isNull(msg, "Message is not null");
 		},
 		
 		testGetMethodErrorMessageWithError: function() {
-			var rtm = new RTM();
 			var response = {
 				status: 200,
 				responseJSON: {"rsp":{"stat":"fail","err":{"code":"97","msg":"Missing signature"}}}
 			};
-			var msg = rtm.getMethodErrorMessage(response);
+			var msg = RTM.getMethodErrorMessage(response);
 			Y.Assert.areEqual("RTM error 97: Missing signature", msg, "Incorrect error message");
+		},
+		
+		testGetMethodErrorMessageWithNullAndUndefinedValues: function() {
+			var response_with_no_stat = {
+				status: 200,
+				responseJSON: { rsp: {} }
+			};
+			var response_with_empty_rsp = {
+				status: 200,
+				responseJSON: { rsp: null }
+			};
+			var response_with_empty_obj_json = {
+				status: 200,
+				responseJSON: {}
+			};
+			var response_with_null_json = {
+				status: 200,
+				responseJSON: null
+			};
+			var response_with_no_json = {
+				status: 200
+			};
+			Y.Assert.areEqual("RTM error: Missing data", RTM.getMethodErrorMessage(response_with_no_stat), "Failed with no stat");
+			Y.Assert.areEqual("RTM error: No data", RTM.getMethodErrorMessage(response_with_empty_rsp), "Failed with empty rsp");
+			Y.Assert.areEqual("RTM error: No data", RTM.getMethodErrorMessage(response_with_empty_obj_json), "Failed with empty obj JSON");
+			Y.Assert.areEqual("HTTP error: No data", RTM.getMethodErrorMessage(response_with_null_json), "Failed with null JSON");
+			Y.Assert.areEqual("HTTP error: No data", RTM.getMethodErrorMessage(response_with_no_json), "Failed with no JSON");
+			Y.Assert.areEqual("HTTP error: No response", RTM.getMethodErrorMessage(null), "Failed with null response");
+			Y.Assert.areEqual("HTTP error: No response", RTM.getMethodErrorMessage(), "Failed with undefined response");
 		},
 		
 		testOrderAndConcatenate: function() {

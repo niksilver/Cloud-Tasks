@@ -28,7 +28,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 		{
 			evalJSON: 'force',
 			onSuccess: function(response) {
-				var err_msg = rtm.getMethodErrorMessage(response);
+				var err_msg = RTM.getMethodErrorMessage(response);
 				if (err_msg) {
 					failureCallback(err_msg);
 				}
@@ -85,19 +85,24 @@ RTM.prototype.getAuthURL = function(frob) {
  * @param {Object} response
  * @return  An error message string, or null.
  */
-RTM.prototype.getMethodErrorMessage = function(response) {
-	if (response
-		&& response.responseJSON
-		&& response.responseJSON.rsp
-		&& response.responseJSON.rsp.stat
-		&& response.responseJSON.rsp.stat == "fail") {
-			var err = response.responseJSON.rsp.err;
-			if (!err) {
-				return "Unknown";
-			}
-			else {
-				return "RTM error " + err.code + ": " + err.msg;
-			}
+RTM.getMethodErrorMessage = function(response) {
+	if (!response) {
+		return "HTTP error: No response";
+	} else if (!response.responseJSON) {
+		return "HTTP error: No data";
+	} else if (!response.responseJSON.rsp) {
+		return "RTM error: No data";
+	} else if (!response.responseJSON.rsp.stat) {
+		return "RTM error: Missing data";
+	}
+	if (response.responseJSON.rsp.stat == "fail") {
+		var err = response.responseJSON.rsp.err;
+		if (!err) {
+			return "Unknown RTM error";
+		}
+		else {
+			return "RTM error " + err.code + ": " + err.msg;
+		}
 	}
 	else {
 		return null;

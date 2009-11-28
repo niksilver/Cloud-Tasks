@@ -17,9 +17,7 @@ testCases.push( function(Y) {
 				taskseriesID:'223344',
 				taskID: '667788',
 				name: 'My test task',
-				due: '2008-07-13T00:00:00Z',
-				//is_due: inst.isDue(due),
-				//is_overdue: inst.isOverdue(due)
+				due: '2008-07-13T00:00:00Z'
 			});
 			
 			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
@@ -119,8 +117,30 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(-1, TaskModel.sortDue(nov30, dec1), 'Nov 30 should be before Dec 1');
 			Y.Assert.areEqual(1, TaskModel.sortDue(dec1, nov30), 'Dec 1 should be before Nov 30');
 			Y.Assert.areEqual(0, TaskModel.sortDue(nov30_2, nov30), 'Nov 30 should be same as Nov 30');
-		}
+		},
 		
+		testSetForPushShouldFlagLocalChanges: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			
+			Y.Assert.areEqual(0, task.localChanges.length, "There should be no local changes initially");
+			
+			task.setForPush('name', 'My changed test task');			
+			Y.Assert.areEqual(1, task.localChanges.length, "Only name should have changed (1)");
+			Y.Assert.areEqual('name', task.localChanges[0], "Only name should have changed (2)");
+			
+			// Changing the name again should result in the name flagged only once, still
+
+			task.setForPush('name', 'My changed test task 2');
+			Y.Assert.areEqual(1, task.localChanges.length, "Only name should have changed again (1)");
+			Y.Assert.areEqual('name', task.localChanges[0], "Only name should have changed again (2)");
+		}
+				
 	});
 
 } );

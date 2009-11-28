@@ -4,6 +4,7 @@
     {"source": "app/lib/MD5.js"},
     {"source": "app/lib/RTM.js"},
     {"source": "app/lib/Date-en-GB.js"},
+	{"source": "app/lib/ErrorHandler.js"},
     {"source": "app/models/TaskModel.js"},
     {"source": "app/models/TaskListModel.js"},
     {

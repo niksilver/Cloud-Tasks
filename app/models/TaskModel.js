@@ -6,6 +6,7 @@ function TaskModel(properties) {
 		this.name = properties.name;
 		this.due = properties.due;
 	}
+	this.localChanges = [];
 }
 
 TaskModel.prototype.update = function() {
@@ -41,3 +42,16 @@ TaskModel.sortDue = function(a, b) {
 	if (a.due < b.due) { return -1; }
 	return 1;
 };
+
+/**
+ * Set a property in the task which we want to be pushed to
+ * the remote server.
+ * @param {Object} property  The property name (e.g. 'due' or 'name').
+ * @param {Object} value  The value the property should be.
+ */
+TaskModel.prototype.setForPush = function(property, value) {
+	this[property] = value;
+	if (this.localChanges.indexOf(property) == -1) {
+		this.localChanges.push(property);
+	}
+}
