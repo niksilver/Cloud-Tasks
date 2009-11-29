@@ -6,6 +6,23 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
+		constructDepotSynchronously: function(name, assert_failure_msg) {
+			var depot_constructor_returned = false;
+			var depot = new Depot({ name: name },
+				function() {
+					depot_constructor_returned = true;
+				},
+				null
+			);
+			this.wait(
+				function() {
+					Y.assert(depot_constructor_returned, assert_failure_msg);
+				},
+				WAIT_TIMEOUT
+			);
+			return depot;
+		},
+
 		testConstructor: function() {
 			var model = new TaskListModel();
 			Y.Assert.isNotUndefined(model, "Model can't be constructed");
@@ -162,18 +179,32 @@ testCases.push( function(Y) {
 				
 		testTaskListStorage: function() {
 			var tasklist = new TaskListModel();
-			
-			tasklist.setTaskList({ something: 'here' });
-			Y.Assert.areEqual('here', tasklist.getTaskList().something, 'Task list does not hold properties after being set');
+
+			tasklist.setTaskList([ 'sometask', 'some other task' ]);
+			Y.Assert.areEqual('sometask', tasklist.getTaskList()[0], 'Task list does not hold task #1 after being set');
+			Y.Assert.areEqual('some other task', tasklist.getTaskList()[1], 'Task list does not hold task #2 after being set');
 
 			tasklist.saveTaskList();
 			var tasklist2 = new TaskListModel();
 			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
 			Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
 			
+			tasklist = undefined;
 			tasklist2.loadTaskList();
-			Y.Assert.areEqual('here', tasklist2.getTaskList().something, 'Task list does not hold properties after being set');
+			Y.Assert.areEqual('sometask', tasklist2.getTaskList()[0], 'Task list does not hold task #1 after being loaded');
+			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1], 'Task list does not hold task #2 after being loaded');
 		},
+		
+		testTaskListStorageHasEndOfListMarker: function() {
+			var tasklist = new TaskListModel();
+
+			tasklist.setTaskList([ 'task1', 'task2', 'task3' ]);
+			tasklist.saveTaskList();
+			tasklist.setTaskList([ 'taskA', 'taskB' ]);
+			tasklist.saveTaskList();
+			tasklist.loadTaskList();
+			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');
+		}
 
 	});
 

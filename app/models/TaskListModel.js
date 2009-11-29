@@ -1,5 +1,14 @@
 function TaskListModel() {
 	this._remote_tasks;
+	this._task_list = [];
+}
+
+TaskListModel.prototype.setTaskList = function(task_list) {
+	this._task_list = task_list;
+}
+
+TaskListModel.prototype.getTaskList = function(task_list) {
+	return this._task_list;
 }
 
 TaskListModel.prototype.setRemoteJSON = function(remote_json) {
@@ -77,14 +86,28 @@ TaskListModel.prototype.getRemoteTasks = function() {
 
 /**
  * Save the task list into the database.
- * @param {Array} tasklist  Array of tasks to be saved.
+ * @param {Array} task_list  Array of tasks to be saved.
  */
-TaskListModel.prototype.saveTaskList = function(tasklist) {
-	var token_cookie = new Mojo.Model.Cookie('token');
-	token_cookie.put(token);
+TaskListModel.prototype.saveTaskList = function() {
+	var i;
+	for (i = 0; i < this._task_list.length; i++) {
+		var task_cookie = new Mojo.Model.Cookie('task_' + i);
+		task_cookie.put(this._task_list[i]);
+	}
+	var task_cookie = new Mojo.Model.Cookie('task_' + i);
+	task_cookie.remove();
 }
 
-TaskListModel.prototype.getToken = function(token) {
-	var token_cookie = new Mojo.Model.Cookie('token');
-	return token_cookie.get();
+TaskListModel.prototype.loadTaskList = function() {
+	this._task_list = [];
+	var i = -1;
+	var task_cookie_value;
+	do {
+		i++;
+		var task_cookie = new Mojo.Model.Cookie('task_' + i);
+		task_cookie_value = task_cookie.get();
+		if (task_cookie_value) {
+			this._task_list.push(task_cookie_value);
+		}
+	} while (task_cookie_value);
 }
