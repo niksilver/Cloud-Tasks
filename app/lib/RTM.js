@@ -6,6 +6,7 @@ function RTM() {
 	this._REST_URL = "http://api.rememberthemilk.com/services/rest/";
 	this._AUTH_URL = "http://www.rememberthemilk.com/services/auth/";
 	this.sharedSecret = Secrets.SHARED_SECRET;
+	this.timeline = null;
 }
 
 RTM.prototype.ajaxRequest = function(url, options) {
@@ -178,13 +179,26 @@ RTM.prototype.deleteToken = function(token) {
 	return token_cookie.remove();
 }
 
+RTM.prototype.createTimeline = function() {
+	var inst = this;
+	this.callMethod("rtm.timelines.create", {},
+		function(response) {
+			inst.timeline = response.responseJSON.rsp.timeline;
+		},
+		function(err_msg) {
+			ErrorHandler.notify(err_msg);
+		}
+	);
+}
+
 /**
- * Push a task to the remote server
+ * Push a task's local change to the remote server
  * @param {Object} task  The TaskModel to be pushed.
- * @param {Object} successCallback  Takes parameter of Ajax.Response
- * @param {Object} failureCallback  Takes parameter of error message
+ * @param {String} property  Name of property whose change needs to be pushed.
+ * @param {Function} successCallback  Takes parameter of Ajax.Response
+ * @param {Function} failureCallback  Takes parameter of error message
  */
-RTM.prototype.push = function(task, successCallback, failureCallback) {
+RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
 	this.callMethod(
 		'rtm.tasks.setName',
 		{

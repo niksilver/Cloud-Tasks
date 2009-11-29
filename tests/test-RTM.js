@@ -375,8 +375,34 @@ testCases.push( function(Y) {
 			rtm.deleteToken();
 			Y.assert(!rtm.getToken(), 'Token is not false after being deleted');
 		},
+		
+		testCreateTimeline: function() {
+			var rtm = new RTM();
+			Y.Assert.isNull(rtm.timeline, "Should have no initial timeline");
+			
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'ok',
+							timeline: '56712'
+						}
+					}
+				})
+			};
+			
+			rtm.createTimeline();
+			this.wait(function() {
+					Y.Assert.areEqual('56712', rtm.timeline, "Did not set timeline successfully");
+				},
+				WAIT_TIMEOUT
+			);
 
-		testPushCallsRightURL: function() {
+		},
+
+		testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
 			var url_used;
 			var good_response = {
@@ -397,11 +423,13 @@ testCases.push( function(Y) {
 				listID: '112233',
 				taskseriesID: '445566',
 				taskID: '778899',
-				name: "Do testing"
+				name: "Do testing",
+				localChanges: ['name']
 			});
 			
 			var response_returned;
-			rtm.push(task,
+			rtm.pushLocalChange(task,
+				'name',
 				function(resp) { response_returned = resp },
 				null
 			);
@@ -441,11 +469,13 @@ testCases.push( function(Y) {
 				listID: '112233',
 				taskseriesID: '445566',
 				taskID: '778899',
-				name: "Do testing"
+				name: "Do testing",
+				localChanges: ['name']
 			});
 			
 			var err_msg_returned;
-			rtm.push(task,
+			rtm.pushLocalChange(task,
+				'name',
 				null,
 				function(err_msg) { err_msg_returned = err_msg }
 			);
@@ -461,7 +491,6 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		}
-
 
 	});
 } );
