@@ -74,3 +74,17 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 TaskListModel.prototype.getRemoteTasks = function() {
 	return this._remote_tasks;
 }
+
+/**
+ * Save the task list into the database.
+ * @param {Array} tasklist  Array of tasks to be saved.
+ */
+TaskListModel.prototype.saveTaskList = function(tasklist) {
+	var token_cookie = new Mojo.Model.Cookie('token');
+	token_cookie.put(token);
+}
+
+TaskListModel.prototype.getToken = function(token) {
+	var token_cookie = new Mojo.Model.Cookie('token');
+	return token_cookie.get();
+}

@@ -158,8 +158,23 @@ testCases.push( function(Y) {
 			// Overdue dates
 			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
 			Y.Assert.areEqual('Mon 2 Jun', model.dueDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
-		}
-		
+		},
+				
+		testTaskListStorage: function() {
+			var tasklist = new TaskListModel();
+			
+			tasklist.setTaskList({ something: 'here' });
+			Y.Assert.areEqual('here', tasklist.getTaskList().something, 'Task list does not hold properties after being set');
+
+			tasklist.saveTaskList();
+			var tasklist2 = new TaskListModel();
+			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
+			Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
+			
+			tasklist2.loadTaskList();
+			Y.Assert.areEqual('here', tasklist2.getTaskList().something, 'Task list does not hold properties after being set');
+		},
+
 	});
 
 } );
