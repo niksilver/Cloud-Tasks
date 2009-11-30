@@ -110,13 +110,19 @@ testCases.push( function(Y) {
 
 		},
 		
-		testSortDue: function(){
-			var nov30 = new TaskModel({ due: '2009-11-30T00:00:00Z' });
-			var nov30_2 = new TaskModel({ due: '2009-11-30T00:00:00Z' });
+		testSortByDueThenName: function(){
+			var nov30 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'B' });
+			var nov30_2 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'A' });
+			var nov30_3 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'C' });
+			var nov30_3_again = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'C' });
 			var dec1 = new TaskModel({ due: '2009-12-01T00:00:00Z' });
-			Y.Assert.areEqual(-1, TaskModel.sortDue(nov30, dec1), 'Nov 30 should be before Dec 1');
-			Y.Assert.areEqual(1, TaskModel.sortDue(dec1, nov30), 'Dec 1 should be before Nov 30');
-			Y.Assert.areEqual(0, TaskModel.sortDue(nov30_2, nov30), 'Nov 30 should be same as Nov 30');
+			
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(nov30, dec1), 'Nov 30 should be before Dec 1');
+			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(dec1, nov30), 'Dec 1 should be before Nov 30');
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(nov30_2, nov30), 'Nov 30 A should be before Nov 30 B');
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(nov30_2, nov30_3), 'Nov 30 A should be before Nov 30 C');
+			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(nov30_3, nov30_2), 'Nov 30 C should be after Nov 30 A');
+			Y.Assert.areEqual(0, TaskModel.sortByDueThenName(nov30_3, nov30_3_again), 'Nov 30 C should be same as Nov 30 C');
 		},
 		
 		testSetForPushShouldFlagLocalChanges: function() {

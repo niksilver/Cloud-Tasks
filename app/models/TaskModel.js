@@ -37,9 +37,15 @@ TaskModel.prototype.isOverdue = function() {
 	return due_date.isBefore(this.today());
 }
 
-TaskModel.sortDue = function(a, b) {
-	if (a.due == b.due) { return 0; }
+TaskModel.sortByDueThenName = function(a, b) {
+	if (a.due == b.due) { return TaskModel.sortByName(a, b); }
 	if (a.due < b.due) { return -1; }
+	return 1;
+};
+
+TaskModel.sortByName = function(a, b) {
+	if (a.name == b.name) { return 0; }
+	if (a.name < b.name) { return -1; }
 	return 1;
 };
 

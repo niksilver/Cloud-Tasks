@@ -38,7 +38,7 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 
 	});
 	
-	_remote_tasks.sort(TaskModel.sortDue);
+	_remote_tasks.sort(TaskModel.sortByDueThenName);
 }
 
 TaskListModel.prototype.today = function() {

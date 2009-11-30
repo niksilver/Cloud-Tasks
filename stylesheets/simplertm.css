@@ -13,8 +13,20 @@
 }
 
 #TaskList .task {
-	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
+	background: url(../images/list-separator-light.png) /contain repeat-x 0% 100%;
 }
+
+/* -------- Experimental, getting rid of tr and td in HTML templates -------- */
+
+/* #TaskList div.task {
+}
+
+#TaskList div.task-name {
+	float: left;
+}
+#TaskList div.task-due {
+	float: right;
+} */
 
 #TaskList .task-name {
 	font-size: 15px;
