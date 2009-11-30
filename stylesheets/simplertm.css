@@ -1,7 +1,7 @@
 /* -------------------- Basic task formatting ------------- */
 
-#tasklist-container {
-	display: table;
+#TaskList .task {
+	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
 }
 
 #TaskList .task-due {
@@ -10,23 +10,8 @@
 	vertical-align: middle;
 	padding: 6px 12px 7px 6px;
 	text-align: left;
-}
-
-#TaskList .task {
-	background: url(../images/list-separator-light.png) /contain repeat-x 0% 100%;
-}
-
-/* -------- Experimental, getting rid of tr and td in HTML templates -------- */
-
-/* #TaskList div.task {
-}
-
-#TaskList div.task-name {
-	float: left;
-}
-#TaskList div.task-due {
 	float: right;
-} */
+}
 
 #TaskList .task-name {
 	font-size: 15px;
