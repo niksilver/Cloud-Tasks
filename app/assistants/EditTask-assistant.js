@@ -27,11 +27,27 @@ EditTaskAssistant.prototype.setup = function() {
 	};
 	this.controller.setupWidget('TaskName', task_name_attributes, this.config.task);
 	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
+	
+	var task_due_attributes = {
+		modelProperty: 'due',
+		hintText: 'Enter due time',
+		multiline: false,
+		autoFocus: false,
+		enterSubmits: true,
+		requiresEnterKey: true
+	};
+	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
+	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
+}
+
+EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Entering");
+	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.config.task.due + "'");
 }
 
 EditTaskAssistant.prototype.activate = function(event) {
