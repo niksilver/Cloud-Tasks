@@ -7,7 +7,7 @@ TaskListModel.prototype.setTaskList = function(task_list) {
 	this._task_list = task_list;
 }
 
-TaskListModel.prototype.getTaskList = function(task_list) {
+TaskListModel.prototype.getTaskList = function() {
 	return this._task_list;
 }
 

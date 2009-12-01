@@ -8,7 +8,10 @@ function TaskListAssistant(config) {
 	this.config = config;
 	this.rtm = config.rtm;
 	this.taskListModel = config.taskListModel;
-	this.taskListWidgetModel = { items: [] };
+	this.taskListModel.loadTaskList();
+	this.taskListWidgetModel = { items: this.taskListModel.getTaskList() };
+
+	this.syncList();
 }
 
 TaskListAssistant.prototype.setup = function() {
@@ -60,7 +63,7 @@ TaskListAssistant.prototype.handleListTap = function(event) {
 	var task_config = {
 		rtm: this.rtm,
 		taskListModel: this.taskListModel,
-		task: Object.clone(event.item)
+		task: event.item
 	};
 	Mojo.Controller.stageController.pushScene('EditTask', task_config);
 }
@@ -107,6 +110,8 @@ TaskListAssistant.prototype.syncList = function() {
 			inst.taskListModel.setRemoteJSON(json);
 			inst.taskListWidgetModel.items = inst.taskListModel.getRemoteTasks();
 			inst.controller.modelChanged(inst.taskListWidgetModel);
+			inst.taskListModel.setTaskList(inst.taskListWidgetModel.items);
+			inst.taskListModel.saveTaskList();
 		},
 		function(err_msg) {
 			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
@@ -114,11 +119,20 @@ TaskListAssistant.prototype.syncList = function() {
 		});
 }
 
-TaskListAssistant.prototype.activate = function(event) {
+TaskListAssistant.prototype.activate = function(returnValue) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
-
-	this.syncList();
+	
+	Mojo.Log.info("TaskListAssistant.activate: Entering");
+	if (!returnValue) {
+		return;
+	}
+	
+	if (returnValue.lastScene == 'EditTask'
+		&& returnValue.task.localChanges.length > 0) {
+		Mojo.Log.info("TaskListAssistant.activate: Task changed");
+		this.controller.modelChanged(this.taskListWidgetModel);
+	}
 }
 
 

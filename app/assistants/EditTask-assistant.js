@@ -38,16 +38,31 @@ EditTaskAssistant.prototype.setup = function() {
 	};
 	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
+	
+	Mojo.Event.back.stopPropagation();
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
+	this.config.task.setForPush('name', this.config.task.name);
 }
 
 EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.config.task.due + "'");
+	this.config.task.setForPush('due', this.config.task.due);
+}
+
+EditTaskAssistant.prototype.handleCommand = function(event){
+	Mojo.Log.info("EditTaskAssistant.handleCommand: Entering");
+	if (event.type == Mojo.Event.back) {
+		Mojo.Log.info("TaskListAssistant.handleCommand: Got back event");
+		Mojo.Controller.stageController.popScene({
+			lastScene: 'EditTask',
+			task: this.config.task
+		});
+	}
 }
 
 EditTaskAssistant.prototype.activate = function(event) {
