@@ -38,7 +38,11 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 
 	});
 	
-	_remote_tasks.sort(TaskModel.sortByDueThenName);
+	this.sort();
+}
+
+TaskListModel.prototype.sort = function() {
+	this._remote_tasks.sort(TaskModel.sortByDueThenName);
 }
 
 TaskListModel.prototype.today = function() {
@@ -110,4 +114,9 @@ TaskListModel.prototype.loadTaskList = function() {
 			this._task_list.push(task_cookie_value);
 		}
 	} while (task_cookie_value);
+}
+
+TaskListModel.prototype.eraseTaskList = function() {
+	this.setTaskList([]);
+	this.saveTaskList();
 }

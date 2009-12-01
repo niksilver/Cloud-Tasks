@@ -6,5 +6,6 @@ StageAssistant.prototype.setup = function() {
 		rtm: new RTM(),
 		taskListModel: new TaskListModel()
 	};
+	//config.taskListModel.eraseTaskList();
 	this.controller.pushScene("TaskList", config);
 }

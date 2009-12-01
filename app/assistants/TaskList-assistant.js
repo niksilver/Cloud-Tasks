@@ -130,8 +130,17 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	if (returnValue.lastScene == 'EditTask'
 		&& returnValue.task.localChanges.length > 0) {
+		var task = returnValue.task;
 		Mojo.Log.info("TaskListAssistant.activate: Task changed");
+		if (task.localChanges.indexOf('name') >= 0 || task.localChanges.indexOf('due') >= 0) {
+			this.taskListModel.sort();
+		}
 		this.controller.modelChanged(this.taskListWidgetModel);
+		this.taskListModel.saveTaskList();
+	}
+	else if (returnValue.lastScene == 'Auth') {
+		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
+		this.syncList();
 	}
 }
 
