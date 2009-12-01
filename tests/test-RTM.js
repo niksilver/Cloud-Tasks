@@ -446,7 +446,7 @@ testCases.push( function(Y) {
 			);
 		},
 		
-		testPushHandlesFailure: function() {
+		testPushLocalChangeHandlesFailure: function() {
 			var rtm = new RTM();
 			var url_used;
 			rtm.ajaxRequest = function(url, options) {
@@ -490,6 +490,75 @@ testCases.push( function(Y) {
 				},
 				WAIT_TIMEOUT
 			);
+		},
+		
+		testPushLocalChanges: function() {
+			var rtm = new RTM();
+			var model = new TaskListModel();
+			model.setRemoteJSON(SampleTestData.big_remote_json);
+			var tasks = model.getRemoteTasks();
+			model.setTaskList(tasks);
+			
+			var task_2_task_id = model.getTaskList()[2].taskID;
+			var task_3_task_id = model.getTaskList()[3].taskID;
+
+			model.getTaskList()[2].setForPush('name', 'My new task name');
+			model.getTaskList()[3].setForPush('due', '2010-01-12T12:34:00Z');
+			
+			var errs = "";
+			var task_2_change_pushed = false;
+			var task_3_change_pushed = false;
+			rtm.oldPushLocalChange = rtm.pushLocalChange;
+			rtm.pushLocalChange = function(task, property, successCallback, failureCallback) {
+				if (property == 'name' && task.name == 'My new task name') {
+					task_2_change_pushed = true;
+				}
+				else if (property == 'due' && task.due == '2010-01-12T12:34:00Z') {
+					task_3_change_pushed = true;
+				}
+				else {
+					errs = errs + " pushLocalChange(" + property + " of " + task.name +")";
+				}
+				rtm.oldPushLocalChange(task, property, successCallback, failureCallback);
+			}
+			
+			var task_2_marked_not_for_push = false;
+			var task_3_marked_not_for_push = false;
+			model.getTaskList()[2].markNotForPush = function(property) {
+				if (property == 'name') {
+					task_2_marked_not_for_push = true;
+				}
+			};
+			model.getTaskList()[3].markNotForPush = function(property) {
+				if (property == 'due') {
+					task_3_marked_not_for_push = true;
+				}
+			};
+			
+			rtm.callMethod = function(method, params, successCallback, failureCallback) {
+				if (params.task_id == task_2_task_id) {
+					// Task 2
+					Y.Assert.areEqual('rtm.tasks.setName', method, "Not calling setName for task 2");
+				}
+				else if (params.task_id == task_3_task_id) {
+					// Task 3
+					Y.Assert.areEqual('rtm.tasks.setDueDate', method, "Not calling setDueDate for task 3");
+					Y.Assert.areEqual('2010-01-12T12:34:00Z', params.due, "Not setting due date for task 3");
+				}
+				else {
+					Y.Assert.fail("Calling method '" + method + "' on task '" + params.task_id + "',"
+						+ " while task 2 has id " + task_2_task_id +" and task 3 has id " + task_3_task_id);
+				}
+				successCallback();
+			};
+			
+			rtm.pushLocalChanges(model);
+			
+			Y.Assert.areEqual(true, task_2_change_pushed, "Task 2 change not pushed");
+			Y.Assert.areEqual(true, task_3_change_pushed, "Task 3 change not pushed");
+			Y.Assert.areEqual(true, task_2_marked_not_for_push, "Task 2 should be marked not for push now");
+			Y.Assert.areEqual(true, task_3_marked_not_for_push, "Task 3 should be marked not for push now");
+			Y.Assert.areEqual("", errs, "Wrong tasks pushed: " + errs);
 		}
 
 	});

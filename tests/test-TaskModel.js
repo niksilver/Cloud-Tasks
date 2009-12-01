@@ -145,8 +145,33 @@ testCases.push( function(Y) {
 			task.setForPush('name', 'My changed test task 2');
 			Y.Assert.areEqual(1, task.localChanges.length, "Only name should have changed again (1)");
 			Y.Assert.areEqual('name', task.localChanges[0], "Only name should have changed again (2)");
+		},
+		
+		testMarkNotForPush: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			task.setForPush('name', 'My changed test task');			
+			task.setForPush('due', '2009-12-01T00:00:00Z');
+			task.setForPush('name', 'My second changed test task');
+			
+			Y.assert(task.localChanges.indexOf('name') >= 0, "Name not set for push");
+			Y.assert(task.localChanges.indexOf('due') >= 0, "Due date not set for push");			
+			
+			task.markNotForPush('name');
+			Y.Assert.areEqual(-1, task.localChanges.indexOf('name'), "Name is still set for push");
+			
+			task.markNotForPush('mistakenproperty');
+			Y.Assert.areEqual(1, task.localChanges.length, "Problem marking non-existent property");
+			
+			task.markNotForPush('due');
+			Y.Assert.areEqual(-1, task.localChanges.indexOf('due'), "Due date is still set for push");
 		}
-				
+
 	});
 
 } );

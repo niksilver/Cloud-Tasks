@@ -61,3 +61,10 @@ TaskModel.prototype.setForPush = function(property, value) {
 		this.localChanges.push(property);
 	}
 }
+
+TaskModel.prototype.markNotForPush = function(property) {
+	var i = this.localChanges.indexOf(property);
+	if (i >= 0) {
+		this.localChanges.splice(i, 1);
+	}
+}

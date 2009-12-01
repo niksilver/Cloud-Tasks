@@ -199,15 +199,48 @@ RTM.prototype.createTimeline = function() {
  * @param {Function} failureCallback  Takes parameter of error message
  */
 RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
-	this.callMethod(
-		'rtm.tasks.setName',
-		{
-			list_id: task.listID,
-			taskseries_id: task.taskseriesID,
-			task_id: task.taskID,
-			name: task.name
-		},
-		successCallback,
-		failureCallback
-	);
+	if (property == 'name') {
+		this.callMethod(
+			'rtm.tasks.setName',
+			{
+				list_id: task.listID,
+				taskseries_id: task.taskseriesID,
+				task_id: task.taskID,
+				name: task.name
+			},
+			successCallback,
+			failureCallback
+		);
+	}
+	else if (property == 'due') {
+		this.callMethod(
+			'rtm.tasks.setDueDate',
+			{
+				list_id: task.listID,
+				taskseries_id: task.taskseriesID,
+				task_id: task.taskID,
+				due: task.due
+			},
+			successCallback,
+			failureCallback
+		);
+	}
+}
+
+/**
+ * Push all the local changes that need pushing from the task list.
+ * @param {TaskListModel} task_list_model  Array of TaskModel objects, any of which might
+ *     need local changes pushing.
+ */
+RTM.prototype.pushLocalChanges = function(task_list_model) {
+	for (var i = 0; i < task_list_model.getTaskList().length; i++) {
+		var task = task_list_model.getTaskList()[i];
+		for (var j = 0; j < task.localChanges.length; j++) {
+			var property = task.localChanges[j];
+			this.pushLocalChange(task, property,
+				function(response) { task.markNotForPush(property) },
+				function(err_msg) { alert(err_msg) }
+			);
+		}
+	}
 }

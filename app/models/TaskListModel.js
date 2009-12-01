@@ -38,11 +38,11 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 
 	});
 	
-	this.sort();
+	this._remote_tasks.sort(TaskModel.sortByDueThenName);
 }
 
 TaskListModel.prototype.sort = function() {
-	this._remote_tasks.sort(TaskModel.sortByDueThenName);
+	this._task_list.sort(TaskModel.sortByDueThenName);
 }
 
 TaskListModel.prototype.today = function() {
