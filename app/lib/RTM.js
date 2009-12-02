@@ -180,10 +180,12 @@ RTM.prototype.deleteToken = function(token) {
 }
 
 RTM.prototype.createTimeline = function() {
+	Mojo.Log.info("RTM.createTimeline: Entering");
 	var inst = this;
 	this.callMethod("rtm.timelines.create", {},
 		function(response) {
 			inst.timeline = response.responseJSON.rsp.timeline;
+			Mojo.Log.info("RTM.createTimeline: Got timeline '" + inst.timeline + "'");
 		},
 		function(err_msg) {
 			ErrorHandler.notify(err_msg);
@@ -255,12 +257,13 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 		var task = task_list_model.getTaskList()[i];
 		for (var j = 0; j < task.localChanges.length; j++) {
 			var property = task.localChanges[j];
+			var task_to_change = task;
 			this.pushLocalChange(task, property,
 				function(response) {
-					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task.name + "'");
+					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task_to_change.name + "'");
 				},
 				function(err_msg) {
-					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task.name + "'. Error message: " + err_msg);
+					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);
 				}
 			);
 		}
