@@ -192,7 +192,8 @@ RTM.prototype.createTimeline = function() {
 }
 
 /**
- * Push a task's local change to the remote server
+ * Push a task's local change to the remote server.
+ * If successfuly will also mark the task's property as no longer needed for push.
  * @param {Object} task  The TaskModel to be pushed.
  * @param {String} property  Name of property whose change needs to be pushed.
  * @param {Function} successCallback  Takes parameter of Ajax.Response
@@ -200,6 +201,13 @@ RTM.prototype.createTimeline = function() {
  */
 RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
 	Mojo.Log.info("RTM.pushLocalChange: Entering with property '" + property + "' for task '" + task.name + "'");
+	
+	if (!this.timeline) {
+		this.createTimeline();
+		return;
+		// createTimeline will return asynchronously, so we'll have to
+		// do the push we wanted some other time.
+	}
 	
 	var method;
 	var parameters;
