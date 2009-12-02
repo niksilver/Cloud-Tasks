@@ -137,6 +137,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		}
 		this.controller.modelChanged(this.taskListWidgetModel);
 		this.taskListModel.saveTaskList();
+		this.rtm.pushLocalChanges(this.taskListModel);
 	}
 	else if (returnValue.lastScene == 'Auth') {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");

@@ -126,6 +126,8 @@ testCases.push( function(Y) {
 
 			var task_hash = {};
 			tasks.each(function(task) {
+				task.today = model.today; // Force today calculation
+				task.update(); // Force overdue calculations based on forced idea of today
 				task_hash[task.taskID] = task;
 			});
 			

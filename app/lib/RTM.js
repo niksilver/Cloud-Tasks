@@ -199,47 +199,59 @@ RTM.prototype.createTimeline = function() {
  * @param {Function} failureCallback  Takes parameter of error message
  */
 RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
+	Mojo.Log.info("RTM.pushLocalChange: Entering with property '" + property + "' for task '" + task.name + "'");
+	
+	var method;
+	var parameters;
+	var augmented_success_callback = function(response) {
+		task.markNotForPush(property);
+		successCallback(response);
+	}
 	if (property == 'name') {
-		this.callMethod(
-			'rtm.tasks.setName',
-			{
-				list_id: task.listID,
-				taskseries_id: task.taskseriesID,
-				task_id: task.taskID,
-				name: task.name
-			},
-			successCallback,
-			failureCallback
-		);
+		method = 'rtm.tasks.setName';
+		parameters = {
+			list_id: task.listID,
+			taskseries_id: task.taskseriesID,
+			task_id: task.taskID,
+			name: task.name
+		};
 	}
 	else if (property == 'due') {
-		this.callMethod(
-			'rtm.tasks.setDueDate',
-			{
-				list_id: task.listID,
-				taskseries_id: task.taskseriesID,
-				task_id: task.taskID,
-				due: task.due
-			},
-			successCallback,
-			failureCallback
-		);
+		method = 'rtm.tasks.setDueDate';
+		parameters = {
+			list_id: task.listID,
+			taskseries_id: task.taskseriesID,
+			task_id: task.taskID,
+			due: task.due
+		};
+	}
+
+	if (method) {
+		this.callMethod(method, parameters, augmented_success_callback, failureCallback);
+	}
+	else {
+		Mojo.Log.warn("RTM.pushLocalChange: No method defined for property '" + property + "'");
 	}
 }
 
 /**
  * Push all the local changes that need pushing from the task list.
- * @param {TaskListModel} task_list_model  Array of TaskModel objects, any of which might
+ * @param {TaskListModel} task_list_model  TaskListModel object, any of whose tasks might
  *     need local changes pushing.
  */
 RTM.prototype.pushLocalChanges = function(task_list_model) {
+	Mojo.Log.info("RTM.pushLocalChanges: Entering");
 	for (var i = 0; i < task_list_model.getTaskList().length; i++) {
 		var task = task_list_model.getTaskList()[i];
 		for (var j = 0; j < task.localChanges.length; j++) {
 			var property = task.localChanges[j];
 			this.pushLocalChange(task, property,
-				function(response) { task.markNotForPush(property) },
-				function(err_msg) { alert(err_msg) }
+				function(response) {
+					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task.name + "'");
+				},
+				function(err_msg) {
+					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task.name + "'. Error message: " + err_msg);
+				}
 			);
 		}
 	}

@@ -39,7 +39,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 	
-	Mojo.Event.back.stopPropagation();
+	//Mojo.Event.back.stopPropagation();
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
