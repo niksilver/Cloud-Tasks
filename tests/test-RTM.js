@@ -486,6 +486,7 @@ testCases.push( function(Y) {
 					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
 					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
 					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					assertContains(url_used, 'timeline=87654', "Timeline not being used");
 					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
 					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
 				},
@@ -570,6 +571,7 @@ testCases.push( function(Y) {
 					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
 					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
 					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					assertContains(url_used, 'timeline=87654', "Timeline not being used");
 					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
 					Y.Assert.areEqual("RTM error 11: Funny failure message", err_msg_returned, "Didn't return error message");
 				},

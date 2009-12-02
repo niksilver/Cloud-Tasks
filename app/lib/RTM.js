@@ -221,6 +221,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
+			timeline: this.timeline,
 			name: task.name
 		};
 	}
@@ -230,6 +231,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
+			timeline: this.timeline,
 			due: task.due
 		};
 	}
