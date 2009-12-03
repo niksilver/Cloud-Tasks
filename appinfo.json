@@ -1,9 +1,9 @@
 {
-	"id": "org.pigsaw.simplertm",
+	"id": "org.pigsaw.cloudtasks",
 	"version": "1.0.0",
 	"vendor": "Pigsaw Global Commodities plc",
 	"type": "web",
 	"main": "index.html",
-	"title": "Simple RTM",
+	"title": "Cloud Tasks",
 	"icon": "icon.png"
 }
