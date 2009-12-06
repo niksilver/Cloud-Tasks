@@ -12,7 +12,7 @@
         "source": "app/assistants/TaskList-assistant.js"
     },
     {
-        "scenes": "auth",
+        "scenes": "Auth",
         "source": "app/assistants/Auth-assistant.js"
     },
     {

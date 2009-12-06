@@ -75,7 +75,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 		switch (event.command) {
 			case 'do-authorise':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-authorise");
-				Mojo.Controller.stageController.pushScene('auth', this.config);
+				Mojo.Controller.stageController.pushScene('Auth', this.config);
 				break;
 			case 'do-deauthorise':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-deauthorise");
