@@ -16,19 +16,20 @@ function TaskListAssistant(config) {
 		items: [
 			{ label: "Sync now", command: 'do-sync', disabled: !this.rtm.getToken() },
 			{ label: "Authorise...", command: 'do-authorise' },
-			{ label: "Deauthorise", command: 'do-deauthorise' }
+			{ label: "Deauthorise", command: 'do-deauthorise', disabled: !this.rtm.getToken() }
 		]
 	};
-	this.setUpSyncMenuItemListener();
+	this.setUpAppMenuItemListeners();
 
 	this.syncList();
 }
 
-TaskListAssistant.prototype.setUpSyncMenuItemListener = function() {
+TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
 	var inst = this;
 	Mojo.Event.listen(document, 'token-changed', function(event) {
-		Mojo.Log.info("TaskListAssistant.setUpSyncMenuItemListener handler: Entering");
-		inst.appMenuModel.items[0].disabled = !event.tokenSet
+		Mojo.Log.info("TaskListAssistant.setUpAppMenuItemListeners handler: Entering");
+		inst.appMenuModel.items[0].disabled = !event.tokenSet;
+		inst.appMenuModel.items[2].disabled = !event.tokenSet;
 	})
 }
 

@@ -7,7 +7,11 @@ var Mojo = {
 	
 	_cookie_store: {},
 	
-	Model: {}
+	Model: {},
+	
+	Event: {
+		send: function() {}
+	}
 };
 
 Mojo.Model.Cookie = function(id) {
