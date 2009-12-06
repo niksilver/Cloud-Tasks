@@ -39,3 +39,13 @@
 #TaskList .task.selected .task-due {
 	color: #fff;
 }
+
+/* ----------------- Task list header ----------------- */
+
+#NetworkIndicator {
+	float: right;
+}
+
+#TaskListHeader {
+	text-align: center;
+}

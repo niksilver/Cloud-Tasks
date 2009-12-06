@@ -30,6 +30,7 @@ TaskListAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.appMenu, {}, {
 		visible: true,
 		items: [
+			{ label: "Sync now", command: 'do-sync' },
 			{ label: "Authorise...", command: 'do-authorise' },
 			{ label: "Deauthorise", command: 'do-deauthorise' }
 		]
@@ -80,6 +81,10 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 			case 'do-deauthorise':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-deauthorise");
 				this.rtm.deleteToken();
+				break;
+			case 'do-sync':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-sync");
+				this.syncList();
 				break;
 			default:
 				Mojo.Log.info("TaskListAssistant.handleCommand: Unrecognised event command");

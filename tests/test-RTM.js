@@ -12,6 +12,10 @@ testCases.push( function(Y) {
 	}
 	
 	return new Y.Test.Case({
+		
+		setUp: function() {
+			(new RTM()).deleteToken();
+		},
 
 		testCallMethodWithSuccess: function() {
 			var rtm = new RTM();
@@ -404,6 +408,8 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeCreatesTimelineIfNeeded: function() {
 			var rtm = new RTM();
+			rtm.setToken('mydummytoken');
+			
 			var url_used;
 			var good_response = {
 				status: 200,
@@ -447,10 +453,38 @@ testCases.push( function(Y) {
 
 			Y.Assert.areEqual(1, createTimeline_call_count, "createTimeline not called just once after second push");
 		},
+		
+		testPushLocalChangeWontPushIfNotAuthorised: function() {
+			var rtm = new RTM();
+			var url_used;
+			var called_remote = false;
+			rtm.ajaxRequest = function(url, options) {
+				called_remote = true;
+			};
+			rtm.timeline = '87654';
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				localChanges: ['name']
+			});
+			
+			rtm.pushLocalChange(task, 'name', function(){}, null);
+			this.wait(
+				function() {
+					Y.Assert.areEqual(false, called_remote, "Remote system mistakenly called");
+				},
+				WAIT_TIMEOUT
+			);
+		},
 
 		testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
 			rtm.timeline = '87654';
+			rtm.setToken('mydummytoken');
+			
 			var url_used;
 			var good_response = {
 				status: 200,
@@ -497,6 +531,8 @@ testCases.push( function(Y) {
 		testPushLocalChangeThenEnsuresMarkedNotForPush: function() {
 			var rtm = new RTM();
 			rtm.timeline = '87654';
+			rtm.setToken('mydummytoken');
+			
 			var good_response = {
 				status: 200,
 				responseJSON: {
@@ -534,6 +570,8 @@ testCases.push( function(Y) {
 		testPushLocalChangeHandlesFailure: function() {
 			var rtm = new RTM();
 			rtm.timeline = '87654';
+			rtm.setToken('mydummytoken');
+			
 			var url_used;
 			rtm.ajaxRequest = function(url, options) {
 				url_used = url;
@@ -582,6 +620,8 @@ testCases.push( function(Y) {
 		testPushLocalChangesHandlesVariousProperties: function() {
 			var rtm = new RTM();
 			rtm.timeline = '87654';
+			rtm.setToken('mydummytoken');
+			
 			var model = new TaskListModel();
 			model.setRemoteJSON(SampleTestData.big_remote_json);
 			var tasks = model.getRemoteTasks();
