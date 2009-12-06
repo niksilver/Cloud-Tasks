@@ -167,6 +167,7 @@ RTM.prototype.fetchToken = function(frob, successCallback, failureCallback) {
 RTM.prototype.setToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	token_cookie.put(token);
+	Mojo.Event.send(document, 'token-changed', {tokenSet: true});
 }
 
 RTM.prototype.getToken = function(token) {
@@ -176,6 +177,7 @@ RTM.prototype.getToken = function(token) {
 
 RTM.prototype.deleteToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
+	Mojo.Event.send(document, 'token-changed', {tokenSet: false});
 	return token_cookie.remove();
 }
 

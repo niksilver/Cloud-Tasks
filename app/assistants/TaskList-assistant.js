@@ -10,8 +10,26 @@ function TaskListAssistant(config) {
 	this.taskListModel = config.taskListModel;
 	this.taskListModel.loadTaskList();
 	this.taskListWidgetModel = { items: this.taskListModel.getTaskList() };
+	
+	this.appMenuModel = {
+		visible: true,
+		items: [
+			{ label: "Sync now", command: 'do-sync', disabled: !this.rtm.getToken() },
+			{ label: "Authorise...", command: 'do-authorise' },
+			{ label: "Deauthorise", command: 'do-deauthorise' }
+		]
+	};
+	this.setUpSyncMenuItemListener();
 
 	this.syncList();
+}
+
+TaskListAssistant.prototype.setUpSyncMenuItemListener = function() {
+	var inst = this;
+	Mojo.Event.listen(document, 'token-changed', function(event) {
+		Mojo.Log.info("TaskListAssistant.setUpSyncMenuItemListener handler: Entering");
+		inst.appMenuModel.items[0].disabled = !event.tokenSet
+	})
 }
 
 TaskListAssistant.prototype.setup = function() {
@@ -27,14 +45,7 @@ TaskListAssistant.prototype.setup = function() {
 
 	// Set up the app menu
 	
-	this.controller.setupWidget(Mojo.Menu.appMenu, {}, {
-		visible: true,
-		items: [
-			{ label: "Sync now", command: 'do-sync' },
-			{ label: "Authorise...", command: 'do-authorise' },
-			{ label: "Deauthorise", command: 'do-deauthorise' }
-		]
-	});	
+	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);	
 	
 	// Set up the task list
 
