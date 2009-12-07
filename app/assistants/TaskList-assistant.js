@@ -166,7 +166,6 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 
 TaskListAssistant.prototype.setUpNetworkIndicator = function() {
 	var indicator = this.controller.get('NetworkIndicator');
-	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: indicator is '" + indicator + "'");
 	indicator.update(this.rtm.networkRequests());
 	this.rtm.onNetworkRequestsChange = function(count) {
 		indicator.update(count);
