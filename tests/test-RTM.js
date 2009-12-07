@@ -493,18 +493,9 @@ testCases.push( function(Y) {
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			
-			var good_response = {
-				status: 200,
-				responseJSON: {
-					"rsp": {
-						"stat": "ok",
-						// Other data omitted
-					}
-				}
-			};
 			rtm.ajaxRequest = function(url, options) {
 				url_used = url;
-				options.onSuccess(good_response);
+				options.onSuccess(SampleTestData.simple_good_response);
 			};
 
 			var task = new TaskModel({
