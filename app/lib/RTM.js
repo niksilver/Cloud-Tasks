@@ -7,11 +7,47 @@ function RTM() {
 	this._AUTH_URL = "http://www.rememberthemilk.com/services/auth/";
 	this.sharedSecret = Secrets.SHARED_SECRET;
 	this.timeline = null;
+	this.numNetworkRequests = 0;
 }
 
-RTM.prototype.ajaxRequest = function(url, options) {
-	Mojo.Log.info("RTM.ajaxRequest using URL " + url);
+/**
+ * The low level ajax call, without any monitoring
+ * @param {Object} url  URL to call
+ * @param {Object} options  Ajax.Request options
+ */
+RTM.prototype.rawAjaxRequest = function(url, options) {
+	Mojo.Log.info("RTM.rawAjaxRequest using URL " + url);
 	new Ajax.Request(url, options);
+}
+
+/**
+ * An ajax request, which will also ensure network activity is monitored.
+ * This wraps rawAjaxRequest().
+ * @param {Object} url  URL to call
+ * @param {Object} options  Ajax.Request options
+ */
+RTM.prototype.ajaxRequest = function(url, options) {
+	var orig_on_success = options.onSuccess;
+	var orig_on_failure = options.onFailure;
+	var wrapped_options = Object.clone(options);
+	var inst = this;
+	options.onSuccess = function(response) {
+		--inst.numNetworkRequests;
+		orig_on_success(response);
+	};
+	options.onFailure = function(response) {
+		--inst.numNetworkRequests;
+		orig_on_failure(response);
+	};
+	++this.numNetworkRequests;
+	this.rawAjaxRequest(url, options);
+}
+
+/**
+ * Return the number of network requests currently running.
+ */
+RTM.prototype.networkRequests = function() {
+	return this.numNetworkRequests;
 }
 
 /** Call an RTM method.
@@ -175,7 +211,7 @@ RTM.prototype.getToken = function(token) {
 	return token_cookie.get();
 }
 
-RTM.prototype.deleteToken = function(token) {
+RTM.prototype.deleteToken = function() {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	Mojo.Event.send(document, 'token-changed', {tokenSet: false});
 	return token_cookie.remove();

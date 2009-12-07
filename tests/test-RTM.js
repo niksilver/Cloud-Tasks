@@ -638,6 +638,47 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task_2_marked_not_for_push, "Task 2 should be marked not for push now");
 			Y.Assert.areEqual(true, task_3_marked_not_for_push, "Task 3 should be marked not for push now");
 			Y.Assert.areEqual("", errs, "Wrong tasks pushed: " + errs);
+		},
+		
+		testAjaxRequestTracksNetworkActivity: function() {
+			var rtm = new RTM();
+			rtm.rawAjaxRequest = function(url_but_really_an_int, options) {
+				// Fail or succeed after options.duration milliseconds
+				if (url_but_really_an_int % 2 == 0) {
+					setTimeout(options.onSuccess, options.duration);
+				} else {
+					setTimeout(options.onFailure, options.duration);
+				}
+			};
+			var fireOffAjaxRequests = function(num_requests, duration_ms) {
+				for (var i = 0; i < num_requests; i++) {
+					rtm.ajaxRequest(i, {
+						onSuccess: function(){},
+						onFailure: function(){},
+						duration: duration_ms
+					});
+				}
+			};
+			
+			Y.Assert.areEqual(0, rtm.networkRequests(), "Testing 1: Should be no network requests in progress at start");
+			fireOffAjaxRequests(1, 1000);
+			Y.Assert.areEqual(1, rtm.networkRequests(), "Testing 1: Should be one network request after initial kick-off");
+			this.wait(
+				function() {
+					Y.Assert.areEqual(0, rtm.networkRequests(), "Testing 1: Should be no network requests after 1 second");
+				},
+				1500)
+
+			Y.Assert.areEqual(0, rtm.networkRequests(), "Testing 20: Should be no network requests in progress at start");
+			fireOffAjaxRequests(20, 500);
+			Y.Assert.areEqual(20, rtm.networkRequests(), "Testing 20: Should be 20 network requests after initial kick-off");
+			this.wait(
+				function() {
+					Y.Assert.areEqual(0, rtm.networkRequests(), "Testing 20: Should be no network requests after more than 500ms");
+				},
+				1000
+			);
+
 		}
 
 	});
