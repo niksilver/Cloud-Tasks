@@ -20,7 +20,7 @@ testCases.push( function(Y) {
 		testCallMethodWithSuccess: function() {
 			var rtm = new RTM();
 			var successfulResponse = SampleTestData.ajax_hello_world_response;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				options.onSuccess(successfulResponse);
 			}
 			var response;
@@ -43,7 +43,7 @@ testCases.push( function(Y) {
 				status: 200,
 				responseJSON: {"rsp":{"stat":"fail","err":{"code":"97","msg":"Missing signature"}}}
 			};
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				options.onSuccess(responseWithRTMError);
 			}
 			var message;
@@ -65,7 +65,7 @@ testCases.push( function(Y) {
 				status: 500,
 				statusText: "Internal error"
 			};
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				options.onFailure(failureResponse);
 			};
 			var message;
@@ -87,7 +87,7 @@ testCases.push( function(Y) {
 			var rtm = new RTM();
 			rtm.setToken('12345');
 			var url_used;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 			}
 			var response;
@@ -108,7 +108,7 @@ testCases.push( function(Y) {
 			var rtm = new RTM();
 			rtm.deleteToken();
 			var url_used;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 			}
 			rtm.callMethod("some.method.name",
@@ -193,7 +193,7 @@ testCases.push( function(Y) {
 		
 		testFetchFrobSuccessfully: function() {
 			var rtm = new RTM();
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				options.onSuccess({
 					status: 200,
 					responseJSON: {
@@ -218,7 +218,7 @@ testCases.push( function(Y) {
 		
 		testFetchFrobUnsuccessfully: function() {
 			var rtm = new RTM();
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				options.onSuccess({
 					status: 200,
 					responseJSON: {
@@ -249,7 +249,7 @@ testCases.push( function(Y) {
 		testFetchFrobCallsCorrectMethod: function() {
 			var rtm = new RTM();
 			var called_url;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				called_url = url;
 			}
 			rtm.fetchFrob(function(){}, function(){});
@@ -280,7 +280,7 @@ testCases.push( function(Y) {
 			var url_used;
 			var frob = '12345';
 			var token = '410c57262293e9d937ee5be75eb7b0128fd61b61';
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess({
 					status: 200,
@@ -316,7 +316,7 @@ testCases.push( function(Y) {
 		testFetchTokenUnsuccessfully: function() {
 			var rtm = new RTM();
 			var url_used;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess({
 					status: 200,
@@ -361,7 +361,7 @@ testCases.push( function(Y) {
 			var rtm = new RTM();
 			Y.Assert.isNull(rtm.timeline, "Should have no initial timeline");
 			
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess({
 					status: 200,
@@ -388,7 +388,7 @@ testCases.push( function(Y) {
 			rtm.setToken('mydummytoken');
 			
 			var url_used;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess(SampleTestData.simple_good_response);
 			};
@@ -426,7 +426,7 @@ testCases.push( function(Y) {
 			var rtm = new RTM();
 			var url_used;
 			var called_remote = false;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				called_remote = true;
 			};
 			rtm.timeline = '87654';
@@ -455,7 +455,7 @@ testCases.push( function(Y) {
 			
 			var url_used;
 			var good_response = SampleTestData.simple_good_response;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess(good_response);
 			};
@@ -493,7 +493,7 @@ testCases.push( function(Y) {
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess(SampleTestData.simple_good_response);
 			};
@@ -524,7 +524,7 @@ testCases.push( function(Y) {
 			rtm.setToken('mydummytoken');
 			
 			var url_used;
-			rtm.ajaxRequest = function(url, options) {
+			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess({
 					status: 200,
