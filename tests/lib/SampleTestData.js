@@ -1,5 +1,29 @@
 SampleTestData = {
 	
+	ajax_hello_world_response: {
+		status: 200,
+		responseJSON: {
+			"rsp": {
+				"stat": "ok",
+				"api_key": "1234abcd",
+				"format": "json",
+				"method": "rtm.test.echo",
+				"param1": "Hello",
+				"param2": "World"
+			}
+		}
+	},
+	
+	simple_good_response: {
+		status: 200,
+		responseJSON: {
+			"rsp": {
+				"stat": "ok",
+				// Other data omitted
+			}
+		}
+	},
+	
 	big_remote_json: {
 	   "rsp":{
 	      "stat":"ok",

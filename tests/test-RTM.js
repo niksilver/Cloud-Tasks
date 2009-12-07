@@ -19,19 +19,7 @@ testCases.push( function(Y) {
 
 		testCallMethodWithSuccess: function() {
 			var rtm = new RTM();
-			var successfulResponse = {
-				status: 200,
-				responseJSON: {
-					"rsp": {
-						"stat": "ok",
-						"api_key": Secrets.API_KEY,
-						"format": "json",
-						"method": "rtm.test.echo",
-						"param1": "Hello",
-						"param2": "World"
-					}
-				}
-			};
+			var successfulResponse = SampleTestData.ajax_hello_world_response;
 			rtm.ajaxRequest = function(url, options) {
 				options.onSuccess(successfulResponse);
 			}
@@ -137,18 +125,7 @@ testCases.push( function(Y) {
 		},
 		
 		testGetMethodErrorMessageWithSuccess: function() {
-			var response = {
-				status: 200,
-				responseJSON: {
-					"rsp": {
-						"stat": "ok",
-						"api_key": Secrets.API_KEY,
-						"format": "json",
-						"method": "rtm.test.echo",
-					// Echoed parameters go here
-					}
-				}
-			};
+			var response = SampleTestData.ajax_hello_world_response;
 			var msg = RTM.getMethodErrorMessage(response);
 			Y.Assert.isNull(msg, "Message is not null");
 		},
@@ -411,18 +388,9 @@ testCases.push( function(Y) {
 			rtm.setToken('mydummytoken');
 			
 			var url_used;
-			var good_response = {
-				status: 200,
-				responseJSON: {
-					"rsp": {
-						"stat": "ok",
-						// Other data omitted
-					}
-				}
-			};
 			rtm.ajaxRequest = function(url, options) {
 				url_used = url;
-				options.onSuccess(good_response);
+				options.onSuccess(SampleTestData.simple_good_response);
 			};
 			var called_createTimeline = false;
 			var createTimeline_call_count = 0;
@@ -486,15 +454,7 @@ testCases.push( function(Y) {
 			rtm.setToken('mydummytoken');
 			
 			var url_used;
-			var good_response = {
-				status: 200,
-				responseJSON: {
-					"rsp": {
-						"stat": "ok",
-						// Other data omitted
-					}
-				}
-			};
+			var good_response = SampleTestData.simple_good_response;
 			rtm.ajaxRequest = function(url, options) {
 				url_used = url;
 				options.onSuccess(good_response);
