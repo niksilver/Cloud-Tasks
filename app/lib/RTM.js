@@ -32,16 +32,24 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
-		--inst.numNetworkRequests;
+		inst.onNetworkRequestsChange(--inst.numNetworkRequests);
 		orig_on_success(response);
 	};
 	options.onFailure = function(response) {
-		--inst.numNetworkRequests;
+		inst.onNetworkRequestsChange(--inst.numNetworkRequests);
 		orig_on_failure(response);
 	};
-	++this.numNetworkRequests;
+	this.onNetworkRequestsChange(++this.numNetworkRequests);
 	this.rawAjaxRequest(url, options);
 }
+
+/**
+ * This gets called with the current number of live network requests
+ * whenever that number changes.
+ * This function is meant to be overridden; the default implementation does nothing.
+ * @param {Object} count  The current number of network requests.
+ */
+RTM.prototype.onNetworkRequestsChange = function(count) {};
 
 /**
  * Return the number of network requests currently running.

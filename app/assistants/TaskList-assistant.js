@@ -20,7 +20,7 @@ function TaskListAssistant(config) {
 		]
 	};
 	this.setUpAppMenuItemListeners();
-
+	
 	this.syncList();
 }
 
@@ -53,7 +53,6 @@ TaskListAssistant.prototype.setup = function() {
 	var listInfo = this.getListInfo();
 	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
 	Mojo.Event.listen(this.controller.get(listInfo.elementId), Mojo.Event.listTap, this.handleListTap.bind(this));
-	
 }
 
 TaskListAssistant.prototype.getListInfo = function() {
@@ -141,6 +140,9 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	   example, key handlers that are observing the document */
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
+
+	this.setUpNetworkIndicator();
+
 	if (!returnValue) {
 		return;
 	}
@@ -162,6 +164,14 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	}
 }
 
+TaskListAssistant.prototype.setUpNetworkIndicator = function() {
+	var indicator = this.controller.get('NetworkIndicator');
+	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: indicator is '" + indicator + "'");
+	indicator.update(this.rtm.networkRequests());
+	this.rtm.onNetworkRequestsChange = function(count) {
+		indicator.update(count);
+	};
+}
 
 TaskListAssistant.prototype.deactivate = function(event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
