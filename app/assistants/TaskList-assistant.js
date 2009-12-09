@@ -147,6 +147,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	this.updateNetworkIndicator();
 
 	if (!returnValue) {
+		Mojo.Log.info("TaskListAssistant.activate: Exiting (no scene return value)");
 		return;
 	}
 	
@@ -165,6 +166,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
 		this.syncList();
 	}
+	Mojo.Log.info("TaskListAssistant.activate: Exiting");
 }
 
 TaskListAssistant.prototype.setUpNetworkIndicator = function(){
