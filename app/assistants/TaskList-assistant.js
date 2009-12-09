@@ -141,7 +141,10 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 
-	this.setUpNetworkIndicator();
+	if (!this.networkIndicator) {
+		this.setUpNetworkIndicator();
+	}
+	this.updateNetworkIndicator();
 
 	if (!returnValue) {
 		return;
@@ -164,12 +167,17 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	}
 }
 
-TaskListAssistant.prototype.setUpNetworkIndicator = function() {
-	var indicator = this.controller.get('NetworkIndicator');
-	indicator.update(this.rtm.networkRequests());
-	this.rtm.onNetworkRequestsChange = function(count) {
-		indicator.update(count);
-	};
+TaskListAssistant.prototype.setUpNetworkIndicator = function(){
+	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: Entering");
+	this.networkIndicator = new NetworkIndicator(this.rtm, this.controller);
+	this.rtm.onNetworkRequestsChange = this.networkIndicator.onNetworkRequestsChange.bind(this.networkIndicator);
+	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: Exiting");
+}
+
+TaskListAssistant.prototype.updateNetworkIndicator = function() {
+	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Entering");
+	this.networkIndicator.onNetworkRequestsChange(this.rtm.networkRequests());
+	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Exiting");
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {
