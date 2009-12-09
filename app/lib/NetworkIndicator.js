@@ -13,7 +13,7 @@ NetworkIndicator.prototype.getElement = function() {
 }
 
 NetworkIndicator.prototype.display = function(pos) {
-	pos = Math.round(pos);
+	pos = Math.round(pos) % 10;
 	var element = this.getElement();
 	var img_value = "url('images/activity-loop-white-26x26.png')";
 	var img_pos_y = -26 * pos;
@@ -56,13 +56,15 @@ NetworkIndicator.prototype.startAnimation = function() {
 	}
 	
 	var queue = Mojo.Animation.queueForElement(this.getElement());
+	var inst = this;
 	this.animation = Mojo.Animation.animateValue(queue,
 		'linear',
 		this.display.bind(this),
 		{
 			from: 0,
-			to: 9.99,
-			duration: 1.5
+			to: 10*1000*1000,
+			duration: 1.0 * (1000*1000), // 1.0s per 10-frame loop
+			onComplete: inst.onAnimationComplete.bind(inst)
 		});
 }
 
@@ -76,4 +78,17 @@ NetworkIndicator.prototype.stopAnimation = function() {
 	this.display(-1);
 	this.animation.cancel();
 	delete this.animation;
+}
+
+/**
+ * On animation complete consider that it has to be restarted.
+ * @param {Object} was_cancelled  Whether the animation was cancelled
+ */
+NetworkIndicator.prototype.onAnimationComplete = function(was_cancelled){
+	Mojo.Log.info("NetworkIndicator.onAnimationComplete: Entering");
+	delete this.animation;
+	if (!was_cancelled) {
+		Mojo.Log.info("NetworkIndicator.onAnimationComplete: Animation not cancelled so will restart it");
+		this.startAnimation();
+	}
 }
