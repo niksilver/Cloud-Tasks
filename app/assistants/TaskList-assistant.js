@@ -171,13 +171,11 @@ TaskListAssistant.prototype.setUpNetworkIndicator = function(){
 	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: Entering");
 	this.networkIndicator = new NetworkIndicator(this.rtm, this.controller);
 	this.rtm.onNetworkRequestsChange = this.networkIndicator.onNetworkRequestsChange.bind(this.networkIndicator);
-	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: Exiting");
 }
 
 TaskListAssistant.prototype.updateNetworkIndicator = function() {
 	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Entering");
 	this.networkIndicator.onNetworkRequestsChange(this.rtm.networkRequests());
-	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Exiting");
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {

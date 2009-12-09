@@ -13,7 +13,6 @@ NetworkIndicator.prototype.getElement = function() {
 }
 
 NetworkIndicator.prototype.display = function(pos) {
-	Mojo.Log.info("NetworkIndicator.display: Entering with pos = " + pos);
 	pos = Math.round(pos);
 	var element = this.getElement();
 	var img_value = "url('images/activity-loop-white-26x26.png')";
