@@ -227,6 +227,23 @@ testCases.push( function(Y) {
 			rtm.setToken('12345');
 			rtm.timeline = '87654';
 			this.assertSetUpRemoteUse(false, rtm, "Test 8");
+		},
+		
+		testSetServiceRequest: function() {
+			var rtm = new RTM();
+			
+			var called_serviceRequest = false;
+			var serviceRequest = function(url, request) {
+				called_serviceRequest = true;
+				Y.Assert.areEqual("palm://com.palm.connectionmanager", url, "Wrong URL");
+				Y.Assert.areEqual('getstatus', request.method, "Wrong method called");
+				Y.Assert.isNotUndefined(request.parameters, "No parameters given");
+				Y.Assert.areEqual(true, request.parameters.subscribe, "Didn't subscribe");
+				Y.Assert.areEqual(rtm.onConnectionManagerStatusChange, request.onSuccess, "Didn't link to handler");
+			};
+			
+			rtm.setServiceRequest(serviceRequest);
+			Y.Assert.areEqual(true, called_serviceRequest, "Didn't call service request after setting");
 		}
 
 	});

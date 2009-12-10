@@ -8,6 +8,7 @@ function RTM() {
 	this.sharedSecret = Secrets.SHARED_SECRET;
 	this.timeline = null;
 	this.numNetworkRequests = 0;
+	this.haveNetworkConnectivity = false;
 }
 
 /**
@@ -340,4 +341,23 @@ RTM.prototype.setUpRemoteUse = function() {
 	if (this.haveNetworkConnectivity && !this.timeline && this.getToken()) {
 		this.createTimeline();
 	}
+}
+
+/**
+ * Pass in a this.controller.serviceRequest function.
+ * Then connection status monitoring will be set up and haveNetworkConnectivity will change.
+ * @param {Function} serviceRequest
+ */
+RTM.prototype.setServiceRequest = function(serviceRequest) {
+	serviceRequest('palm://com.palm.connectionmanager', {
+		method: 'getstatus',
+		parameters: {
+		   subscribe: true
+	   	},
+		onSuccess: this.onConnectionManagerStatusChange
+	});
+}
+
+RTM.prototype.onConnectionManagerStatusChange = function(status) {
+	
 }
