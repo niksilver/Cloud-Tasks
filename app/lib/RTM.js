@@ -323,3 +323,7 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 		}
 	}
 }
+
+RTM.prototype.isRemoteUseSetUp = function() {
+	return this.timeline !== undefined && this.getToken() !== undefined;
+}

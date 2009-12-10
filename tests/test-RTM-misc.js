@@ -149,6 +149,26 @@ testCases.push( function(Y) {
 				1000
 			);
 
+		},
+		
+		testIsRemoteUseSetUp: function() {
+			var rtm = new RTM();
+			
+			rtm.deleteToken();
+			rtm.timeline = undefined;
+			Y.Assert.areEqual(false, rtm.isRemoteUseSetUp(), "Remote use should not be ready with no token or timeline");
+			
+			rtm.setToken('1234');
+			rtm.timeline = undefined;
+			Y.Assert.areEqual(false, rtm.isRemoteUseSetUp(), "Remote use should not be ready with just a token");
+			
+			rtm.deleteToken();
+			rtm.timeline = '8765';
+			Y.Assert.areEqual(false, rtm.isRemoteUseSetUp(), "Remote use should not be ready with just a timeline");
+			
+			rtm.setToken('1234');
+			rtm.timeline = '8765';
+			Y.Assert.areEqual(true, rtm.isRemoteUseSetUp(), "Remote use should be ready with both a token and a timeline");
 		}
 
 	});
