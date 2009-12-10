@@ -324,6 +324,20 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 	}
 }
 
+/**
+ * See if we are set up to use the remote server.
+ * It will be if we have a timeline and a token.
+ */
 RTM.prototype.isRemoteUseSetUp = function() {
 	return this.timeline !== undefined && this.getToken() !== undefined;
+}
+
+/**
+ * Create a timeline if there is network connectivity and
+ * an auth token, and if we don't already have a timeline.
+ */
+RTM.prototype.setUpRemoteUse = function() {
+	if (this.haveNetworkConnectivity && !this.timeline && this.getToken()) {
+		this.createTimeline();
+	}
 }
