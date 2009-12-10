@@ -244,6 +244,22 @@ testCases.push( function(Y) {
 			
 			rtm.setServiceRequest(serviceRequest);
 			Y.Assert.areEqual(true, called_serviceRequest, "Didn't call service request after setting");
+		},
+		
+		testOnConnectionManagerStatusChange: function() {
+			var rtm = new RTM();
+			var called_setUpRemoteUse = false;
+			rtm.setUpRemoteUse = function() {
+				called_setUpRemoteUse = true;
+			}
+			
+			rtm.onConnectionManagerStatusChange(false);
+			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "Property incorrect when status is false");
+			Y.Assert.areEqual(false, called_setUpRemoteUse, "Mistakenly called setUpRemoteUse when no connection");
+			
+			rtm.onConnectionManagerStatusChange(true);
+			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Property incorrect when status is true");
+			Y.Assert.areEqual(true, called_setUpRemoteUse, "Didn't call setUpRemoteUse despite getting a connection");
 		}
 
 	});

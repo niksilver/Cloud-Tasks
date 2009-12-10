@@ -338,6 +338,7 @@ RTM.prototype.isRemoteUseSetUp = function() {
  * an auth token, and if we don't already have a timeline.
  */
 RTM.prototype.setUpRemoteUse = function() {
+	Mojo.Log.info("RTM.setUpRemoteUse: Entering");
 	if (this.haveNetworkConnectivity && !this.timeline && this.getToken()) {
 		this.createTimeline();
 	}
@@ -349,6 +350,7 @@ RTM.prototype.setUpRemoteUse = function() {
  * @param {Function} serviceRequest
  */
 RTM.prototype.setServiceRequest = function(serviceRequest) {
+	Mojo.Log.info("RTM.setServiceRequest: Entering");
 	serviceRequest('palm://com.palm.connectionmanager', {
 		method: 'getstatus',
 		parameters: {
@@ -359,5 +361,9 @@ RTM.prototype.setServiceRequest = function(serviceRequest) {
 }
 
 RTM.prototype.onConnectionManagerStatusChange = function(status) {
-	
+	Mojo.Log.info("RTM.onConnectionManagerStatusChange: Entering with status " + status);
+	this.haveNetworkConnectivity = status;
+	if (status) {
+		this.setUpRemoteUse();
+	}
 }
