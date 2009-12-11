@@ -351,19 +351,22 @@ RTM.prototype.setUpRemoteUse = function() {
  */
 RTM.prototype.setServiceRequest = function(serviceRequest) {
 	Mojo.Log.info("RTM.setServiceRequest: Entering");
+	var inst = this;
 	serviceRequest('palm://com.palm.connectionmanager', {
 		method: 'getstatus',
 		parameters: {
 		   subscribe: true
 	   	},
-		onSuccess: this.onConnectionManagerStatusChange
+		onSuccess: this.onConnectionManagerStatusChange.bind(this),
+		onFailure: function() { Mojo.Log.warn("RTM.setServiceRequest: Failed to get status"); }
 	});
 }
 
-RTM.prototype.onConnectionManagerStatusChange = function(status) {
-	Mojo.Log.info("RTM.onConnectionManagerStatusChange: Entering with status " + status);
-	this.haveNetworkConnectivity = status;
-	if (status) {
+RTM.prototype.onConnectionManagerStatusChange = function(response) {
+	Mojo.Log.info("RTM.onConnectionManagerStatusChange: Entering");
+	Mojo.Log.info("RTM.onConnectionManagerStatusChange: isInternetConnectionAvailable = " + response.isInternetConnectionAvailable);
+	this.haveNetworkConnectivity = response.isInternetConnectionAvailable;
+	if (this.haveNetworkConnectivity) {
 		this.setUpRemoteUse();
 	}
 }

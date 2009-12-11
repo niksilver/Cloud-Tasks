@@ -141,6 +141,8 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 
+	this.rtm.setServiceRequest(this.controller.serviceRequest.bind(this.controller));
+	
 	if (!this.networkIndicator) {
 		this.setUpNetworkIndicator();
 	}
