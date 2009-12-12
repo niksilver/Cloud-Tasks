@@ -261,7 +261,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	}
 	
 	if (!this.timeline) {
-		Mojo.Log.info("RTM.pushLocalChange: No timeline so won't push, but will try to get new timeline");
+		Mojo.Log.info("RTM.pushLocalChange: No timeline so won't push, but will fire next event which might get it");
 		this.createTimeline();
 		return;
 		// createTimeline will return asynchronously, so we'll have to
