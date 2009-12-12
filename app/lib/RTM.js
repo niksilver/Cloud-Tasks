@@ -10,6 +10,7 @@ function RTM() {
 	this.numNetworkRequests = 0;
 	this.haveNetworkConnectivity = false;
 	this.connectionManager = undefined;
+	this.retrier = new Retrier(this);
 }
 
 /**
@@ -382,4 +383,11 @@ RTM.prototype.onConnectivityStatusChange = function(response) {
 	if (this.haveNetworkConnectivity) {
 		this.setUpRemoteUse();
 	}
+}
+
+/**
+ * Fire the next event that's needed.
+ */
+RTM.prototype.fireNextEvent = function() {
+	this.retrier.fire();
 }
