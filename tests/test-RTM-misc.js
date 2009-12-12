@@ -251,6 +251,58 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager set up prematurely");
 		},
 		
+		testSetUpConnectionManagerHandlesSuccess: function() {
+			var rtm = new RTM();
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
+			
+			var onSuccess_callback;
+			var serviceRequestConstructor = function ServiceRequestMock(url, request) {
+				onSuccess_callback = request.onSuccess;
+			};
+			
+			var called_onConnectivityStatusChange = false;
+			rtm.onConnectivityStatusChange = function() {
+				called_onConnectivityStatusChange = true;
+			}
+			
+			rtm.setUpConnectionManager(serviceRequestConstructor);
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager set up prematurely");
+			onSuccess_callback({isInternetConnectionAvailable: true});
+			
+			this.wait(function() {
+					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
+					Y.Assert.areEqual(true, called_onConnectivityStatusChange, "Didn't handle status change");
+				},
+				1000
+			);
+		},
+		
+		testSetUpConnectionManagerHandlesSuccessDuringConstructor: function() {
+			var rtm = new RTM();
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
+			
+			var onSuccess_callback;
+			var serviceRequestConstructor = function ServiceRequestMock(url, request) {
+				// Note we make a successful callback before the constructor is complete
+				request.onSuccess({isInternetConnectionAvailable: true});
+			};
+			
+			var called_onConnectivityStatusChange = false;
+			rtm.onConnectivityStatusChange = function() {
+				called_onConnectivityStatusChange = true;
+			}
+			
+			rtm.setUpConnectionManager(serviceRequestConstructor);
+			this.wait(function() {
+					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
+					Y.Assert.areEqual(true, called_onConnectivityStatusChange, "Didn't handle status change");
+				},
+				1000
+			);
+		},
+		
 		testOnConnectivityStatusChange: function() {
 			var rtm = new RTM();
 			var called_setUpRemoteUse = false;
