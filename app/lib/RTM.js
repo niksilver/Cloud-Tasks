@@ -367,6 +367,10 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 		onFailure: function() {
 			Mojo.Log.warn("RTM.setUpConnectionManager: Failed to make the service request");
 			inst.connectionManager = undefined;
+		},
+		onError: function() {
+			Mojo.Log.warn("RTM.setUpConnectionManager: Error received making the service request");
+			inst.connectionManager = undefined;
 		}
 	});
 }
