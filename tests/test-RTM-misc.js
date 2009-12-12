@@ -257,7 +257,7 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
 			
 			var onSuccess_callback;
-			var serviceRequestConstructor = function ServiceRequestMock(url, request) {
+			var serviceRequestConstructor = function(url, request) {
 				onSuccess_callback = request.onSuccess;
 			};
 			
@@ -284,7 +284,7 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
 			
 			var onSuccess_callback;
-			var serviceRequestConstructor = function ServiceRequestMock(url, request) {
+			var serviceRequestConstructor = function(url, request) {
 				// Note we make a successful callback before the constructor is complete
 				request.onSuccess({isInternetConnectionAvailable: true});
 			};
