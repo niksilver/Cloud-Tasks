@@ -9,6 +9,7 @@ function RTM() {
 	this.timeline = null;
 	this.numNetworkRequests = 0;
 	this.haveNetworkConnectivity = false;
+	this.connectionManager = undefined;
 }
 
 /**
@@ -345,14 +346,15 @@ RTM.prototype.setUpRemoteUse = function() {
 }
 
 /**
- * Pass in the Mojo.Service.Request constructor.
- * Then connection status monitoring will be set up and haveNetworkConnectivity will change.
- * @param {Mojo.Service.Request} serviceRequestConstructor
+ * Set up the connection manager which will constantly update
+ * the status of this.haveNetworkConnectivity.
+ * The resulting connection manager is stored in this.connectionManager.
+ * @param {Mojo.Service.Request} serviceRequestConstructor  To create the connection manager.
  */
-RTM.prototype.setServiceRequest = function(serviceRequestConstructor) {
+RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 	Mojo.Log.info("RTM.setServiceRequest: Entering");
 	var inst = this;
-	new serviceRequestConstructor('palm://com.palm.connectionmanager', {
+	this.connectionManager = new serviceRequestConstructor('palm://com.palm.connectionmanager', {
 		method: 'getstatus',
 		parameters: {
 		   subscribe: true

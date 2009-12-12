@@ -229,8 +229,10 @@ testCases.push( function(Y) {
 			this.assertSetUpRemoteUse(false, rtm, "Test 8");
 		},
 		
-		testSetServiceRequest: function() {
+		testSetUpConnectionManager: function() {
 			var rtm = new RTM();
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
 			
 			var called_serviceRequestConstructor = false;
 			var constructor_url_called = undefined;
@@ -244,8 +246,9 @@ testCases.push( function(Y) {
 				Y.Assert.isFunction(request.onSuccess, "Didn't link to a success handler");
 			};
 			
-			rtm.setServiceRequest(serviceRequestConstructor);
+			rtm.setUpConnectionManager(serviceRequestConstructor);
 			Y.Assert.areEqual(true, called_serviceRequestConstructor, "Didn't call service request after setting");
+			Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not preserved");
 		},
 		
 		testOnConnectionManagerStatusChange: function() {
