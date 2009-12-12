@@ -232,9 +232,11 @@ testCases.push( function(Y) {
 		testSetServiceRequest: function() {
 			var rtm = new RTM();
 			
-			var called_serviceRequest = false;
-			var serviceRequest = function(url, request) {
-				called_serviceRequest = true;
+			var called_serviceRequestConstructor = false;
+			var constructor_url_called = undefined;
+			var constructor_request_used = undefined;
+			var serviceRequestConstructor = function ServiceRequestMock(url, request) {
+				called_serviceRequestConstructor = true;
 				Y.Assert.areEqual("palm://com.palm.connectionmanager", url, "Wrong URL");
 				Y.Assert.areEqual('getstatus', request.method, "Wrong method called");
 				Y.Assert.isNotUndefined(request.parameters, "No parameters given");
@@ -242,8 +244,8 @@ testCases.push( function(Y) {
 				Y.Assert.isFunction(request.onSuccess, "Didn't link to a success handler");
 			};
 			
-			rtm.setServiceRequest(serviceRequest);
-			Y.Assert.areEqual(true, called_serviceRequest, "Didn't call service request after setting");
+			rtm.setServiceRequest(serviceRequestConstructor);
+			Y.Assert.areEqual(true, called_serviceRequestConstructor, "Didn't call service request after setting");
 		},
 		
 		testOnConnectionManagerStatusChange: function() {

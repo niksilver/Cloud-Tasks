@@ -345,14 +345,14 @@ RTM.prototype.setUpRemoteUse = function() {
 }
 
 /**
- * Pass in a this.controller.serviceRequest function.
+ * Pass in the Mojo.Service.Request constructor.
  * Then connection status monitoring will be set up and haveNetworkConnectivity will change.
- * @param {Function} serviceRequest
+ * @param {Mojo.Service.Request} serviceRequestConstructor
  */
-RTM.prototype.setServiceRequest = function(serviceRequest) {
+RTM.prototype.setServiceRequest = function(serviceRequestConstructor) {
 	Mojo.Log.info("RTM.setServiceRequest: Entering");
 	var inst = this;
-	serviceRequest('palm://com.palm.connectionmanager', {
+	new serviceRequestConstructor('palm://com.palm.connectionmanager', {
 		method: 'getstatus',
 		parameters: {
 		   subscribe: true
