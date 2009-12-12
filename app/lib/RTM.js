@@ -364,7 +364,10 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 			setTimeout(function(){ inst.connectionManager = connection_manager }, 500);
 			inst.onConnectivityStatusChange(request);
 		},
-		onFailure: function() { Mojo.Log.warn("RTM.setServiceRequest: Failed to get status"); }
+		onFailure: function() {
+			Mojo.Log.warn("RTM.setUpConnectionManager: Failed to make the service request");
+			inst.connectionManager = undefined;
+		}
 	});
 }
 

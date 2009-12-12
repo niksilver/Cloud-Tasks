@@ -303,6 +303,24 @@ testCases.push( function(Y) {
 			);
 		},
 		
+		testSetUpConnectionManagerHandlesFailure: function() {
+			var rtm = new RTM();
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
+			
+			var onFailure_callback;
+			var serviceRequestConstructor = function(url, request) {
+				onFailure_callback = request.onFailure;
+			};
+			
+			rtm.setUpConnectionManager(serviceRequestConstructor);
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager defined after setup call");
+			rtm.connectionManager = "Some pretend value";
+			onFailure_callback();
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager has not been removed");
+		},
+				
 		testOnConnectivityStatusChange: function() {
 			var rtm = new RTM();
 			var called_setUpRemoteUse = false;
