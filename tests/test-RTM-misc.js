@@ -170,79 +170,21 @@ testCases.push( function(Y) {
 			rtm.timeline = '8765';
 			Y.Assert.areEqual(true, rtm.isRemoteUseSetUp(), "Remote use should be ready with both a token and a timeline");
 		},
-		
-		assertSetUpRemoteUse: function(should_call_createTimeline, rtm, test_name) {
-			var called_createTimeline = false;
-			rtm.createTimeline = function() { called_createTimeline = true; };
-			rtm.setUpRemoteUse();
-			Y.Assert.areEqual(should_call_createTimeline, called_createTimeline, test_name);
-			
-		},
-		
-		testSetUpRemoteUse: function() {
-			var rtm = new RTM();
-			
-			Y.Assert.areEqual(false, rtm.isRemoteUseSetUp(), "Remote use is set up when it shouldn't be");
 
-			// haveNetworkConnectivity:
-			// token:
-			// timeline:
-
-			rtm.haveNetworkConnectivity = false;
-			rtm.deleteToken();
-			rtm.timeline = undefined;
-			this.assertSetUpRemoteUse(false, rtm, "Test 1");
-
-			rtm.haveNetworkConnectivity = true;
-			rtm.deleteToken();
-			rtm.timeline = undefined;
-			this.assertSetUpRemoteUse(false, rtm, "Test 2");
-
-			rtm.haveNetworkConnectivity = false;
-			rtm.setToken('12345');
-			rtm.timeline = undefined;
-			this.assertSetUpRemoteUse(false, rtm, "Test 3");
-
-			rtm.haveNetworkConnectivity = true;
-			rtm.setToken('12345');
-			rtm.timeline = undefined;
-			this.assertSetUpRemoteUse(true, rtm, "Test 4");
-
-			rtm.haveNetworkConnectivity = false;
-			rtm.deleteToken();
-			rtm.timeline = '87654';
-			this.assertSetUpRemoteUse(false, rtm, "Test 5");
-
-			rtm.haveNetworkConnectivity = true;
-			rtm.deleteToken();
-			rtm.timeline = '87654';
-			this.assertSetUpRemoteUse(false, rtm, "Test 6");
-
-			rtm.haveNetworkConnectivity = false;
-			rtm.setToken('12345');
-			rtm.timeline = '87654';
-			this.assertSetUpRemoteUse(false, rtm, "Test 7");
-
-			rtm.haveNetworkConnectivity = true;
-			rtm.setToken('12345');
-			rtm.timeline = '87654';
-			this.assertSetUpRemoteUse(false, rtm, "Test 8");
-		},
-		
 		testOnConnectivityStatusChange: function() {
 			var rtm = new RTM();
-			var called_setUpRemoteUse = false;
-			rtm.setUpRemoteUse = function() {
-				called_setUpRemoteUse = true;
+			var called_fireNextEvent = false;
+			rtm.fireNextEvent = function() {
+				called_fireNextEvent = true;
 			}
 			
 			rtm.onConnectivityStatusChange({isInternetConnectionAvailable: false});
 			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "Property incorrect when status is false");
-			Y.Assert.areEqual(false, called_setUpRemoteUse, "Mistakenly called setUpRemoteUse when no connection");
+			Y.Assert.areEqual(false, called_fireNextEvent, "Mistakenly called fireNextEvent when no connection");
 			
 			rtm.onConnectivityStatusChange({isInternetConnectionAvailable: true});
 			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Property incorrect when status is true");
-			Y.Assert.areEqual(true, called_setUpRemoteUse, "Didn't call setUpRemoteUse despite getting a connection");
+			Y.Assert.areEqual(true, called_fireNextEvent, "Didn't call fireNextEvent despite getting a connection");
 		}
 
 	});

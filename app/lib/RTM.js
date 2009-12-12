@@ -336,17 +336,6 @@ RTM.prototype.isRemoteUseSetUp = function() {
 }
 
 /**
- * Create a timeline if there is network connectivity and
- * an auth token, and if we don't already have a timeline.
- */
-RTM.prototype.setUpRemoteUse = function() {
-	Mojo.Log.info("RTM.setUpRemoteUse: Entering");
-	if (this.haveNetworkConnectivity && !this.timeline && this.getToken()) {
-		this.createTimeline();
-	}
-}
-
-/**
  * Set up the connection manager which will constantly update
  * the status of this.haveNetworkConnectivity.
  * The resulting connection manager is stored in this.connectionManager.
@@ -381,7 +370,7 @@ RTM.prototype.onConnectivityStatusChange = function(response) {
 	Mojo.Log.info("RTM.onConnectionManagerStatusChange: isInternetConnectionAvailable = " + response.isInternetConnectionAvailable);
 	this.haveNetworkConnectivity = response.isInternetConnectionAvailable;
 	if (this.haveNetworkConnectivity) {
-		this.setUpRemoteUse();
+		this.fireNextEvent();
 	}
 }
 
