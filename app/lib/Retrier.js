@@ -34,7 +34,7 @@ Retrier.prototype.fire = function(data) {
 		Mojo.Log.info("Retrier.fire: Setting up connection manager");
 		this.rtm.setUpConnectionManager(Mojo.Service.Request);
 	}
-	else if (!this.rtm.hasInternetConnectivity) {
+	else if (!this.rtm.haveNetworkConnectivity) {
 		// Can't do anything about this, just have to wait for a connection
 		Mojo.Log.info("Retrier.fire: Need an internet connection, but can't take action");
 	}
@@ -46,6 +46,7 @@ Retrier.prototype.fire = function(data) {
 	}
 	else if (data.taskListModel) {
 		Mojo.Log.info("Retrier.fire: Push local changes");
+		Mojo.Log.info("Retrier.fire: taskListModel is '" + data.taskListModel + "'");
 		rtm.pushLocalChanges(data.taskListModel);
 	}
 }

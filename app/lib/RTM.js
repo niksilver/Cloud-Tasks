@@ -370,6 +370,7 @@ RTM.prototype.onConnectivityStatusChange = function(response) {
 	Mojo.Log.info("RTM.onConnectionManagerStatusChange: isInternetConnectionAvailable = " + response.isInternetConnectionAvailable);
 	this.haveNetworkConnectivity = response.isInternetConnectionAvailable;
 	if (this.haveNetworkConnectivity) {
+		Mojo.Log.info("RTM.onConnectionManagerStatusChange: Firing next event...");
 		this.fireNextEvent();
 	}
 }
@@ -378,5 +379,6 @@ RTM.prototype.onConnectivityStatusChange = function(response) {
  * Fire the next event that's needed.
  */
 RTM.prototype.fireNextEvent = function() {
+	Mojo.Log.info("RTM.fireNextEvent: Entering");
 	this.retrier.fire();
 }

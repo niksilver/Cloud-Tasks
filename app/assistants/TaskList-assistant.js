@@ -141,6 +141,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 
+	Mojo.Log.info("TaskListAssistant.activate: Firing next event...");
 	this.rtm.fireNextEvent();
 	
 	if (!this.networkIndicator) {
