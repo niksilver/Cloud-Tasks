@@ -142,6 +142,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 
 	Mojo.Log.info("TaskListAssistant.activate: Firing next event...");
+	// This may push local changes, or do what's needed before that.
 	this.rtm.fireNextEvent();
 	
 	if (!this.networkIndicator) {
@@ -163,7 +164,6 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		}
 		this.controller.modelChanged(this.taskListWidgetModel);
 		this.taskListModel.saveTaskList();
-		this.rtm.pushLocalChanges(this.taskListModel);
 	}
 	else if (returnValue.lastScene == 'Auth') {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
