@@ -17,10 +17,13 @@ Retrier = function(rtm) {
 }
 
 /**
+ * Set this so that the Retrier has tasks to push.
+ */
+Retrier.prototype.taskListModel = undefined;
+
+/**
  * Fire the next event where possible.
  * Won't do anything if there is ongoing network activity.
- * @param {Object} data  Optional data if necessary. Fields may be:
- *   - taskListModel: A TaskListModel object needed for pushing local changes.
  */
 Retrier.prototype.fire = function(data) {
 	Mojo.Log.info("Retrier.fire: Entering");
@@ -45,15 +48,11 @@ Retrier.prototype.fire = function(data) {
 		Mojo.Log.info("Retrier.fire: Getting timeline");
 		this.rtm.createTimeline();
 	}
-	else if (!data) {
-		Mojo.Log.info("Retrier.fire: Could push local changes but no data specified");
+	else if (this.taskListModel) {
+		Mojo.Log.info("Retrier.fire: Can push local changes");
+		this.rtm.pushLocalChanges(this.taskListModel);
 	}
-	else if (!data.taskListModel) {
-		Mojo.Log.info("Retrier.fire: Could push local changes but no task list model specified in data");
-	}
-	else if (data.taskListModel) {
-		Mojo.Log.info("Retrier.fire: Push local changes");
-		Mojo.Log.info("Retrier.fire: taskListModel is '" + data.taskListModel + "'");
-		rtm.pushLocalChanges(data.taskListModel);
+	else {
+		Mojo.Log.info("Retrier.fire: No actions to take");
 	}
 }
