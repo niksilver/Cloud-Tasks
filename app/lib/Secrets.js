@@ -1,4 +1,0 @@
-Secrets = {
-	API_KEY: 'e5e38b52e66059a8cab79fd12b5a7080',
-	SHARED_SECRET: '0f4b678fff353641'
-}

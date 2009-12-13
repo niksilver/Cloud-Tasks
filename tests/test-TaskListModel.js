@@ -22,6 +22,12 @@ testCases.push( function(Y) {
 			);
 			return depot;
 		},
+		
+		_should: {
+			error: {
+				testSetTaskListShouldErrorWithoutTaskModelObjects: true
+			}
+		},
 
 		testConstructor: function() {
 			var model = new TaskListModel();
@@ -178,13 +184,21 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
 			Y.Assert.areEqual('Mon 2 Jun', model.dueDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
 		},
+		
+		testSetTaskListShouldErrorWithoutTaskModelObjects: function() {
+			var tasklist = new TaskListModel();
+			tasklist.setTaskList(['hello', 'world']);
+		},
 				
 		testTaskListStorage: function() {
 			var tasklist = new TaskListModel();
 
-			tasklist.setTaskList([ 'sometask', 'some other task' ]);
-			Y.Assert.areEqual('sometask', tasklist.getTaskList()[0], 'Task list does not hold task #1 after being set');
-			Y.Assert.areEqual('some other task', tasklist.getTaskList()[1], 'Task list does not hold task #2 after being set');
+			tasklist.setTaskList([
+				new TaskModel({	name: 'sometask' }),
+				new TaskModel({	name: 'some other task' }),
+			]);
+			Y.Assert.areEqual('sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
+			Y.Assert.areEqual('some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
 
 			tasklist.saveTaskList();
 			var tasklist2 = new TaskListModel();
@@ -193,16 +207,24 @@ testCases.push( function(Y) {
 			
 			tasklist = undefined;
 			tasklist2.loadTaskList();
-			Y.Assert.areEqual('sometask', tasklist2.getTaskList()[0], 'Task list does not hold task #1 after being loaded');
-			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1], 'Task list does not hold task #2 after being loaded');
+			Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
+			Y.Assert.areEqual('sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
+			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
 		},
 		
 		testTaskListStorageHasEndOfListMarker: function() {
 			var tasklist = new TaskListModel();
 
-			tasklist.setTaskList([ 'task1', 'task2', 'task3' ]);
+			tasklist.setTaskList([
+				new TaskModel({	name: 'task1' }),
+				new TaskModel({	name: 'task2' }),
+				new TaskModel({	name: 'task3' })
+			]);
 			tasklist.saveTaskList();
-			tasklist.setTaskList([ 'taskA', 'taskB' ]);
+			tasklist.setTaskList([
+				new TaskModel({	name: 'taskA' }),
+				new TaskModel({	name: 'taskB' })
+			]);
 			tasklist.saveTaskList();
 			tasklist.loadTaskList();
 			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');

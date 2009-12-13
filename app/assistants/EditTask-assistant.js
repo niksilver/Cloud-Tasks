@@ -46,7 +46,7 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
 	for (p in this.config.task) {
-		Mojo.Log.info("-    task['" + p + "'] = '" + this.config.task.p + "'");
+		Mojo.Log.info("-    task['" + p + "'] = '" + this.config.task[p] + "'");
 	}
 	this.config.task.setForPush('name', this.config.task.name);
 }

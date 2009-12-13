@@ -9,6 +9,27 @@ function TaskModel(properties) {
 	this.localChanges = [];
 }
 
+TaskModel.createFromObject = function(obj) {
+	var task = new TaskModel(obj);
+	if (obj.localChanges) {
+		obj.localChanges.each(function(property_name) {
+			task.setForPush(property_name, obj[property_name]);
+		})
+	}
+	return task;
+}
+
+TaskModel.prototype.toObject = function() {
+	return {
+		listID: this.listID,
+		taskseriesID: this.taskseriesID,
+		taskID: this.taskID,
+		name: this.name,
+		due: this.due,
+		localChanges: this.localChanges.clone()
+	}
+}
+
 TaskModel.prototype.update = function() {
 	this.isDueFlag = this.isDue();
 	this.isOverdueFlag = this.isOverdue();

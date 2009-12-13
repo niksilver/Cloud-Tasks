@@ -44,6 +44,16 @@ testCases.push( function(Y) {
 			
 			return depot_value;
 		},
+		
+		_should: {
+			error: {
+				testStubDepotRejectsObjectsWithFunctions: "Stub depot will not save objects with functions"
+			}
+		},
+		
+		setUp: function() {
+			Mojo.Depot.eraseAllDepots();
+		},
 
 		testDepotConstructor: function() {
 			var depot = new Mojo.Depot({ name: 'test_db' });

@@ -170,6 +170,39 @@ testCases.push( function(Y) {
 			
 			task.markNotForPush('due');
 			Y.Assert.areEqual(-1, task.localChanges.indexOf('due'), "Due date is still set for push");
+		},
+		
+		testCreateFromObject: function() {
+			var obj = {
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			};
+			var task = TaskModel.createFromObject(obj);
+			Y.Assert.isInstanceOf(TaskModel, task, "Task is not a TaskModel object");
+			Y.Assert.areEqual('123456', task.listID, "List ID not created");
+			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID not created");
+			Y.Assert.areEqual('667788', task.taskID, "Task ID not created");
+			Y.Assert.areEqual('My test task', task.name, "Name not created");
+			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Due date not created");
+			Y.Assert.isArray(task.localChanges, "Local changes not set up");
+			Y.Assert.areEqual(0, task.localChanges.length, "Local changes recorded incorrectly");
+		},
+		
+		testCreateFromObjectWithLocalChanges: function () {
+			var obj = {
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				localChanges: ['name']
+			};
+			var task = TaskModel.createFromObject(obj);
+			Y.Assert.isInstanceOf(TaskModel, task, "Task is not a TaskModel object");
+			Y.Assert.isArray(task.localChanges, "Task's local changes not set up");
+			Y.Assert.areEqual('name', task.localChanges[0], "Task's local change not recorded");
 		}
 
 	});

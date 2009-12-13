@@ -3,7 +3,16 @@ function TaskListModel() {
 	this._task_list = [];
 }
 
+/**
+ * Set the task list.
+ * @param {Array} task_list  Should be an array of TaskModel objects.
+ */
 TaskListModel.prototype.setTaskList = function(task_list) {
+	task_list.each(function(task) {
+		if (!(task instanceof TaskModel)) {
+			throw new Error("TaskListModel.setTaskList needs an array of TaskModel objects");
+		}
+	});
 	this._task_list = task_list;
 }
 
@@ -96,7 +105,8 @@ TaskListModel.prototype.saveTaskList = function() {
 	var i;
 	for (i = 0; i < this._task_list.length; i++) {
 		var task_cookie = new Mojo.Model.Cookie('task_' + i);
-		task_cookie.put(this._task_list[i]);
+		var task = this._task_list[i];
+		task_cookie.put(task.toObject());
 	}
 	var task_cookie = new Mojo.Model.Cookie('task_' + i);
 	task_cookie.remove();
@@ -111,7 +121,8 @@ TaskListModel.prototype.loadTaskList = function() {
 		var task_cookie = new Mojo.Model.Cookie('task_' + i);
 		task_cookie_value = task_cookie.get();
 		if (task_cookie_value) {
-			this._task_list.push(task_cookie_value);
+			var task = TaskModel.createFromObject(task_cookie_value);
+			this._task_list.push(task);
 		}
 	} while (task_cookie_value);
 }
