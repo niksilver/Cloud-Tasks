@@ -41,6 +41,10 @@ Retrier.prototype.fire = function(data) {
 	else if (!this.rtm.getToken()) {
 		Mojo.Log.info("Retrier.fire: No auth token, can't go further");
 	}
+	else if (!this.rtm.timeline) {
+		Mojo.Log.info("Retrier.fire: Getting timeline");
+		this.rtm.createTimeline();
+	}
 	else if (!data) {
 		Mojo.Log.info("Retrier.fire: Could push local changes but no data specified");
 	}
