@@ -352,7 +352,7 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 		onSuccess: function(request) {
 			// Delay setting the connection manager to give the constructor a change to complete
 			setTimeout(function(){ inst.connectionManager = connection_manager }, 500);
-			inst.onConnectivityStatusChange(request);
+			inst.setHaveNetworkConnectivity(request.isInternetConnectionAvailable);
 		},
 		onFailure: function() {
 			Mojo.Log.warn("RTM.setUpConnectionManager: Failed to make the service request");
@@ -365,10 +365,24 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 	});
 }
 
-RTM.prototype.onConnectivityStatusChange = function(response) {
+/**
+ * Set whether or not we have network connectivity. If this is different from before
+ * then the change function will then be called.
+ * @param {Boolean} haveNetworkConnectivity
+ */
+RTM.prototype.setHaveNetworkConnectivity = function(haveNetworkConnectivity) {
+	Mojo.Log.info("RTM.setHaveNetworkConnectivity: Entering with connectivity = " + haveNetworkConnectivity);
+	if (this.haveNetworkConnectivity != haveNetworkConnectivity) {
+		this.haveNetworkConnectivity = haveNetworkConnectivity;
+		this.onHaveNetworkConnectivityChange(this.haveNetworkConnectivity);
+	}
+}
+
+/**
+ * React to the fact that the status of network connectivity has changed.
+ */
+RTM.prototype.onHaveNetworkConnectivityChange = function() {
 	Mojo.Log.info("RTM.onConnectionManagerStatusChange: Entering");
-	Mojo.Log.info("RTM.onConnectionManagerStatusChange: isInternetConnectionAvailable = " + response.isInternetConnectionAvailable);
-	this.haveNetworkConnectivity = response.isInternetConnectionAvailable;
 	if (this.haveNetworkConnectivity) {
 		Mojo.Log.info("RTM.onConnectionManagerStatusChange: Firing next event...");
 		this.fireNextEvent();

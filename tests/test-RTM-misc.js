@@ -170,19 +170,49 @@ testCases.push( function(Y) {
 			rtm.timeline = '8765';
 			Y.Assert.areEqual(true, rtm.isRemoteUseSetUp(), "Remote use should be ready with both a token and a timeline");
 		},
+		
+		testSetHaveNetworkConnectivity: function() {
+			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
+			
+			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "RTM mistakenly initialised with network connectivity");
+			
+			var called_onHaveNetworkConnectivityChange;
+			rtm.onHaveNetworkConnectivityChange = function(new_val) {
+				called_onHaveNetworkConnectivityChange = true;
+			}
+			
+			called_onHaveNetworkConnectivityChange = false;
+			rtm.setHaveNetworkConnectivity(false);
+			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "1: Connectivity flag incorrectly set");
+			Y.Assert.areEqual(false, called_onHaveNetworkConnectivityChange, "1: Change function called incorrectly");
+			
+			called_onHaveNetworkConnectivityChange = false;
+			rtm.setHaveNetworkConnectivity(true);
+			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "2: Connectivity flag incorrectly set");
+			Y.Assert.areEqual(true, called_onHaveNetworkConnectivityChange, "2: Change function not called");
 
-		testOnConnectivityStatusChange: function() {
+			called_onHaveNetworkConnectivityChange = false;
+			rtm.setHaveNetworkConnectivity(true);
+			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "3: Connectivity flag incorrectly set");
+			Y.Assert.areEqual(false, called_onHaveNetworkConnectivityChange, "3: Change function not called");
+			
+		},
+
+		testOnHaveNetworkConnectivityChange: function() {
 			var rtm = new RTM();
 			var called_fireNextEvent = false;
 			rtm.fireNextEvent = function() {
 				called_fireNextEvent = true;
 			}
 			
-			rtm.onConnectivityStatusChange({isInternetConnectionAvailable: false});
+			rtm.haveNetworkConnectivity = false;
+			rtm.onHaveNetworkConnectivityChange();
 			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "Property incorrect when status is false");
 			Y.Assert.areEqual(false, called_fireNextEvent, "Mistakenly called fireNextEvent when no connection");
 			
-			rtm.onConnectivityStatusChange({isInternetConnectionAvailable: true});
+			rtm.haveNetworkConnectivity = true;
+			rtm.onHaveNetworkConnectivityChange();
 			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Property incorrect when status is true");
 			Y.Assert.areEqual(true, called_fireNextEvent, "Didn't call fireNextEvent despite getting a connection");
 		}

@@ -41,8 +41,11 @@ Retrier.prototype.fire = function(data) {
 	else if (!this.rtm.getToken()) {
 		Mojo.Log.info("Retrier.fire: No auth token, can't go further");
 	}
+	else if (!data) {
+		Mojo.Log.info("Retrier.fire: Could push local changes but no data specified");
+	}
 	else if (!data.taskListModel) {
-		Mojo.Log.info("Retrier.fire: Could push local changes but no task list model specified");
+		Mojo.Log.info("Retrier.fire: Could push local changes but no task list model specified in data");
 	}
 	else if (data.taskListModel) {
 		Mojo.Log.info("Retrier.fire: Push local changes");

@@ -40,18 +40,18 @@ testCases.push( function(Y) {
 				onSuccess_callback = request.onSuccess;
 			};
 			
-			var called_onConnectivityStatusChange = false;
-			rtm.onConnectivityStatusChange = function() {
-				called_onConnectivityStatusChange = true;
+			var called_setHaveNetworkConnectivity = false;
+			rtm.setHaveNetworkConnectivity = function() {
+				called_setHaveNetworkConnectivity = true;
 			}
 			
 			rtm.setUpConnectionManager(serviceRequestConstructor);
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager set up prematurely");
-			onSuccess_callback({isInternetConnectionAvailable: true});
+			onSuccess_callback(true);
 			
 			this.wait(function() {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
-					Y.Assert.areEqual(true, called_onConnectivityStatusChange, "Didn't handle status change");
+					Y.Assert.areEqual(true, called_setHaveNetworkConnectivity, "Didn't handle status change");
 				},
 				1000
 			);
@@ -65,18 +65,18 @@ testCases.push( function(Y) {
 			var onSuccess_callback;
 			var serviceRequestConstructor = function(url, request) {
 				// Note we make a successful callback before the constructor is complete
-				request.onSuccess({isInternetConnectionAvailable: true});
+				request.onSuccess(true);
 			};
 			
-			var called_onConnectivityStatusChange = false;
-			rtm.onConnectivityStatusChange = function() {
-				called_onConnectivityStatusChange = true;
+			var called_setHaveNetworkConnectivity = false;
+			rtm.setHaveNetworkConnectivity = function() {
+				called_setHaveNetworkConnectivity = true;
 			}
 			
 			rtm.setUpConnectionManager(serviceRequestConstructor);
 			this.wait(function() {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
-					Y.Assert.areEqual(true, called_onConnectivityStatusChange, "Didn't handle status change");
+					Y.Assert.areEqual(true, called_setHaveNetworkConnectivity, "Didn't handle status change");
 				},
 				1000
 			);
