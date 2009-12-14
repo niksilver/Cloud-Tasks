@@ -234,8 +234,8 @@ RTM.prototype.createTimeline = function() {
 	var inst = this;
 	this.callMethod("rtm.timelines.create", {},
 		function(response) {
-			Mojo.Log.info("RTM.createTimeline: Got timeline '" + inst.timeline + "'");
 			inst.timeline = response.responseJSON.rsp.timeline;
+			Mojo.Log.info("RTM.createTimeline: Got timeline '" + inst.timeline + "'");
 			inst.fireNextEvent();
 		},
 		function(err_msg) {
@@ -355,10 +355,10 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 			// Delay setting the connection manager to give the constructor a change to complete
 			setTimeout(function(){
 					inst.connectionManager = connection_manager;
+					inst.setHaveNetworkConnectivity(request.isInternetConnectionAvailable);
 					inst.fireNextEvent();
 				},
 				500);
-			inst.setHaveNetworkConnectivity(request.isInternetConnectionAvailable);
 		},
 		onFailure: function() {
 			Mojo.Log.warn("RTM.setUpConnectionManager: Failed to make the service request");

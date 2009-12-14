@@ -12,25 +12,28 @@ testCases.push( function(Y) {
 			var rtm = new RTM();
 
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager should be initially undefined");
+			Y.Assert.areEqual(false, rtm.haveNetworkConnectivity, "Internet connectivity incorrect flagged initially");
 			
 			var onSuccess_callback;
 			var serviceRequestConstructor = function(url, request) {
 				onSuccess_callback = request.onSuccess;
 			};
 			
-			rtm.setHaveNetworkConnectivity = function() {};
-			
 			var called_fireNextEvent = false;
 			rtm.fireNextEvent = function() {
+				// Likely to be called twice: Once when we set the connection manager
+				// and once when we set having internet connectivity
 				called_fireNextEvent = true;
+				Y.Assert.isNotUndefined(rtm.connectionManager, "Next event fired but connection manager not defined");
 			};
 			
 			rtm.setUpConnectionManager(serviceRequestConstructor);
-			onSuccess_callback("Some arbitrary object");
+			onSuccess_callback({isInternetConnectionAvailable: true});
 			
 			this.wait(function() {
 					Y.Assert.areEqual(true, called_fireNextEvent, "Didn't fire next event");
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up");
+					Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Network connectivity not flagged");
 				},
 				1000
 			);
