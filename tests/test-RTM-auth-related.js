@@ -173,7 +173,7 @@ testCases.push( function(Y) {
 		
 		testTokenStorage: function() {
 			var rtm = new RTM();
-			rtm.retrier.fire = function() {};
+			rtm.fireNextEvent = function() {};
 			
 			Y.assert(!rtm.getToken(), 'Token is not initially false');
 			rtm.setToken('12345');

@@ -153,7 +153,7 @@ testCases.push( function(Y) {
 		
 		testIsRemoteUseSetUp: function() {
 			var rtm = new RTM();
-			rtm.retrier.fire = function() {};
+			rtm.fireNextEvent = function() {};
 			
 			rtm.deleteToken();
 			rtm.timeline = undefined;

@@ -19,7 +19,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeCreatesTimelineIfNeeded: function() {
 			var rtm = new RTM();
-			rtm.retrier.fire = function() {};
+			rtm.fireNextEvent = function() {};
 			rtm.setToken('mydummytoken');
 			
 			var url_used;

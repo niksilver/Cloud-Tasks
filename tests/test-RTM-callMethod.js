@@ -85,7 +85,7 @@ testCases.push( function(Y) {
 		
 		testCallMethodUsesTokenWhenSet: function() {
 			var rtm = new RTM();
-			rtm.retrier.fire = function() {};
+			rtm.fireNextEvent = function() {};
 
 			rtm.setToken('12345');
 			var url_used;
