@@ -47,7 +47,7 @@ testCases.push( function(Y) {
 			
 			rtm.setUpConnectionManager(serviceRequestConstructor);
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager set up prematurely");
-			onSuccess_callback(true);
+			onSuccess_callback("Some arbitrary object");
 			
 			this.wait(function() {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
@@ -65,7 +65,7 @@ testCases.push( function(Y) {
 			var onSuccess_callback;
 			var serviceRequestConstructor = function(url, request) {
 				// Note we make a successful callback before the constructor is complete
-				request.onSuccess(true);
+				request.onSuccess("Some arbitrary object");
 			};
 			
 			var called_setHaveNetworkConnectivity = false;

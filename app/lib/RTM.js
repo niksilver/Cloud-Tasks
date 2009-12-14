@@ -351,7 +351,11 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 	   	},
 		onSuccess: function(request) {
 			// Delay setting the connection manager to give the constructor a change to complete
-			setTimeout(function(){ inst.connectionManager = connection_manager }, 500);
+			setTimeout(function(){
+					inst.connectionManager = connection_manager;
+					inst.fireNextEvent();
+				},
+				500);
 			inst.setHaveNetworkConnectivity(request.isInternetConnectionAvailable);
 		},
 		onFailure: function() {
