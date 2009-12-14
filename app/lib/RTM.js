@@ -234,8 +234,9 @@ RTM.prototype.createTimeline = function() {
 	var inst = this;
 	this.callMethod("rtm.timelines.create", {},
 		function(response) {
-			inst.timeline = response.responseJSON.rsp.timeline;
 			Mojo.Log.info("RTM.createTimeline: Got timeline '" + inst.timeline + "'");
+			inst.timeline = response.responseJSON.rsp.timeline;
+			inst.fireNextEvent();
 		},
 		function(err_msg) {
 			ErrorHandler.notify(err_msg);

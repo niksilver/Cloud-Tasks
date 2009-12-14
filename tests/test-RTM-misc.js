@@ -86,6 +86,8 @@ testCases.push( function(Y) {
 		
 		testCreateTimeline: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
+			
 			Y.Assert.isNull(rtm.timeline, "Should have no initial timeline");
 			
 			rtm.rawAjaxRequest = function(url, options) {

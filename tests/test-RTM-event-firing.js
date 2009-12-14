@@ -4,6 +4,8 @@
 
 testCases.push( function(Y) {
 
+	var WAIT_TIMEOUT = 500;
+
 	return new Y.Test.Case({
 
 		testSetUpConnectionManagerFiresEventOnSuccess: function() {
@@ -72,6 +74,37 @@ testCases.push( function(Y) {
 
 			rtm.setToken('12345');
 			Y.Assert.areEqual(true, called_fireNextEvent, "Setting the token didn't fire the next event");
+		},
+		
+		testCreateTimelineFiresEventOnSuccess: function() {
+			var rtm = new RTM();
+			
+			var called_fireNextEvent = false;
+			rtm.fireNextEvent = function() {
+				called_fireNextEvent = true;
+			};
+			
+			rtm.rawAjaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({
+					status: 200,
+					responseJSON: {
+						rsp: {
+							stat: 'ok',
+							timeline: '56712'
+						}
+					}
+				})
+			};
+			
+			rtm.createTimeline();
+			this.wait(function() {
+					Y.Assert.areEqual('56712', rtm.timeline, "Did not set timeline successfully");
+					Y.Assert.areEqual(true, called_fireNextEvent, "Did not fire next event");
+				},
+				WAIT_TIMEOUT
+			);
+
 		}
 
 	});
