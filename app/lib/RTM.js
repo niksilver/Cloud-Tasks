@@ -215,6 +215,7 @@ RTM.prototype.setToken = function(token) {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	token_cookie.put(token);
 	Mojo.Event.send(document, 'token-changed', {tokenSet: true});
+	this.fireNextEvent();
 }
 
 RTM.prototype.getToken = function(token) {

@@ -60,6 +60,18 @@ testCases.push( function(Y) {
 			called_fireNextEvent = false;
 			rtm.setHaveNetworkConnectivity(false);
 			Y.Assert.areEqual(false, called_fireNextEvent, "5: Fired the next event despite losing connectivity");
+		},
+		
+		testSetTokenFiresNextEvent: function() {
+			var rtm = new RTM();
+			
+			var called_fireNextEvent;
+			rtm.fireNextEvent = function() {
+				called_fireNextEvent = true;
+			};
+
+			rtm.setToken('12345');
+			Y.Assert.areEqual(true, called_fireNextEvent, "Setting the token didn't fire the next event");
 		}
 
 	});

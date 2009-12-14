@@ -19,6 +19,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeCreatesTimelineIfNeeded: function() {
 			var rtm = new RTM();
+			rtm.retrier.fire = function() {};
 			rtm.setToken('mydummytoken');
 			
 			var url_used;
@@ -84,6 +85,7 @@ testCases.push( function(Y) {
 
 		testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			
@@ -124,6 +126,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeThenEnsuresMarkedNotForPush: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			
@@ -154,6 +157,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeHandlesFailure: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			
@@ -204,6 +208,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangesHandlesVariousProperties: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
 			rtm.setToken('mydummytoken');
 			

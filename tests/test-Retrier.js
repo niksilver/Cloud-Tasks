@@ -6,9 +6,10 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
-		testCreatesTimeline: function() {
+		testRetrierCreatesTimeline: function() {
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
+			rtm.fireNextEvent = function() {};
 			
 			rtm.connectionManager = "Some pretend connection manager";
 			rtm.haveNetworkConnectivity = true;
@@ -28,8 +29,9 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, called_createTimeline, "Timeline creation mistakenly attempted again");
 		},
 		
-		testUsesGivenTaskListModel: function() {
+		testRetrierUsesGivenTaskListModel: function() {
 			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
 			var retrier = new Retrier(rtm);
 			var tlm = new TaskListModel();
 			retrier.taskListModel = tlm;
