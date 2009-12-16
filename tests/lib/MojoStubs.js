@@ -11,6 +11,10 @@ var Mojo = {
 	
 	Event: {
 		send: function() {}
+	},
+	
+	Service: {
+		Request: undefined
 	}
 };
 

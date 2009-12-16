@@ -51,6 +51,28 @@ testCases.push( function(Y) {
 			retrier.fire();
 			Y.Assert.areEqual(true, called_pushLocalChanges, "Did not attempt to push local changes");
 			Y.Assert.areEqual(tlm, tlm_used, "Did not use the TaskListModel specified");
+		},
+		
+		testRetrierRunsSetUpConnectionManagerIndependently: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			retrier.serviceRequestConstructor = "Some service request constructor";
+			
+			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager has been mistakenly initialised");
+			
+			var called_setUpConnectionManager = false;
+			rtm.setUpConnectionManager = function() {
+				called_setUpConnectionManager = true;
+			}
+			
+			var called_fireOtherSequence = false;
+			retrier.fireOtherSequence = function() {
+				called_fireOtherSequence = true;
+			}
+			
+			retrier.fire();
+			Y.Assert.areEqual(true, called_setUpConnectionManager, "Didn't try to set up connection manager");
+			Y.Assert.areEqual(true, called_fireOtherSequence, "Didn't try to fire other sequence");
 		}
 
 	});
