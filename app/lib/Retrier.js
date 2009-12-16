@@ -62,7 +62,7 @@ Retrier.prototype.firePushChangesSequence = function() {
 		Mojo.Log.info("Retrier.fire: Need an internet connection, but can't take action");
 	}
 	else if (this.rtm.networkRequestsForPushingChanges() > 0) {
-		Mojo.Log.info("Retrier.fire: Network requests ongoing, so won't take action");
+		Mojo.Log.info("Retrier.fire: Network requests for pushing changes ongoing, so won't take action");
 		return;
 	}
 	else if (!this.rtm.getToken()) {
