@@ -65,14 +65,14 @@ testCases.push( function(Y) {
 				called_setUpConnectionManager = true;
 			}
 			
-			var called_fireOtherSequence = false;
-			retrier.fireOtherSequence = function() {
-				called_fireOtherSequence = true;
+			var called_firePushChangesSequence = false;
+			retrier.firePushChangesSequence = function() {
+				called_firePushChangesSequence = true;
 			}
 			
 			retrier.fire();
 			Y.Assert.areEqual(true, called_setUpConnectionManager, "Didn't try to set up connection manager");
-			Y.Assert.areEqual(true, called_fireOtherSequence, "Didn't try to fire other sequence");
+			Y.Assert.areEqual(true, called_firePushChangesSequence, "Didn't try to fire push changes sequence");
 		}
 
 	});

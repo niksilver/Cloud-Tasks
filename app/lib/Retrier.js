@@ -6,7 +6,7 @@
  *   - Only do this if connection manager not yet defined
  *   - Set up connection manager
  *   
- * - Other
+ * - Push changes
  *   - Have an internet connection
  *   - Make sure no other network requests on-going
  *   - Be authorised to access the user's Remember The Milk data.
@@ -41,7 +41,7 @@ Retrier.prototype.fire = function() {
 	Mojo.Log.info("Retrier.fire: Entering");
 	
 	this.fireSetUpConnectionManagerSequence();
-	this.fireOtherSequence();
+	this.firePushChangesSequence();
 }
 
 /**
@@ -56,7 +56,7 @@ Retrier.prototype.fireSetUpConnectionManagerSequence = function() {
 	this.rtm.setUpConnectionManager(this.serviceRequestConstructor);
 }
 
-Retrier.prototype.fireOtherSequence = function() {
+Retrier.prototype.firePushChangesSequence = function() {
 	if (!this.rtm.haveNetworkConnectivity) {
 		// Can't do anything about this, just have to wait for a connection
 		Mojo.Log.info("Retrier.fire: Need an internet connection, but can't take action");

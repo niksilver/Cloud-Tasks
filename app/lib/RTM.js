@@ -344,7 +344,7 @@ RTM.prototype.isRemoteUseSetUp = function() {
  * @param {Mojo.Service.Request} serviceRequestConstructor  To create the connection manager.
  */
 RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
-	Mojo.Log.info("RTM.setServiceRequest: Entering");
+	Mojo.Log.info("RTM.setUpConnectionManager: Entering");
 	var inst = this;
 	var connection_manager = new serviceRequestConstructor('palm://com.palm.connectionmanager', {
 		method: 'getstatus',
@@ -354,6 +354,7 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 		onSuccess: function(request) {
 			// Delay setting the connection manager to give the constructor a change to complete
 			setTimeout(function(){
+					Mojo.Log.info("RTM.setUpConnectionManager: Success");
 					inst.connectionManager = connection_manager;
 					inst.setHaveNetworkConnectivity(request.isInternetConnectionAvailable);
 					inst.fireNextEvent();
