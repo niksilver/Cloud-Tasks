@@ -7,10 +7,25 @@ function RTM() {
 	this._AUTH_URL = "http://www.rememberthemilk.com/services/auth/";
 	this.sharedSecret = Secrets.SHARED_SECRET;
 	this.timeline = null;
-	this.numNetworkRequests = 0;
 	this.haveNetworkConnectivity = false;
 	this.connectionManager = undefined;
 	this.retrier = new Retrier(this);
+
+	this.numNetworkRequests = {
+		total: 0,
+		forPushingChanges: 0,
+		forPullingTasks: 0,
+		forOther: 0
+	};
+	
+	this.methodPurpose = {
+		"rtm.auth.getFrob": "forPushingChanges",
+		"rtm.auth.getToken": "forPushingChanges",
+		"rtm.timelines.create": "forPushingChanges",
+		"rtm.tasks.setName": "forPushingChanges",
+		"rtm.tasks.setDueDate": "forPushingChanges",
+		"rtm.tasks.getList": "forPullingTasks",
+	};
 }
 
 /**
@@ -27,7 +42,8 @@ RTM.prototype.rawAjaxRequest = function(url, options) {
  * An ajax request, which will also ensure network activity is monitored.
  * This wraps rawAjaxRequest().
  * @param {Object} url  URL to call
- * @param {Object} options  Ajax.Request options
+ * @param {Object} options  Ajax.Request options. May also include a field "rtmMethodPurpose"
+ *     which is "forPushingChanges" or "forPullingTasks".
  */
 RTM.prototype.ajaxRequest = function(url, options) {
 	var orig_on_success = options.onSuccess;
@@ -35,14 +51,17 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
-		inst.onNetworkRequestsChange(--inst.numNetworkRequests);
+		--inst.numNetworkRequests[options.rtmMethodPurpose];
+		inst.onNetworkRequestsChange(--inst.numNetworkRequests.total);
 		orig_on_success(response);
 	};
 	options.onFailure = function(response) {
-		inst.onNetworkRequestsChange(--inst.numNetworkRequests);
+		--inst.numNetworkRequests[options.rtmMethodPurpose];
+		inst.onNetworkRequestsChange(--inst.numNetworkRequests.total);
 		orig_on_failure(response);
 	};
-	this.onNetworkRequestsChange(++this.numNetworkRequests);
+	++inst.numNetworkRequests[options.rtmMethodPurpose];
+	this.onNetworkRequestsChange(++this.numNetworkRequests.total);
 	this.rawAjaxRequest(url, options);
 }
 
@@ -58,7 +77,21 @@ RTM.prototype.onNetworkRequestsChange = function(count) {};
  * Return the number of network requests currently running.
  */
 RTM.prototype.networkRequests = function() {
-	return this.numNetworkRequests;
+	return this.numNetworkRequests.total;
+}
+
+/**
+ * Return the number of network requests for pushing changes currently running.
+ */
+RTM.prototype.networkRequestsForPushingChanges = function() {
+	return this.numNetworkRequests.forPushingChanges;
+}
+
+/**
+ * Return the number of network requests for pulling tasks currently running.
+ */
+RTM.prototype.networkRequestsForPullingTasks = function() {
+	return this.numNetworkRequests.forPullingTasks;
 }
 
 /** Call an RTM method.
@@ -93,7 +126,8 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 				var msg = "Exception " + ex.name + ": " + ex.message;
 				Mojo.Log.warn(msg);
 				failureCallback(msg);
-			}
+			},
+			rtmMethodPurpose: this.methodPurpose[method_name] || 'forOther'
 		});
 }
 

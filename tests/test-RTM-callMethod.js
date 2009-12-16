@@ -36,6 +36,47 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		},
+
+		testCallMethodCountsMethodPurposes: function() {
+			var rtm = new RTM();
+			var successfulResponse = SampleTestData.ajax_hello_world_response;
+			rtm.rawAjaxRequest = function(url, options) {
+				setTimeout(function() {
+						options.onSuccess(successfulResponse);
+					},
+					250
+				);
+			};
+			
+			Y.Assert.areEqual(0, rtm.networkRequests(), "Some network requests before anything's happened");
+
+			// Methods for pushing changes
+			rtm.callMethod("rtm.auth.getFrob", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.auth.getToken", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.timelines.create", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.tasks.setName", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
+			
+			// Method for pulling tasks
+			rtm.callMethod("rtm.tasks.getList", {}, function(resp){ response = resp }, null);
+			
+			// Method that's not specified for either
+			rtm.callMethod("dont.fail.on.this", {}, function(resp){ response = resp }, null);
+			
+			Y.Assert.areEqual(8, rtm.networkRequests(), "Wrong number of network requests");
+			Y.Assert.areEqual(6, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
+			Y.Assert.areEqual(1, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests for pulling tasks");
+			
+			this.wait(
+				function() {
+					Y.Assert.areEqual(0, rtm.networkRequests(), "Wrong number of network requests at end");
+					Y.Assert.areEqual(0, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes at end");
+					Y.Assert.areEqual(0, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests at end for pulling tasks");
+				},
+				500
+			);
+		},
 		
 		testCallMethodWithRTMError: function() {
 			var rtm = new RTM();
