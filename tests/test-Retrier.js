@@ -85,14 +85,23 @@ testCases.push( function(Y) {
 			rtm.networkRequestsForPushingChanges = function() { return 0; };
 			rtm.networkRequestsForPullingTasks = function() { return 1; };
 			
-			var called_createTimeline = false;
+			var called_createTimeline;
 			// Create timeline is the next action in the sequence for pushing changes
 			rtm.createTimeline = function() {
 				called_createTimeline = true;
 			}
 			
+			called_createTimeline = false;
 			retrier.fire();
 			Y.Assert.areEqual(true, called_createTimeline, "Didn't try to create a timeline");
+			
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 1; };
+			rtm.networkRequestsForPullingTasks = function() { return 0; };
+			
+			called_createTimeline = false;
+			retrier.fire();
+			Y.Assert.areEqual(false, called_createTimeline, "Tried to create timeline despite other activity for pushing changes");
 		}
 
 	});
