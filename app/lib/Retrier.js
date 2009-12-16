@@ -8,7 +8,7 @@
  *   
  * - Push changes
  *   - Have an internet connection
- *   - Make sure no other network requests on-going
+ *   - Make sure no on-going network requests for pushing changes
  *   - Be authorised to access the user's Remember The Milk data.
  *   - Have a timeline
  *   - Push local changes
@@ -61,7 +61,7 @@ Retrier.prototype.firePushChangesSequence = function() {
 		// Can't do anything about this, just have to wait for a connection
 		Mojo.Log.info("Retrier.fire: Need an internet connection, but can't take action");
 	}
-	else if (this.rtm.networkRequests() > 0) {
+	else if (this.rtm.networkRequestsForPushingChanges() > 0) {
 		Mojo.Log.info("Retrier.fire: Network requests ongoing, so won't take action");
 		return;
 	}

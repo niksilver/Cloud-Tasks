@@ -73,6 +73,26 @@ testCases.push( function(Y) {
 			retrier.fire();
 			Y.Assert.areEqual(true, called_setUpConnectionManager, "Didn't try to set up connection manager");
 			Y.Assert.areEqual(true, called_firePushChangesSequence, "Didn't try to fire push changes sequence");
+		},
+		
+		testRetrierRunsPushChangesSequenceWhenNoActivityForPulling: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			rtm.connectionManager = "Some dummy connection manager";
+			rtm.haveNetworkConnectivity = true;
+			rtm.setToken('87654');
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 0; };
+			rtm.networkRequestsForPullingTasks = function() { return 1; };
+			
+			var called_createTimeline = false;
+			// Create timeline is the next action in the sequence for pushing changes
+			rtm.createTimeline = function() {
+				called_createTimeline = true;
+			}
+			
+			retrier.fire();
+			Y.Assert.areEqual(true, called_createTimeline, "Didn't try to create a timeline");
 		}
 
 	});
