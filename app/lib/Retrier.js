@@ -12,6 +12,12 @@
  *   - Be authorised to access the user's Remember The Milk data.
  *   - Have a timeline
  *   - Push local changes
+ * 
+ * - Pull tasks
+ *   - Have an internet connection
+ *   - Make sure no on-going network requests for pulling tasks
+ *   - Be authorised to access the user's Remember The Milk data.
+ *   - Pull tasks
  */
 
 /**
@@ -42,6 +48,7 @@ Retrier.prototype.fire = function() {
 	
 	this.fireSetUpConnectionManagerSequence();
 	this.firePushChangesSequence();
+	this.firePullTasksSequence();
 }
 
 /**
@@ -78,5 +85,36 @@ Retrier.prototype.firePushChangesSequence = function() {
 	}
 	else {
 		Mojo.Log.info("Retrier.fire: No actions to take");
+	}
+}
+
+Retrier.prototype.firePullTasksSequence = function() {
+	if (!this.rtm.haveNetworkConnectivity) {
+		// Can't do anything about this, just have to wait for a connection
+		Mojo.Log.info("Retrier.firePullTasksequence: Need an internet connection, but can't take action");
+	}
+	else if (this.rtm.networkRequestsForPullingTasks() > 0) {
+		Mojo.Log.info("Retrier.firePullTasksequence: Network requests for pulling tasks ongoing, so won't take action");
+		return;
+	}
+	else if (!this.rtm.getToken()) {
+		Mojo.Log.info("Retrier.firePullTasksequence: No auth token, can't go further");
+	}
+	else {
+		Mojo.Log.info("Retrier.firePullTasksequence: Pulling tasks");
+		this.rtm.callMethod('rtm.tasks.getList', {
+			filter: 'status:incomplete'
+			},
+			function(response) {
+				Mojo.Log.info("Retrier.firePullTasksequence: Response is good");
+				var json = response.responseJSON;
+				Mojo.Log.info("Retrier.firePullTasksequence: " + Object.toJSON(json).substr(0, 50) + "...");
+			},
+			function(err_msg) {
+				Mojo.Log.info("Retrier.firePullTasksequence: Error: " + err_msg);
+				ErrorHandler.notify(err_msg);
+			}
+		);
+
 	}
 }
