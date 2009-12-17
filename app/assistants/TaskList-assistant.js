@@ -10,6 +10,7 @@ function TaskListAssistant(config) {
 	this.taskListModel = config.taskListModel;
 	this.taskListModel.loadTaskList();
 	this.taskListWidgetModel = { items: this.taskListModel.getTaskList() };
+	this.rtm.retrier.onTaskListModelChange = this.onTaskListModelChange.bind(this);
 	
 	this.appMenuModel = {
 		visible: true,
@@ -20,8 +21,6 @@ function TaskListAssistant(config) {
 		]
 	};
 	this.setUpAppMenuItemListeners();
-	
-	this.syncList();
 }
 
 TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
@@ -104,35 +103,10 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 	}
 }
 
-/**
- * Sync the local task list with the one from RTM, if we have authorisation. 
- */
-TaskListAssistant.prototype.syncList = function() {
-	Mojo.Log.info("TaskListAssistant.syncList: Entering");
-	if (!this.rtm.getToken()) {
-		Mojo.Log.info("TaskListAssistant.syncList: No token so won't sync");
-		return;
-	}
-	
-	var inst = this;
-	Mojo.Log.info("TaskListAssistant.syncList: Token exists, so will sync");
-	this.rtm.callMethod('rtm.tasks.getList', {
-			filter: 'status:incomplete'
-		},
-		function(response) {
-			Mojo.Log.info("TaskListAssistant.syncList: Response is good");
-			var json = response.responseJSON;
-			Mojo.Log.info("TaskListAssistant.syncList: " + Object.toJSON(json).substr(0, 50) + "...");
-			inst.taskListModel.setRemoteJSON(json);
-			inst.taskListWidgetModel.items = inst.taskListModel.getRemoteTasks();
-			inst.controller.modelChanged(inst.taskListWidgetModel);
-			inst.taskListModel.setTaskList(inst.taskListWidgetModel.items);
-			inst.taskListModel.saveTaskList();
-		},
-		function(err_msg) {
-			Mojo.Log.info("TaskListAssistant.syncList: Error: " + err_msg);
-			ErrorHandler.notify(err_msg);
-		});
+TaskListAssistant.prototype.onTaskListModelChange = function() {
+	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Entering");
+	this.taskListWidgetModel.items = this.taskListModel.getRemoteTasks();
+	this.controller.modelChanged(this.taskListWidgetModel);
 }
 
 TaskListAssistant.prototype.activate = function(returnValue) {
