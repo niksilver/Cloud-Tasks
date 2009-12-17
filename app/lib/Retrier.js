@@ -35,7 +35,8 @@ function Retrier(rtm) {
 Retrier.prototype.serviceRequestConstructor = Mojo.Service.Request;
 
 /**
- * Set this so that the Retrier has tasks to push.
+ * Set this so that the Retrier has tasks to push
+ * and knows what to merge with pulled tasks.
  */
 Retrier.prototype.taskListModel = undefined;
 
@@ -91,27 +92,29 @@ Retrier.prototype.firePushChangesSequence = function() {
 Retrier.prototype.firePullTasksSequence = function() {
 	if (!this.rtm.haveNetworkConnectivity) {
 		// Can't do anything about this, just have to wait for a connection
-		Mojo.Log.info("Retrier.firePullTasksequence: Need an internet connection, but can't take action");
+		Mojo.Log.info("Retrier.firePullTasksSequence: Need an internet connection, but can't take action");
 	}
 	else if (this.rtm.networkRequestsForPullingTasks() > 0) {
-		Mojo.Log.info("Retrier.firePullTasksequence: Network requests for pulling tasks ongoing, so won't take action");
+		Mojo.Log.info("Retrier.firePullTasksSequence: Network requests for pulling tasks ongoing, so won't take action");
 		return;
 	}
 	else if (!this.rtm.getToken()) {
-		Mojo.Log.info("Retrier.firePullTasksequence: No auth token, can't go further");
+		Mojo.Log.info("Retrier.firePullTasksSequence: No auth token, can't go further");
 	}
 	else {
-		Mojo.Log.info("Retrier.firePullTasksequence: Pulling tasks");
+		Mojo.Log.info("Retrier.firePullTasksSequence: Pulling tasks");
+		var inst = this;
 		this.rtm.callMethod('rtm.tasks.getList', {
 			filter: 'status:incomplete'
 			},
 			function(response) {
-				Mojo.Log.info("Retrier.firePullTasksequence: Response is good");
+				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
 				var json = response.responseJSON;
-				Mojo.Log.info("Retrier.firePullTasksequence: " + Object.toJSON(json).substr(0, 50) + "...");
+				Mojo.Log.info("Retrier.firePullTasksSequence: " + Object.toJSON(json).substr(0, 50) + "...");
+				inst.taskListModel.setRemoteJSON(json);
 			},
 			function(err_msg) {
-				Mojo.Log.info("Retrier.firePullTasksequence: Error: " + err_msg);
+				Mojo.Log.info("Retrier.firePullTasksSequence: Error: " + err_msg);
 				ErrorHandler.notify(err_msg);
 			}
 		);

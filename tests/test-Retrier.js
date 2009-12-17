@@ -117,7 +117,7 @@ testCases.push( function(Y) {
 			rtm.networkRequestsForPullingTasks = function() { return 0; };
 			
 			var called_callMethod;
-			// Create timeline is the next action in the sequence for pushing changes
+			// Calling a remote method is the next action in the sequence for pulling tasks
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
 				called_callMethod = true;
 				Y.Assert.areEqual('rtm.tasks.getList', method_name, "Didn't call method to get name");
@@ -134,6 +134,36 @@ testCases.push( function(Y) {
 			called_callMethod = false;
 			retrier.fire();
 			Y.Assert.areEqual(false, called_callMethod, "Tried to call method despite other activity for pulling tasks");
+		},
+		
+		testRetrierPullTasksSequenceSetsTasks: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			var task_list_model = new TaskListModel();
+			
+			retrier.taskListModel = task_list_model;
+			retrier.firePushChangesSequence = function() {};
+
+			rtm.connectionManager = "Some dummy connection manager";
+			rtm.haveNetworkConnectivity = true;
+			rtm.setToken('87654');
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 1; };
+			rtm.networkRequestsForPullingTasks = function() { return 0; };
+			
+			// Calling a remote method is the next action in the sequence for pushing changes
+			rtm.callMethod = function(method_name, params, on_success, on_failure) {
+				on_success({ responseJSON: SampleTestData.big_remote_json });
+			}
+
+			var called_setRemoteJSON;
+			task_list_model.setRemoteJSON = function(remote_json) {
+				called_setRemoteJSON = true;
+			}
+			
+			called_setRemoteJSON = false;
+			retrier.fire();
+			Y.Assert.areEqual(true, called_setRemoteJSON, "Didn't try to set remote JSON");
 		}
 
 	});
