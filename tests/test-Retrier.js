@@ -136,7 +136,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, called_callMethod, "Tried to call method despite other activity for pulling tasks");
 		},
 		
-		testRetrierPullTasksSequenceSetsTasks: function() {
+		testRetrierPullTasksSequenceSetsUpTasks: function() {
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
 			var task_list_model = new TaskListModel();
@@ -152,18 +152,27 @@ testCases.push( function(Y) {
 			rtm.networkRequestsForPullingTasks = function() { return 0; };
 			
 			// Calling a remote method is the next action in the sequence for pushing changes
+			var sample_json = SampleTestData.big_remote_json;
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
-				on_success({ responseJSON: SampleTestData.big_remote_json });
+				on_success({ responseJSON: sample_json });
 			}
 
 			var called_setRemoteJSON;
 			task_list_model.setRemoteJSON = function(remote_json) {
 				called_setRemoteJSON = true;
+				Y.Assert.areEqual(sample_json, remote_json, "setRemoteJSON not called with right variable");
+			}
+			
+			var called_onTaskListModelChange;
+			retrier.onTaskListModelChange = function() {
+				called_onTaskListModelChange = true;
 			}
 			
 			called_setRemoteJSON = false;
+			called_onTaskListModelChange = false;
 			retrier.fire();
 			Y.Assert.areEqual(true, called_setRemoteJSON, "Didn't try to set remote JSON");
+			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
 		}
 
 	});

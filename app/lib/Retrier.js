@@ -41,6 +41,11 @@ Retrier.prototype.serviceRequestConstructor = Mojo.Service.Request;
 Retrier.prototype.taskListModel = undefined;
 
 /**
+ * Override this to respond whenever taskListModel changes.
+ */
+Retrier.prototype.onTaskListModelChange = function() {};
+
+/**
  * Fire the next event where possible.
  * Won't do anything if there is ongoing network activity.
  */
@@ -112,6 +117,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				var json = response.responseJSON;
 				Mojo.Log.info("Retrier.firePullTasksSequence: " + Object.toJSON(json).substr(0, 50) + "...");
 				inst.taskListModel.setRemoteJSON(json);
+				inst.onTaskListModelChange();
 			},
 			function(err_msg) {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Error: " + err_msg);
