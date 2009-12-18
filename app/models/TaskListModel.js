@@ -103,12 +103,14 @@ TaskListModel.prototype.getRemoteTasks = function() {
  */
 TaskListModel.prototype.saveTaskList = function() {
 	var i;
-	for (i = 0; i < this._task_list.length; i++) {
-		var task_cookie = new Mojo.Model.Cookie('task_' + i);
+	var num_tasks = this._task_list.length;
+	
+	for (i = 0; i < num_tasks; i++) {
+		var task_cookie = new Mojo.Model.Cookie('task' + i);
 		var task = this._task_list[i];
 		task_cookie.put(task.toObject());
 	}
-	var task_cookie = new Mojo.Model.Cookie('task_' + i);
+	var task_cookie = new Mojo.Model.Cookie('task' + i);
 	task_cookie.remove();
 }
 
@@ -118,7 +120,7 @@ TaskListModel.prototype.loadTaskList = function() {
 	var task_cookie_value;
 	do {
 		i++;
-		var task_cookie = new Mojo.Model.Cookie('task_' + i);
+		var task_cookie = new Mojo.Model.Cookie('task' + i);
 		task_cookie_value = task_cookie.get();
 		if (task_cookie_value) {
 			var task = TaskModel.createFromObject(task_cookie_value);
