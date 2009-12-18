@@ -105,7 +105,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 
 TaskListAssistant.prototype.onTaskListModelChange = function() {
 	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Entering");
-	this.taskListWidgetModel.items = this.taskListModel.getRemoteTasks();
+	this.taskListWidgetModel.items = this.taskListModel.getTaskList();
 	this.controller.modelChanged(this.taskListWidgetModel);
 }
 

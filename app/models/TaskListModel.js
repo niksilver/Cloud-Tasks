@@ -19,9 +19,16 @@ TaskListModel.prototype.getTaskList = function() {
 	return this._task_list;
 }
 
-TaskListModel.objectToTaskList = function(remote_json) {
-	var _remote_tasks = [];
-	var tasks_obj = remote_json.rsp.tasks;
+/**
+ * Take a Remember The Milk API response with a task list, and convert it
+ * into an array of TaskModel objects.
+ * @param {Object} data_obj  A JSON data structure of the kind that is returned from
+ *     Remember The Milk, with "rsp" at the top level.
+ * @returns {Array} An array of TaskModel objects.
+ */
+TaskListModel.objectToTaskList = function(data_obj) {
+	var task_list = [];
+	var tasks_obj = data_obj.rsp.tasks;
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
 	list_array.each(function(list_obj) {
 		var list_id = list_obj.id;
@@ -40,13 +47,13 @@ TaskListModel.objectToTaskList = function(remote_json) {
 				due: due
 			});
 			task.update();
-			_remote_tasks.push(task);
+			task_list.push(task);
 		});
 
 	});
 	
-	_remote_tasks.sort(TaskModel.sortByDueThenName);
-	return _remote_tasks;
+	task_list.sort(TaskModel.sortByDueThenName);
+	return task_list;
 }
 
 TaskListModel.prototype.sort = function() {
