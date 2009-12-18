@@ -94,7 +94,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				break;
 			case 'do-sync':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-sync");
-				this.syncList();
+				this.rtm.fireNextEvent();
 				break;
 			default:
 				Mojo.Log.info("TaskListAssistant.handleCommand: Unrecognised event command");
@@ -141,7 +141,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	}
 	else if (returnValue.lastScene == 'Auth') {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
-		this.syncList();
+		this.rtm.fireNextEvent();
 	}
 	Mojo.Log.info("TaskListAssistant.activate: Exiting");
 }
