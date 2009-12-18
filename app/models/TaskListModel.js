@@ -1,5 +1,4 @@
 function TaskListModel() {
-	this._remote_tasks;
 	this._task_list = [];
 }
 
@@ -20,9 +19,8 @@ TaskListModel.prototype.getTaskList = function() {
 	return this._task_list;
 }
 
-TaskListModel.prototype.setRemoteJSON = function(remote_json) {
-	this._remote_tasks = [];
-	var _remote_tasks = this._remote_tasks;
+TaskListModel.objectToTaskList = function(remote_json) {
+	var _remote_tasks = [];
 	var tasks_obj = remote_json.rsp.tasks;
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
 	list_array.each(function(list_obj) {
@@ -47,7 +45,8 @@ TaskListModel.prototype.setRemoteJSON = function(remote_json) {
 
 	});
 	
-	this._remote_tasks.sort(TaskModel.sortByDueThenName);
+	_remote_tasks.sort(TaskModel.sortByDueThenName);
+	return _remote_tasks;
 }
 
 TaskListModel.prototype.sort = function() {
@@ -91,10 +90,6 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	}
 
 	return utc_date.toString('ddd d MMM yyyy');
-}
-
-TaskListModel.prototype.getRemoteTasks = function() {
-	return this._remote_tasks;
 }
 
 /**

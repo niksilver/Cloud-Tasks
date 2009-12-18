@@ -213,8 +213,7 @@ testCases.push( function(Y) {
 			rtm.setToken('mydummytoken');
 			
 			var model = new TaskListModel();
-			model.setRemoteJSON(SampleTestData.big_remote_json);
-			var tasks = model.getRemoteTasks();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			model.setTaskList(tasks);
 			
 			var task_2_task_id = model.getTaskList()[2].taskID;

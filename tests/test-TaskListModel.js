@@ -36,9 +36,8 @@ testCases.push( function(Y) {
 		
 		testSetRemoteJSON: function() {
 			var model = new TaskListModel();
-			model.setRemoteJSON(SampleTestData.big_remote_json);
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			
-			var tasks = model.getRemoteTasks();
 			Y.Assert.isArray(tasks, "Tasks is not an array");
 			Y.assert(tasks.length > 10, "Tasks is not very long, only got " + tasks.length + " items");
 			
@@ -64,8 +63,7 @@ testCases.push( function(Y) {
 		testSetRemoteJSONWhichUsesArrays: function() {
 
 			var model = new TaskListModel();
-			model.setRemoteJSON(SampleTestData.remote_json_with_two_lists);
-			var tasks = model.getRemoteTasks();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_two_lists);
 
 			var task_hash = {};
 			tasks.each(function(task) {
@@ -87,8 +85,7 @@ testCases.push( function(Y) {
 		
 		testGetRemoteTasksIsSorted: function() {
 			var model = new TaskListModel();
-			model.setRemoteJSON(SampleTestData.big_remote_json);
-			var tasks = model.getRemoteTasks();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			var last_date = tasks[0].due;
 			
 			for (var i = 0; i < tasks.length; i++) {
@@ -102,8 +99,7 @@ testCases.push( function(Y) {
 
 			var model = new TaskListModel();
 
-			model.setRemoteJSON(SampleTestData.remote_json_with_overdue_tasks);
-			var tasks = model.getRemoteTasks();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
 
 			var task_hash = {};			
 			tasks.each(function(task) {
@@ -127,8 +123,7 @@ testCases.push( function(Y) {
 				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
 			};
 
-			model.setRemoteJSON(SampleTestData.remote_json_with_overdue_tasks);
-			var tasks = model.getRemoteTasks();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
 
 			var task_hash = {};
 			tasks.each(function(task) {
