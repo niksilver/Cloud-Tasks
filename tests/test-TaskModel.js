@@ -180,7 +180,9 @@ testCases.push( function(Y) {
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z'
 			};
-			var task = TaskModel.createFromObject(obj);
+			var TaskModelCopy = Object.clone(TaskModel);
+			TaskModelCopy.today = function() { return Date.parse('2008-07-13T00:00:00Z') };
+			var task = TaskModelCopy.createFromObject(obj);
 			Y.Assert.isInstanceOf(TaskModel, task, "Task is not a TaskModel object");
 			Y.Assert.areEqual('123456', task.listID, "List ID not created");
 			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID not created");
@@ -189,6 +191,8 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Due date not created");
 			Y.Assert.isArray(task.localChanges, "Local changes not set up");
 			Y.Assert.areEqual(0, task.localChanges.length, "Local changes recorded incorrectly");
+			Y.Assert.areEqual(true, task.isDueFlag, "Due flag not set correctly");
+			Y.Assert.areEqual(true, task.isOverdueFlag, "Overdue flag not set correctly");
 		},
 		
 		testCreateFromObjectWithLocalChanges: function () {

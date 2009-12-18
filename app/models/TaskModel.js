@@ -16,6 +16,7 @@ TaskModel.createFromObject = function(obj) {
 			task.setForPush(property_name, obj[property_name]);
 		})
 	}
+	task.update();
 	return task;
 }
 
