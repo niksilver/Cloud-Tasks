@@ -156,23 +156,16 @@ testCases.push( function(Y) {
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
 				on_success({ responseJSON: sample_json });
 			}
-
-			var called_setRemoteJSON;
-			task_list_model.setRemoteJSON = function(remote_json) {
-				called_setRemoteJSON = true;
-				Y.Assert.areEqual(sample_json, remote_json, "setRemoteJSON not called with right variable");
-			}
 			
 			var called_onTaskListModelChange;
 			retrier.onTaskListModelChange = function() {
 				called_onTaskListModelChange = true;
 			}
 			
-			called_setRemoteJSON = false;
 			called_onTaskListModelChange = false;
 			retrier.fire();
-			Y.Assert.areEqual(true, called_setRemoteJSON, "Didn't try to set remote JSON");
 			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
+			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
 		}
 
 	});

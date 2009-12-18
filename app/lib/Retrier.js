@@ -117,7 +117,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				var json = response.responseJSON;
 				Mojo.Log.info("Retrier.firePullTasksSequence: " + Object.toJSON(json).substr(0, 50) + "...");
 				inst.taskListModel.setRemoteJSON(json);
-				inst.taskListModel.setTaskList(inst.taskListModel.getTaskList());
+				inst.taskListModel.setTaskList(inst.taskListModel.getRemoteTasks());
 				inst.taskListModel.saveTaskList();
 				inst.onTaskListModelChange();
 			},
