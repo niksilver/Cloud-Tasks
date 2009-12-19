@@ -17,7 +17,7 @@
  *   - Have an internet connection
  *   - Make sure no on-going network requests for pulling tasks
  *   - Be authorised to access the user's Remember The Milk data.
- *   - Pull tasks
+ *   - Pull tasks and record the latest modified time
  */
 
 /**
@@ -119,6 +119,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				var task_list = TaskListModel.objectToTaskList(json);
 				inst.taskListModel.setTaskList(task_list);
 				inst.taskListModel.saveTaskList();
+				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
 				inst.onTaskListModelChange();
 			},
 			function(err_msg) {

@@ -166,6 +166,9 @@ testCases.push( function(Y) {
 			retrier.fire();
 			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
 			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
+			
+			var latest_modified = task_list_model.getLatestModified();
+			Y.Assert.areEqual(latest_modified, rtm.getLatestModified(), "Didn't record latest modified time");
 		}
 
 	});
