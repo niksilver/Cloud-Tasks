@@ -34,7 +34,13 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(model, "Model can't be constructed");
 		},
 		
-		testSetRemoteJSON: function() {
+		testConstructorWithArgument: function() {
+			var task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+			var model = new TaskListModel(task_list);
+			Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
+		},
+		
+		testObjectToTaskList: function() {
 			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			
@@ -60,9 +66,8 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");			
 		},
 		
-		testSetRemoteJSONWhichUsesArrays: function() {
+		testObjectToTaskListWhenUsingArrays: function() {
 
-			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_two_lists);
 
 			var task_hash = {};
@@ -83,8 +88,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
 		},
 		
-		testGetRemoteTasksIsSorted: function() {
-			var model = new TaskListModel();
+		testTaskListFromObjectIsSorted: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			var last_date = tasks[0].due;
 			
@@ -96,9 +100,6 @@ testCases.push( function(Y) {
 		},
 
 		testDueTasksFlagged: function() {
-
-			var model = new TaskListModel();
-
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
 
 			var task_hash = {};			
@@ -223,7 +224,11 @@ testCases.push( function(Y) {
 			tasklist.saveTaskList();
 			tasklist.loadTaskList();
 			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');
-		}
+		},
+		
+		/*testGetMostRecentModified: function() {
+			
+		}*/
 
 	});
 

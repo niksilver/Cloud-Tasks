@@ -1,5 +1,9 @@
-function TaskListModel() {
-	this._task_list = [];
+/**
+ * Construct an empty task list or (if argument supplied) with a list of tasks set up.
+ * @param {Object} optional_task_list  Optional array of TaskModel objects which is to be task list
+ */
+function TaskListModel(optional_task_list) {
+	this._task_list = optional_task_list || [];
 }
 
 /**
