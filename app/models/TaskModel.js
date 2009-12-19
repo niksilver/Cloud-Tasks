@@ -5,6 +5,7 @@ function TaskModel(properties) {
 		this.taskID = properties.taskID;
 		this.name = properties.name;
 		this.due = properties.due;
+		this.modified = properties.modified;
 	}
 	this.localChanges = [];
 }
