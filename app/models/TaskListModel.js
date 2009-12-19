@@ -43,12 +43,14 @@ TaskListModel.objectToTaskList = function(data_obj) {
 			var task_obj = taskseries_obj.task;
 			var task_id = task_obj.id;
 			var due = task_obj.due;
+			var modified = taskseries_obj.modified;
 			var task = new TaskModel({
 				listID: list_id,
 				taskseriesID: taskseries_id,
 				taskID: task_id,
 				name: name,
-				due: due
+				due: due,
+				modified: modified
 			});
 			task.update();
 			task_list.push(task);
@@ -138,4 +140,27 @@ TaskListModel.prototype.loadTaskList = function() {
 TaskListModel.prototype.eraseTaskList = function() {
 	this.setTaskList([]);
 	this.saveTaskList();
+}
+
+/**
+ * Get the latest modified property of all the tasks. May return undefined
+ * if no tasks have a modified time.
+ */
+TaskListModel.prototype.getLatestModified = function() {
+	var latest_value = undefined;
+	var latest_date = undefined;
+	this._task_list.each(function(task) {
+		if (task.modified && !latest_value) {
+			latest_value = task.modified;
+			latest_date = Date.parse(task.modified);
+		}
+		else if (task.modified && latest_value) {
+			var present_date = Date.parse(task.modified);
+			if (present_date.isAfter(latest_date)) {
+				latest_value = task.modified;
+				latest_date = present_date;
+			}
+		}
+	});
+	return latest_value;
 }

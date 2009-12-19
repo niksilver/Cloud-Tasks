@@ -55,6 +55,7 @@ testCases.push( function(Y) {
 				Y.Assert.isNotUndefined(task.taskseriesID, "Task " + i + " does not have a taskseriesID");
 				Y.Assert.isNotUndefined(task.name, "Task " + i + " does not have a name");
 				Y.Assert.isNotUndefined(task.due, "Task " + i + " does not have a due property");
+				Y.Assert.isNotUndefined(task.modified, "Task " + i + " does not have a modified time");
 				if (task.taskID == '79139889') {
 					sample_task = task;
 				}
@@ -63,7 +64,8 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2637966', sample_task.listID, "List id not correct");
 			Y.Assert.areEqual('55274651', sample_task.taskseriesID, "Taskseries id not correct");
 			Y.Assert.areEqual('MB, AB - Update on testing companies', sample_task.name, "Task name not correct");
-			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");			
+			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");
+			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
 		},
 		
 		testObjectToTaskListWhenUsingArrays: function() {
@@ -226,9 +228,30 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');
 		},
 		
-		/*testGetMostRecentModified: function() {
-			
-		}*/
+		testGetLatestModified: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
+		},
+		
+		testGetLatestModifiedIfAllUndefined: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			model.getTaskList().each(function(task_model) {
+				delete task_model.modified;
+			});
+			Y.Assert.isUndefined(model.getLatestModified(), "Lastest modified should be undefined if no modified times");
+		},
+		
+		testGetLatestModifiedIfNoTasks: function() {
+			var model = new TaskListModel();
+			Y.Assert.isUndefined(model.getLatestModified(), "Lastest modified should be undefined if no tasks");
+		},
+		
+		testGetLatestModifiedWithSomeUndefinedValues: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			model.getTaskList()[2].modified = undefined;
+			model.getTaskList()[5].modified = undefined;
+			Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
+		}
 
 	});
 
