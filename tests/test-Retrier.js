@@ -153,7 +153,50 @@ testCases.push( function(Y) {
 			
 			// Calling a remote method is the next action in the sequence for pushing changes
 			var sample_json = SampleTestData.big_remote_json;
+			var last_sync_param = "This value should be overwritten";
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
+				last_sync_param = params.last_sync;
+				on_success({ responseJSON: sample_json });
+			}
+			
+			var called_onTaskListModelChange;
+			retrier.onTaskListModelChange = function() {
+				called_onTaskListModelChange = true;
+			}
+			
+			called_onTaskListModelChange = false;
+			retrier.fire();
+			Y.Assert.isUndefined(last_sync_param, "last_sync parameter was mistakenly set");
+			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
+			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
+			
+			var latest_modified = task_list_model.getLatestModified();
+			Y.Assert.areEqual(latest_modified, rtm.getLatestModified(), "Didn't record latest modified time");
+		},
+		
+		testRetrierPullTasksSequenceWorksIncrementally: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			var task_list_model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			
+			retrier.taskListModel = task_list_model;
+			retrier.firePushChangesSequence = function() {};
+
+			rtm.connectionManager = "Some dummy connection manager";
+			rtm.haveNetworkConnectivity = true;
+			rtm.setToken('87654');
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 1; };
+			rtm.networkRequestsForPullingTasks = function() { return 0; };
+			
+			var latest_modified = task_list_model.getLatestModified();
+			rtm.setLatestModified(latest_modified);
+			
+			// Calling a remote method is the next action in the sequence for pushing changes
+			var sample_json = SampleTestData.big_remote_json;
+			var last_sync_param;
+			rtm.callMethod = function(method_name, params, on_success, on_failure) {
+				last_sync_param = params.last_sync;
 				on_success({ responseJSON: sample_json });
 			}
 			
@@ -166,10 +209,9 @@ testCases.push( function(Y) {
 			retrier.fire();
 			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
 			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
-			
-			var latest_modified = task_list_model.getLatestModified();
-			Y.Assert.areEqual(latest_modified, rtm.getLatestModified(), "Didn't record latest modified time");
+			Y.Assert.areEqual(latest_modified, last_sync_param, "last_sync not set for incremental pulling of tasks");
 		}
+
 
 	});
 

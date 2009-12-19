@@ -110,12 +110,12 @@ Retrier.prototype.firePullTasksSequence = function() {
 		Mojo.Log.info("Retrier.firePullTasksSequence: Pulling tasks");
 		var inst = this;
 		this.rtm.callMethod('rtm.tasks.getList', {
-			filter: 'status:incomplete'
+			filter: 'status:incomplete',
+			last_sync: this.rtm.getLatestModified()
 			},
 			function(response) {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
 				var json = response.responseJSON;
-				Mojo.Log.info("Retrier.firePullTasksSequence: " + Object.toJSON(json).substr(0, 50) + "...");
 				var task_list = TaskListModel.objectToTaskList(json);
 				inst.taskListModel.setTaskList(task_list);
 				inst.taskListModel.saveTaskList();
