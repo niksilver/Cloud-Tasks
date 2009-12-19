@@ -252,15 +252,30 @@ RTM.prototype.setToken = function(token) {
 	this.fireNextEvent();
 }
 
-RTM.prototype.getToken = function(token) {
+RTM.prototype.getToken = function() {
 	var token_cookie = new Mojo.Model.Cookie('token');
 	return token_cookie.get();
 }
 
 RTM.prototype.deleteToken = function() {
 	var token_cookie = new Mojo.Model.Cookie('token');
+	token_cookie.remove();
 	Mojo.Event.send(document, 'token-changed', {tokenSet: false});
-	return token_cookie.remove();
+}
+
+RTM.prototype.setLatestModified = function(modified) {
+	var modified_cookie = new Mojo.Model.Cookie('latestModified');
+	modified_cookie.put(modified);
+}
+
+RTM.prototype.getLatestModified = function() {
+	var modified_cookie = new Mojo.Model.Cookie('latestModified');
+	return modified_cookie.get();
+}
+
+RTM.prototype.deleteLatestModified = function() {
+	var modified_cookie = new Mojo.Model.Cookie('latestModified');
+	modified_cookie.remove();
 }
 
 RTM.prototype.createTimeline = function() {

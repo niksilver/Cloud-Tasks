@@ -218,6 +218,21 @@ testCases.push( function(Y) {
 			rtm.onHaveNetworkConnectivityChange();
 			Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Property incorrect when status is true");
 			Y.Assert.areEqual(true, called_fireNextEvent, "Didn't call fireNextEvent despite getting a connection");
+		},
+		
+		testLatestModifiedStorage: function() {
+			var rtm = new RTM();
+			
+			Y.Assert.isUndefined(rtm.getLatestModified(), "Latest modified time should initially be undefined");
+			
+			rtm.setLatestModified('2009-11-18T16:58:19Z');
+			Y.Assert.areEqual('2009-11-18T16:58:19Z',rtm.getLatestModified(), "Latest modified not set/got correctly");
+			
+			rtm = new RTM(); // A new instance, see if the value is saved
+			Y.Assert.areEqual('2009-11-18T16:58:19Z',rtm.getLatestModified(), "Latest modified not saved properly");
+			
+			rtm.deleteLatestModified();
+			Y.Assert.isUndefined(rtm.getLatestModified(), "Latest modified not deleted");
 		}
 
 	});
