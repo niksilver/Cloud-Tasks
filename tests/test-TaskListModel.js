@@ -282,14 +282,15 @@ testCases.push( function(Y) {
 		testMergeTaskUsingNewTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
-			var new_task = new TaskModel({
+			var TaskModelExtended = TaskModel;
+			TaskModelExtended.prototype.today = function() { return Date.parse('2010-01-01T00:00:00Z'); };
+			var new_task = new TaskModelExtended({
 				listID: '11234',
 				taskseriesID: '556677',
 				taskID: '889900',
 				name: 'Do something new',
 				due: '2010-01-01T00:00:00Z'
 			});
-			new_task.today = function() { return Date.parse('2010-01-01T00:00:00Z'); };
 			
 			var num_tasks = model.getTaskList().length;
 			model.mergeTask(new_task);
@@ -307,15 +308,17 @@ testCases.push( function(Y) {
 		testMergeTaskWithExistingTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			var existing_task = model.getTaskList()[5];
-			var existing_task_updated = new TaskModel({
+			
+			// Make make a task model that thinks it is the due date
+			var TaskModelExtended = TaskModel;
+			TaskModelExtended.prototype.today = function() { return Date.parse(existing_task.due); };
+			var existing_task_updated = new TaskModelExtended({
 				listID: existing_task.listID,
 				taskseriesID: existing_task.taskseriesID,
 				taskID: existing_task.taskID,
 				name: existing_task.name + " again",
 				due: existing_task.due
 			});
-			// Make it one day past the due date
-			existing_task_updated.today = function() { return Date.parse(existing_task_updated.due).add({ seconds: 1 }); };
 
 			var num_tasks = model.getTaskList().length;
 			model.mergeTask(existing_task_updated);
@@ -327,7 +330,7 @@ testCases.push( function(Y) {
 				taskID: existing_task.taskID});
 			Y.Assert.areEqual(existing_task_updated.name, found_task.name, "Task not updated");
 			Y.Assert.areEqual(true, found_task.isDueFlag, "Task's due flag not updated");
-			Y.Assert.areEqual(true, found_task.isOverdueFlag, "Task's overdue flag not updated");
+			Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
 		}
 
 	});

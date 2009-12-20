@@ -52,7 +52,6 @@ TaskListModel.objectToTaskList = function(data_obj) {
 				due: due,
 				modified: modified
 			});
-			task.update();
 			task_list.push(task);
 		});
 
@@ -208,11 +207,9 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
 TaskListModel.prototype.mergeTask = function(task_model) {
 	var task_index = this.getTaskIndex(task_model);
 	if (task_index == -1) {
-		task_model.update();
 		this._task_list.push(task_model);
 	}
 	else {
-		task_model.update();
 		this._task_list[task_index] = task_model;
 	}
 }

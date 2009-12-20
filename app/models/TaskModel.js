@@ -8,6 +8,7 @@ function TaskModel(properties) {
 		this.modified = properties.modified;
 	}
 	this.localChanges = [];
+	this.update();
 }
 
 TaskModel.createFromObject = function(obj) {
