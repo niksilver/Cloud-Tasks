@@ -277,6 +277,57 @@ testCases.push( function(Y) {
 				taskID: "79230749"
 			});
 			Y.Assert.isUndefined(task2, "Mistakenly found task");
+		},
+		
+		testMergeTaskUsingNewTask: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			
+			var new_task = new TaskModel({
+				listID: '11234',
+				taskseriesID: '556677',
+				taskID: '889900',
+				name: 'Do something new',
+				due: '2010-01-01T00:00:00Z'
+			});
+			new_task.today = function() { return Date.parse('2010-01-01T00:00:00Z'); };
+			
+			var num_tasks = model.getTaskList().length;
+			model.mergeTask(new_task);
+			Y.Assert.areEqual(num_tasks+1, model.getTaskList().length, "Task list isn't any bigger");
+			
+			var extra_task = model.getTask({
+				listID: "11234",
+				taskseriesID: "556677",
+				taskID: "889900"});
+			Y.Assert.isNotUndefined(extra_task, "New task not found in list");
+			Y.Assert.areEqual(true, extra_task.isDueFlag, "New task's due flag not updated");
+			Y.Assert.areEqual(false, extra_task.isOverdueFlag, "New task's overdue flag not updated");
+		},
+		
+		testMergeTaskWithExistingTask: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var existing_task = model.getTaskList()[5];
+			var existing_task_updated = new TaskModel({
+				listID: existing_task.listID,
+				taskseriesID: existing_task.taskseriesID,
+				taskID: existing_task.taskID,
+				name: existing_task.name + " again",
+				due: existing_task.due
+			});
+			// Make it one day past the due date
+			existing_task_updated.today = function() { return Date.parse(existing_task_updated.due).add({ seconds: 1 }); };
+
+			var num_tasks = model.getTaskList().length;
+			model.mergeTask(existing_task_updated);
+			Y.Assert.areEqual(num_tasks, model.getTaskList().length, "Task list should be same size");
+			
+			var found_task = model.getTask({
+				listID: existing_task.listID,
+				taskseriesID: existing_task.taskseriesID,
+				taskID: existing_task.taskID});
+			Y.Assert.areEqual(existing_task_updated.name, found_task.name, "Task not updated");
+			Y.Assert.areEqual(true, found_task.isDueFlag, "Task's due flag not updated");
+			Y.Assert.areEqual(true, found_task.isOverdueFlag, "Task's overdue flag not updated");
 		}
 
 	});

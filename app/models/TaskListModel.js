@@ -182,3 +182,37 @@ TaskListModel.prototype.getTask = function(spec) {
 	}
 	return undefined;
 }
+
+/**
+ * Get the index of a task with the given specification. spec must be an object with
+ * properties listID, taskseriesID and taskID defined. Will return the
+ * index in the task list of the matching TaskModel or -1.
+ * @param {Object} spec  The match criteria.
+ */
+TaskListModel.prototype.getTaskIndex = function(spec) {
+	for (var i = 0; i < this._task_list.length; i++) {
+		var task = this._task_list[i];
+		if (spec.taskID == task.taskID
+			&& spec.taskseriesID == task.taskseriesID
+			&& spec.listID == task.listID) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+/**
+ * Merge a given task into the list. If it is entirely new it will be added.
+ * @param {TaskModel} task_model  The task to be merged.
+ */
+TaskListModel.prototype.mergeTask = function(task_model) {
+	var task_index = this.getTaskIndex(task_model);
+	if (task_index == -1) {
+		task_model.update();
+		this._task_list.push(task_model);
+	}
+	else {
+		task_model.update();
+		this._task_list[task_index] = task_model;
+	}
+}
