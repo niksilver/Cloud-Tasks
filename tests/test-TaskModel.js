@@ -5,6 +5,20 @@
 testCases.push( function(Y) {
 
 	return new Y.Test.Case({
+		
+		// Adapted from http://www.lshift.net/blog/2006/08/03/subclassing-in-javascript-part-2
+		extend: function(superclass, prototype) {
+		    var res = function () {
+		        superclass.apply(this, arguments);
+		    };
+		    var withoutcon = function () {};
+		    withoutcon.prototype = superclass.prototype;
+		    res.prototype = new withoutcon();
+		    for (var k in prototype) {
+		        res.prototype[k] = prototype[k];
+		    }
+		    return res;
+		},
 
 		testConstructorPickedUp: function() {
 			var task = new TaskModel();
@@ -18,7 +32,8 @@ testCases.push( function(Y) {
 				taskID: '667788',
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z',
-				modified: '2008-06-20T21:11:26Z'
+				modified: '2008-06-20T21:11:26Z',
+				deleted: false
 			});
 			
 			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
@@ -27,6 +42,23 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('My test task', task.name, "Task name doesn't get set");
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Task due date doesn't get set");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time doesn't get set");
+			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set");
+		},
+		
+		testConstructorSetsDeletedDefault: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z',
+				modified: '2008-06-20T21:11:26Z'
+			});
+			
+			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
+			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID doesn't get set");
+			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
+			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set to default");
 		},
 		
 		testIsDue: function() {
@@ -181,7 +213,8 @@ testCases.push( function(Y) {
 				taskID: '667788',
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z',
-				modified: '2008-06-20T21:11:26Z'
+				modified: '2008-06-20T21:11:26Z',
+				deleted: true
 			};
 			var TaskModelCopy = Object.clone(TaskModel);
 			TaskModelCopy.today = function() { return Date.parse('2008-07-13T00:00:00Z') };
@@ -193,6 +226,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('My test task', task.name, "Name not created");
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Due date not created");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time not created");
+			Y.Assert.areEqual(true, task.deleted, "Deleted flag not created");
 			Y.Assert.isArray(task.localChanges, "Local changes not set up");
 			Y.Assert.areEqual(0, task.localChanges.length, "Local changes recorded incorrectly");
 			Y.Assert.areEqual(true, task.isDueFlag, "Due flag not set correctly");
