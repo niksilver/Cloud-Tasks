@@ -896,6 +896,25 @@ SampleTestData = {
          } // list 11122940
       } // tasks
    } // rsp
-  }// last_sync_response
-  
+  },// last_sync_response
+
+  last_sync_response_with_just_one_deletion: {
+	   "rsp":{
+	      "stat":"ok",
+	      "tasks":{
+	         "list":{
+	            "id":"11122940",
+	            "deleted":{
+	               "taskseries":{
+	                  "id":"58274350",
+	                  "task":{
+	                     "id":"83601519",
+	                     "deleted":"2009-12-20T22:21:19Z"
+	                  }
+	               }
+	            }
+	         }
+	      }
+	   }
+	} // last_sync_response_with_just_one_deletion
 }		

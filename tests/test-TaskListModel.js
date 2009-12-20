@@ -132,6 +132,24 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task_id_to_task['83601413'].deleted, "Wrong deleted flag for task ID 83601413");
 			Y.Assert.areEqual(true, task_id_to_task['83601399'].deleted, "Wrong deleted flag for task ID 83601399");
 		},
+		
+		testObjectToTaskListWithSingleDeletedItem: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response_with_just_one_deletion);
+			
+			Y.Assert.areEqual(1, tasks.length, "Wrong number of tasks");
+
+			var task_id_to_task = {};			
+			for (var i = 0; i < tasks.length; i++) {
+				var task = tasks[i];
+				task_id_to_task[task.taskID] = task;
+			}
+			var task = tasks[0];
+			
+			Y.Assert.areEqual('11122940', task.listID, "Bad list ID");
+			Y.Assert.areEqual('58274350', task.taskseriesID, "Bad taskseries ID");
+			Y.Assert.areEqual('83601519', task.taskID, "Bad task ID");
+			Y.Assert.areEqual(true, task.deleted, "Deleted flag set wrong");
+		},
 
 		testDueTasksFlagged: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
