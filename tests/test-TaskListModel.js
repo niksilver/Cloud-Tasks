@@ -259,8 +259,25 @@ testCases.push( function(Y) {
 			model.getTaskList()[5].modified = '2009-11-19T16:58:19-04:00'; // = 20:58Z
 			model.getTaskList()[8].modified = '2009-11-19T16:58:19Z';      // = 16:58Z
 			Y.Assert.areEqual('2009-11-19T16:58:19-04:00', model.getLatestModified(), "Timezoned modification not calculated correctly");
-		}
+		},
 
+		testGetTask: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			
+			var task1 = model.getTask({
+				listID: "2637966",
+				taskseriesID: "32135089",
+				taskID: "79230749"
+			});
+			Y.Assert.areEqual("Misc notes - Update", task1.name, "Didn't get task correctly");
+			
+			var task2 = model.getTask({
+				listID: "madeuplist",
+				taskseriesID: "32135089",
+				taskID: "79230749"
+			});
+			Y.Assert.isUndefined(task2, "Mistakenly found task");
+		}
 
 	});
 

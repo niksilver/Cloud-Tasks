@@ -164,3 +164,21 @@ TaskListModel.prototype.getLatestModified = function() {
 	});
 	return latest_value;
 }
+
+/**
+ * Get a task with the given specification. spec must be an object with
+ * properties listID, taskseriesID and taskID defined. Will return the
+ * matching TaskModel or undefined.
+ * @param {Object} spec  The match criteria.
+ */
+TaskListModel.prototype.getTask = function(spec) {
+	for (var i = 0; i < this._task_list.length; i++) {
+		var task = this._task_list[i];
+		if (spec.taskID == task.taskID
+			&& spec.taskseriesID == task.taskseriesID
+			&& spec.listID == task.listID) {
+			return task;
+		}
+	}
+	return undefined;
+}
