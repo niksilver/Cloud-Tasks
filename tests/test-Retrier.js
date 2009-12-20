@@ -153,10 +153,10 @@ testCases.push( function(Y) {
 			
 			// Calling a remote method is the next action in the sequence for pushing changes
 			var sample_json = SampleTestData.big_remote_json;
-			var last_sync_param = "This value should be overwritten";
-			rtm.callMethod = function(method_name, params, on_success, on_failure) {
-				last_sync_param = params.last_sync;
-				on_success({ responseJSON: sample_json });
+			var url_used;
+			rtm.ajaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess({ responseJSON: sample_json });
 			}
 			
 			var called_onTaskListModelChange;
@@ -166,7 +166,7 @@ testCases.push( function(Y) {
 			
 			called_onTaskListModelChange = false;
 			retrier.fire();
-			Y.Assert.isUndefined(last_sync_param, "last_sync parameter was mistakenly set");
+			Y.Assert.areEqual(-1, url_used.indexOf('last_sync'), "last_sync parameter was mistakenly set, URL is " + url_used);
 			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
 			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
 			

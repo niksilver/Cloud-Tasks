@@ -109,10 +109,8 @@ Retrier.prototype.firePullTasksSequence = function() {
 	else {
 		Mojo.Log.info("Retrier.firePullTasksSequence: Pulling tasks");
 		var inst = this;
-		this.rtm.callMethod('rtm.tasks.getList', {
-			filter: 'status:incomplete',
-			last_sync: this.rtm.getLatestModified()
-			},
+		this.rtm.callMethod('rtm.tasks.getList',
+			this.getListParameters(),
 			function(response) {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
 				var json = response.responseJSON;
@@ -129,4 +127,12 @@ Retrier.prototype.firePullTasksSequence = function() {
 		);
 
 	}
+}
+
+Retrier.prototype.getListParameters = function() {
+	var params = { filter: 'status:incomplete' };
+	if (this.rtm.getLatestModified()) {
+		params.last_sync = this.rtm.getLatestModified();
+	}
+	return params;
 }

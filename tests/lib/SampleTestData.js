@@ -806,5 +806,96 @@ SampleTestData = {
           ] // Close all lists
        } // Close tasks object
     } // Close rsp
-  } // remote_json_with_overdue_tasks
+  }, // remote_json_with_overdue_tasks
+  
+  last_sync_response: {
+   "rsp":{
+      "stat":"ok",
+      "tasks":{
+         "list":{
+            "id":"11122940",
+            "current":"2009-12-19T23:45:24Z",
+            "taskseries":[
+               {
+                  "id":"58274353",
+                  "created":"2009-12-19T23:48:11Z",
+                  "modified":"2009-12-19T23:48:11Z",
+                  "name":"Sixth task",
+                  "source":"js",
+                  "url":"",
+                  "location_id":"",
+                  "tags":[
+
+                  ],
+                  "participants":[
+
+                  ],
+                  "notes":[
+
+                  ],
+                  "task":{
+                     "id":"83601522",
+                     "due":"",
+                     "has_due_time":"0",
+                     "added":"2009-12-19T23:48:11Z",
+                     "completed":"",
+                     "deleted":"",
+                     "priority":"N",
+                     "postponed":"0",
+                     "estimate":""
+                  }
+               }, // taskseries 58274353
+               {
+                  "id":"58274350",
+                  "created":"2009-12-19T23:48:07Z",
+                  "modified":"2009-12-19T23:48:07Z",
+                  "name":"Fifth task",
+                  "source":"js",
+                  "url":"",
+                  "location_id":"",
+                  "tags":[
+
+                  ],
+                  "participants":[
+
+                  ],
+                  "notes":[
+
+                  ],
+                  "task":{
+                     "id":"83601519",
+                     "due":"",
+                     "has_due_time":"0",
+                     "added":"2009-12-19T23:48:07Z",
+                     "completed":"",
+                     "deleted":"",
+                     "priority":"N",
+                     "postponed":"0",
+                     "estimate":""
+                  }
+               } // taskseries 58274350
+            ], // Array of taskseries
+            "deleted":{
+               "taskseries":[
+                  {
+                     "id":"58274252",
+                     "task":{
+                        "id":"83601413",
+                        "deleted":"2009-12-19T23:48:18Z"
+                     }
+                  },
+                  {
+                     "id":"58274238",
+                     "task":{
+                        "id":"83601399",
+                        "deleted":"2009-12-19T23:48:14Z"
+                     }
+                  }
+               ] // Array of deleted taskseries
+            } // deleted
+         } // list 11122940
+      } // tasks
+   } // rsp
+  }// last_sync_response
+  
 }		
