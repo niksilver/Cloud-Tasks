@@ -201,15 +201,19 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
 }
 
 /**
- * Merge a given task into the list. If it is entirely new it will be added.
- * @param {TaskModel} task_model  The task to be merged.
+ * Merge a given task into the list.
+ * If it is entirely new it will be added.
+ * If it is another version of an existing one then it will overwrite the existing one,
+ * except for any local changes.
+ * @param {TaskModel} task  The task to be merged.
  */
-TaskListModel.prototype.mergeTask = function(task_model) {
-	var task_index = this.getTaskIndex(task_model);
+TaskListModel.prototype.mergeTask = function(task) {
+	var task_index = this.getTaskIndex(task);
 	if (task_index == -1) {
-		this._task_list.push(task_model);
+		this._task_list.push(task);
 	}
 	else {
-		this._task_list[task_index] = task_model;
+		task.takeLocalChanges(this._task_list[task_index]);
+		this._task_list[task_index] = task;
 	}
 }

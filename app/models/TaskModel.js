@@ -92,3 +92,15 @@ TaskModel.prototype.markNotForPush = function(property) {
 		this.localChanges.splice(i, 1);
 	}
 }
+
+/**
+ * Take any local changes made in another task.
+ * They will also then be flagged as local changes in this.
+ * @param {TaskModel} other_task  The task which may have some local changes.
+ */
+TaskModel.prototype.takeLocalChanges = function(other_task) {
+	for (var i = 0; i < other_task.localChanges.length; i++) {
+		var property = other_task.localChanges[i];
+		this.setForPush(property, other_task[property]);
+	}
+}

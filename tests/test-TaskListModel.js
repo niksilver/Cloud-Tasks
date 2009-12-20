@@ -23,6 +23,20 @@ testCases.push( function(Y) {
 			return depot;
 		},
 		
+		// Adapted from http://www.lshift.net/blog/2006/08/03/subclassing-in-javascript-part-2
+		extend: function(superclass, prototype) {
+		    var res = function () {
+		        superclass.apply(this, arguments);
+		    };
+		    var withoutcon = function () {};
+		    withoutcon.prototype = superclass.prototype;
+		    res.prototype = new withoutcon();
+		    for (var k in prototype) {
+		        res.prototype[k] = prototype[k];
+		    }
+		    return res;
+		},
+		
 		_should: {
 			error: {
 				testSetTaskListShouldErrorWithoutTaskModelObjects: true
@@ -282,8 +296,10 @@ testCases.push( function(Y) {
 		testMergeTaskUsingNewTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
-			var TaskModelExtended = TaskModel;
-			TaskModelExtended.prototype.today = function() { return Date.parse('2010-01-01T00:00:00Z'); };
+			var TaskModelExtended = this.extend(TaskModel, {
+				today: function() { return Date.parse('2010-01-01T00:00:00Z') }
+			});
+
 			var new_task = new TaskModelExtended({
 				listID: '11234',
 				taskseriesID: '556677',
@@ -310,13 +326,15 @@ testCases.push( function(Y) {
 			var existing_task = model.getTaskList()[5];
 			
 			// Make make a task model that thinks it is the due date
-			var TaskModelExtended = TaskModel;
-			TaskModelExtended.prototype.today = function() { return Date.parse(existing_task.due); };
+			var TaskModelExtended = this.extend(TaskModel, {
+				today: function() { return Date.parse(existing_task.due) }
+			});
+			var updated_name = existing_task.name + " again";
 			var existing_task_updated = new TaskModelExtended({
 				listID: existing_task.listID,
 				taskseriesID: existing_task.taskseriesID,
 				taskID: existing_task.taskID,
-				name: existing_task.name + " again",
+				name: updated_name,
 				due: existing_task.due
 			});
 
@@ -328,8 +346,47 @@ testCases.push( function(Y) {
 				listID: existing_task.listID,
 				taskseriesID: existing_task.taskseriesID,
 				taskID: existing_task.taskID});
-			Y.Assert.areEqual(existing_task_updated.name, found_task.name, "Task not updated");
+			Y.Assert.areEqual(updated_name, found_task.name, "Task not updated");
 			Y.Assert.areEqual(true, found_task.isDueFlag, "Task's due flag not updated");
+			Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
+		},
+		
+		testMergeTaskWithLocalChangesWithExistingTask: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var original_task = model.getTaskList()[5];
+			
+			// Make make a task model that thinks it is not yet the due date
+			var TaskModelExtended = this.extend(TaskModel, {
+				today: function() {	return Date.parse(original_task.due).add({ days: -1 }) }
+			});
+			var remotely_updated_name = original_task.name + " again";
+			var original_task_updated_remotely = new TaskModelExtended({
+				listID: original_task.listID,
+				taskseriesID: original_task.taskseriesID,
+				taskID: original_task.taskID,
+				name: remotely_updated_name,
+				due: original_task.due
+			});
+			
+			// Also make sure the original task thinks it's not yet the due date
+			original_task.today = TaskModelExtended.today;
+			
+			// Now update the original task locally
+			var locally_updated_due = Date.parse(original_task.due).add({ days: 1 }).toISOString();
+			original_task.setForPush('due', locally_updated_due);
+
+			var num_tasks = model.getTaskList().length;
+			model.mergeTask(original_task_updated_remotely);
+			Y.Assert.areEqual(num_tasks, model.getTaskList().length, "Task list should be same size");
+			
+			var found_task = model.getTask({
+				listID: original_task.listID,
+				taskseriesID: original_task.taskseriesID,
+				taskID: original_task.taskID});
+			Y.Assert.areEqual(remotely_updated_name, found_task.name, "Task not updated from merged task");
+			Y.Assert.areEqual(locally_updated_due, found_task.due, "Task does not carry locally updated due date");
+			Y.Assert.areEqual('due', found_task.localChanges[0], "Local change flags are lost");
+			Y.Assert.areEqual(false, found_task.isDueFlag, "Task's due flag not updated");
 			Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
 		}
 
