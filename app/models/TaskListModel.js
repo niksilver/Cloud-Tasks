@@ -36,7 +36,8 @@ TaskListModel.objectToTaskList = function(data_obj) {
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
 	list_array.each(function(list_obj) {
 		var list_id = list_obj.id;
-		var taskseries_array = Object.isArray(list_obj.taskseries) ? list_obj.taskseries : [list_obj.taskseries];
+		
+		var taskseries_array = TaskListModel.makeArray(list_obj.taskseries);
 		taskseries_array.each(function(taskseries_obj) {
 			var taskseries_id = taskseries_obj.id;
 			var name = taskseries_obj.name;
@@ -55,10 +56,47 @@ TaskListModel.objectToTaskList = function(data_obj) {
 			task_list.push(task);
 		});
 
+		var deleted_obj = list_obj.deleted;
+		var taskseries_elt = deleted_obj ? deleted_obj.taskseries : undefined;
+		taskseries_array = TaskListModel.makeArray(taskseries_elt);
+		taskseries_array.each(function(taskseries_obj) {
+			var taskseries_id = taskseries_obj.id;
+			var task_obj = taskseries_obj.task;
+			var task_id = task_obj.id;
+			var modified = task_obj.deleted;
+			var task = new TaskModel({
+				listID: list_id,
+				taskseriesID: taskseries_id,
+				taskID: task_id,
+				modified: modified,
+				deleted: true
+			});
+			task_list.push(task);
+		});
+
 	});
 	
 	task_list.sort(TaskModel.sortByDueThenName);
 	return task_list;
+}
+
+/**
+ * Make an array for an object.
+ * If object is an array then just returns it.
+ * If it's undefined returns an empty array.
+ * Otherwise returns an array with just the object in it.
+ * @param {Object} obj  The object for the array.
+ */
+TaskListModel.makeArray = function(obj) {
+	if (Object.isArray(obj)) {
+		return obj;
+	}
+	else if (Object.isUndefined(obj)) {
+		return [];
+	}
+	else {
+		return [obj];
+	}
 }
 
 TaskListModel.prototype.sort = function() {

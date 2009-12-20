@@ -817,7 +817,7 @@ SampleTestData = {
             "current":"2009-12-19T23:45:24Z",
             "taskseries":[
                {
-                  "id":"58274353",
+                  "id":"58274353", // Task 1
                   "created":"2009-12-19T23:48:11Z",
                   "modified":"2009-12-19T23:48:11Z",
                   "name":"Sixth task",
@@ -846,7 +846,7 @@ SampleTestData = {
                   }
                }, // taskseries 58274353
                {
-                  "id":"58274350",
+                  "id":"58274350", // Task 2
                   "created":"2009-12-19T23:48:07Z",
                   "modified":"2009-12-19T23:48:07Z",
                   "name":"Fifth task",
@@ -878,14 +878,14 @@ SampleTestData = {
             "deleted":{
                "taskseries":[
                   {
-                     "id":"58274252",
+                     "id":"58274252", // Task 3, deleted
                      "task":{
                         "id":"83601413",
                         "deleted":"2009-12-19T23:48:18Z"
                      }
                   },
                   {
-                     "id":"58274238",
+                     "id":"58274238", // Task 4, deleted
                      "task":{
                         "id":"83601399",
                         "deleted":"2009-12-19T23:48:14Z"

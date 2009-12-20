@@ -114,6 +114,24 @@ testCases.push( function(Y) {
 				last_date = this_date;
 			}
 		},
+		
+		testObjectToTaskListWithDeletedItems: function() {
+			var model = new TaskListModel();
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response);
+			
+			Y.Assert.areEqual(4, tasks.length, "Wrong number of tasks");
+
+			var task_id_to_task = {};			
+			for (var i = 0; i < tasks.length; i++) {
+				var task = tasks[i];
+				task_id_to_task[task.taskID] = task;
+			}
+			
+			Y.Assert.areEqual('Sixth task', task_id_to_task['83601522'].name, "Bad name for task ID 83601522");
+			Y.Assert.areEqual('Fifth task', task_id_to_task['83601519'].name, "Bad name for task ID 83601519");
+			Y.Assert.areEqual(true, task_id_to_task['83601413'].deleted, "Wrong deleted flag for task ID 83601413");
+			Y.Assert.areEqual(true, task_id_to_task['83601399'].deleted, "Wrong deleted flag for task ID 83601399");
+		},
 
 		testDueTasksFlagged: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
