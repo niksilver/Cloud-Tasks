@@ -117,6 +117,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				var task_list = TaskListModel.objectToTaskList(json);
 				inst.taskListModel.mergeTaskList(task_list);
 				inst.taskListModel.purgeTaskList();
+				inst.taskListModel.sort();
 				inst.taskListModel.saveTaskList();
 				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
 				inst.onTaskListModelChange();

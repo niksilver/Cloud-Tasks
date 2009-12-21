@@ -76,7 +76,6 @@ TaskListModel.objectToTaskList = function(data_obj) {
 
 	});
 	
-	task_list.sort(TaskModel.sortByDueThenName);
 	return task_list;
 }
 

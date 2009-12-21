@@ -104,17 +104,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
 		},
 		
-		testTaskListFromObjectIsSorted: function() {
-			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-			var last_date = tasks[0].due;
-			
-			for (var i = 0; i < tasks.length; i++) {
-				var this_date = tasks[i].due;
-				Y.assert(last_date <= this_date, "Date for task[" + i + "] is " + this_date + " but comes after " + last_date);
-				last_date = this_date;
-			}
-		},
-		
 		testObjectToTaskListWithDeletedItems: function() {
 			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response);
