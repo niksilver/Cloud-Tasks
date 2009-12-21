@@ -149,13 +149,25 @@ TaskListModel.prototype.saveTaskList = function() {
 	var i;
 	var num_tasks = this._task_list.length;
 	
+	// Save the list
 	for (i = 0; i < num_tasks; i++) {
 		var task_cookie = new Mojo.Model.Cookie('task' + i);
 		var task = this._task_list[i];
 		task_cookie.put(task.toObject());
 	}
-	var task_cookie = new Mojo.Model.Cookie('task' + i);
-	task_cookie.remove();
+	
+	// Put an end-of-list marker, and clean up any extra cookies
+	var min_cleanup_index = i;
+	var max_cleanup_index = i;
+	if (this._previous_saved_length - 1 > max_cleanup_index) {
+		max_cleanup_index = this._previous_saved_length - 1;
+	}
+	for (var i = min_cleanup_index; i <= max_cleanup_index; i++) {
+		var task_cookie = new Mojo.Model.Cookie('task' + i);
+		task_cookie.remove();
+	}
+	
+	this._previous_saved_length = num_tasks;
 }
 
 TaskListModel.prototype.loadTaskList = function() {

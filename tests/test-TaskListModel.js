@@ -42,6 +42,10 @@ testCases.push( function(Y) {
 				testSetTaskListShouldErrorWithoutTaskModelObjects: true
 			}
 		},
+		
+		setUp: function() {
+			Mojo.Model.Cookie.deleteCookieStore();
+		},
 
 		testConstructor: function() {
 			var model = new TaskListModel();
@@ -265,6 +269,61 @@ testCases.push( function(Y) {
 			tasklist.saveTaskList();
 			tasklist.loadTaskList();
 			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');
+		},
+		
+		assertTaskCookieExists: function(i, message) {
+			var task_cookie = new Mojo.Model.Cookie('task' + i);
+			var task_cookie_value = task_cookie.get();
+			Y.Assert.isNotUndefined(task_cookie_value, message + ": Task[" + i + "] should exist but doesn't");
+		},
+		
+		assertTaskCookieDoesNotExist: function(i, message) {
+			var task_cookie = new Mojo.Model.Cookie('task' + i);
+			var task_cookie_value = task_cookie.get();
+			Y.Assert.isUndefined(task_cookie_value, message + ": Task[" + i + "] should not exist");
+		},
+		
+		testTaskListStorageDoesntWasteResources: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+
+			var list_of_5 = [];
+			var list_of_9 = [];
+			var list_of_4 = [];
+			
+			for (var i = 0; i < 5; i++) {
+				list_of_5.push(tasks.pop());
+			}
+			
+			var model = new TaskListModel(list_of_5);
+			model.saveTaskList();
+			
+			this.assertTaskCookieExists(0, "Initial setup");
+			this.assertTaskCookieExists(1, "Initial setup");
+			this.assertTaskCookieExists(4, "Initial setup");
+			this.assertTaskCookieDoesNotExist(5, "Initial setup");
+			this.assertTaskCookieDoesNotExist(6, "Initial setup");
+			
+			model.getTaskList().pop(); // Task are now [0..3]
+			model.getTaskList().pop(); // Task are now [0..2]
+			model.getTaskList().pop(); // Task are now [0..1]
+			model.saveTaskList();
+
+			this.assertTaskCookieExists(0, "After popping");
+			this.assertTaskCookieExists(1, "After popping");
+			this.assertTaskCookieDoesNotExist(2, "After popping");
+			this.assertTaskCookieDoesNotExist(3, "After popping");
+			this.assertTaskCookieDoesNotExist(4, "After popping");
+			this.assertTaskCookieDoesNotExist(5, "After popping");
+			
+			model.getTaskList().push(tasks.pop()); // Task[2]
+			model.saveTaskList();
+
+			this.assertTaskCookieExists(0, "After pushing");
+			this.assertTaskCookieExists(1, "After pushing");
+			this.assertTaskCookieExists(2, "After pushing");
+			this.assertTaskCookieDoesNotExist(3, "After pushing");
+			this.assertTaskCookieDoesNotExist(4, "After pushing");
+			this.assertTaskCookieDoesNotExist(5, "After pushing");
 		},
 		
 		testGetLatestModified: function() {

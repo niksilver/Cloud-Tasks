@@ -36,6 +36,10 @@ Mojo.Model.Cookie.prototype = {
 	remove: function() { delete Mojo._cookie_store[this._id]; }
 };
 
+Mojo.Model.Cookie.deleteCookieStore = function() {
+	Mojo._cookie_store = {};
+}
+
 Mojo.Depot = function(options) {
 	if (!Mojo.Depot._databases) {
 		Mojo.Depot._databases = {};
