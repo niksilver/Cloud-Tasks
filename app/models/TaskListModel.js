@@ -267,13 +267,30 @@ TaskListModel.prototype.mergeTaskList = function(task_list) {
 	}
 }
 
+/**
+ * Remove all those tasks that don't need to be shown
+ */
 TaskListModel.prototype.purgeTaskList = function() {
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
-		if (task.hasLocalChanges() || !task.deleted) {
-			continue;
+		if (task.deleted && !task.hasLocalChanges()) {
+			// Need to purge this task
+			this._task_list.splice(i, 1);
 		}
-		// Need to purge this task
-		this._task_list.splice(i, 1);
 	}
+}
+
+/**
+ * Get a list of only those tasks that don't need to be shown.
+ * @return  An array of TaskModel objects.
+ */
+TaskListModel.prototype.getListOfVisibleTasks = function() {
+	var list = [];
+	for (var i = 0; i < this._task_list.length; i++) {
+		var task = this._task_list[i];
+		if (!task.deleted) {
+			list.push(task);
+		}
+	}
+	return list;
 }

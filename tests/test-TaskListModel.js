@@ -459,6 +459,45 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(model.getTask(task_4), "Task 4 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_8), "Task 8 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_2), "Task 2 was mistakenly purged");
+		},
+		
+		testGetListOfVisibleTasks: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var num_tasks = model.getTaskList().length;
+
+			// Save some tasks for checking later
+			var task_2 = model.getTaskList()[2];
+			var task_3 = model.getTaskList()[3];
+			var task_4 = model.getTaskList()[4];
+			var task_5 = model.getTaskList()[5];
+			var task_6 = model.getTaskList()[6];
+			var task_7 = model.getTaskList()[7];
+			var task_8 = model.getTaskList()[8];
+			
+			// Set three tasks to be deleted.
+			// These should not be visible
+			task_3.deleted = true;
+			task_5.deleted = true;
+			task_7.deleted = true;
+			
+			// Set two tasks to be deleted locally, but changes need to be pushed
+			// These should not be visible, either
+			task_4.setForPush('deleted', true);
+			task_8.setForPush('deleted', true);
+			
+			// Set one task which has local changes which need to be pushed, but is not to be deleted.
+			// This should still be visible
+			task_2.setForPush('name', "Do it again");
+			
+			var visible_tasks = model.getListOfVisibleTasks();
+			var visible_model = new TaskListModel(visible_tasks);
+			Y.Assert.areEqual(num_tasks-5, visible_tasks.length, "Wrong tasks omitted");
+			Y.Assert.isUndefined(visible_model.getTask(task_3), "Task 3 not omitted");
+			Y.Assert.isUndefined(visible_model.getTask(task_5), "Task 5 not omitted");
+			Y.Assert.isUndefined(visible_model.getTask(task_7), "Task 7 not omitted");
+			Y.Assert.isUndefined(visible_model.getTask(task_4), "Task 4 not omitted");
+			Y.Assert.isUndefined(visible_model.getTask(task_8), "Task 8 not omitted");
+			Y.Assert.isNotUndefined(visible_model.getTask(task_2), "Task 2 was mistakenly omitted");
 		}
 
 	});
