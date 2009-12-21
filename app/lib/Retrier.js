@@ -115,7 +115,8 @@ Retrier.prototype.firePullTasksSequence = function() {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
 				var json = response.responseJSON;
 				var task_list = TaskListModel.objectToTaskList(json);
-				inst.taskListModel.setTaskList(task_list);
+				inst.taskListModel.mergeTaskList(task_list);
+				inst.taskListModel.purgeTaskList();
 				inst.taskListModel.saveTaskList();
 				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
 				inst.onTaskListModelChange();

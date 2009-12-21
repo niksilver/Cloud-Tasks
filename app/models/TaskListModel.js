@@ -255,3 +255,25 @@ TaskListModel.prototype.mergeTask = function(task) {
 		this._task_list[task_index] = task;
 	}
 }
+
+/**
+ * Merge several tasks into the list
+ * @param {Array} task_list  An array of TaskModel objects, each of which is to be merged
+ *     into this list.
+ */
+TaskListModel.prototype.mergeTaskList = function(task_list) {
+	for (var i = 0; i < task_list.length; i++) {
+		this.mergeTask(task_list[i]);
+	}
+}
+
+TaskListModel.prototype.purgeTaskList = function() {
+	for (var i = this._task_list.length-1; i >= 0; i--) {
+		var task = this._task_list[i];
+		if (task.hasLocalChanges() || !task.deleted) {
+			continue;
+		}
+		// Need to purge this task
+		this._task_list.splice(i, 1);
+	}
+}

@@ -31,10 +31,10 @@ SampleTestData = {
 	         "list":
 			 	// Might be an array of list objects, not just a single list object as here
 			 	{
-	            "id":"2637966", // Task 1
+	            "id":"2637966",
 	            "taskseries":[
 	               {
-	                  "id":"52954009",
+	                  "id":"52954009", // Task 1
 	                  "created":"2009-10-22T20:49:48Z",
 	                  "modified":"2009-10-22T20:49:48Z",
 	                  "name":"O2 - Expect deposit credited",
@@ -916,5 +916,26 @@ SampleTestData = {
 	         }
 	      }
 	   }
-	} // last_sync_response_with_just_one_deletion
+	}, // last_sync_response_with_just_one_deletion
+
+  last_sync_response_deleting_task_5: {
+	   "rsp":{
+	      "stat":"ok",
+	      "tasks":{
+	         "list":{
+	            "id":"2637966",
+	            "deleted":{
+	               "taskseries":{
+	                  "id":"54961818",
+	                  "task":{
+	                     "id":"78667188",
+	                     "deleted":"2009-12-20T22:21:19Z"
+	                  }
+	               }
+	            }
+	         }
+	      }
+	   }
+	} // last_sync_response_deleting_task_5
+
 }		
