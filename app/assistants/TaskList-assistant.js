@@ -9,7 +9,7 @@ function TaskListAssistant(config) {
 	this.rtm = config.rtm;
 	this.taskListModel = config.taskListModel;
 	this.taskListModel.loadTaskList();
-	this.taskListWidgetModel = { items: this.taskListModel.getTaskList() };
+	this.taskListWidgetModel = { items: this.taskListModel.getListOfVisibleTasks() };
 	this.rtm.retrier.onTaskListModelChange = this.onTaskListModelChange.bind(this);
 	
 	this.appMenuModel = {
@@ -105,7 +105,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 
 TaskListAssistant.prototype.onTaskListModelChange = function() {
 	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Entering");
-	this.taskListWidgetModel.items = this.taskListModel.getTaskList();
+	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
 	this.controller.modelChanged(this.taskListWidgetModel);
 }
 
