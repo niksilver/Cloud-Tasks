@@ -137,7 +137,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		if (task.localChanges.indexOf('name') >= 0 || task.localChanges.indexOf('due') >= 0) {
 			this.taskListModel.sort();
 		}
-		this.controller.modelChanged(this.taskListWidgetModel);
+		this.onTaskListModelChange();
 		this.taskListModel.saveTaskList();
 	}
 	else if (returnValue.lastScene == 'Auth') {
