@@ -26,6 +26,7 @@
  */
 function Retrier(rtm) {
 	this.rtm = rtm;
+	this.eventSpacer = new EventSpacer(15*60*1000); // Pull no more than every 15 mins
 }
 
 /**
@@ -95,7 +96,11 @@ Retrier.prototype.firePushChangesSequence = function() {
 }
 
 Retrier.prototype.firePullTasksSequence = function() {
-	if (!this.rtm.haveNetworkConnectivity) {
+	if (!this.eventSpacer.isReady()) {
+		Mojo.Log.info("Too soon after last pull to pull tasks again");
+		return;
+	}
+	else if (!this.rtm.haveNetworkConnectivity) {
 		// Can't do anything about this, just have to wait for a connection
 		Mojo.Log.info("Retrier.firePullTasksSequence: Need an internet connection, but can't take action");
 	}
@@ -120,6 +125,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				inst.taskListModel.sort();
 				inst.taskListModel.saveTaskList();
 				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
+				inst.eventSpacer.haveFired();
 				inst.onTaskListModelChange();
 			},
 			function(err_msg) {

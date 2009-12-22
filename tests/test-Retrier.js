@@ -300,6 +300,45 @@ testCases.push( function(Y) {
 			retrier.fire();
 			Y.Assert.areEqual(orig_num_tasks-1, task_list_model.getTaskList().length, "Task list model not updated correctly");
 			Y.Assert.isUndefined(task_list_model.getTask(task_5_spec), "Can still find task 5 in updated list");
+		},
+
+		testRetrierSpacesPullTasksSequence: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			var task_list_model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+
+			retrier.taskListModel = task_list_model;
+			retrier.eventSpacer = new EventSpacer(100);
+			retrier.firePushChangesSequence = function() {};
+
+			rtm.connectionManager = "Some dummy connection manager";
+			rtm.haveNetworkConnectivity = true;
+			rtm.setToken('87654');
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 1; };
+			rtm.networkRequestsForPullingTasks = function() { return 0; };
+			
+			var called_callMethod;
+			// Calling a remote method is the next action in the sequence for pulling tasks
+			rtm.callMethod = function(method_name, params, on_success, on_failure) {
+				called_callMethod = true;
+				Y.Assert.areEqual('rtm.tasks.getList', method_name, "Didn't call method to get name");
+				on_success({ responseJSON: SampleTestData.last_sync_response_deleting_task_5 });
+			}
+			
+			called_callMethod = false;
+			retrier.fire();
+			Y.Assert.areEqual(true, called_callMethod, "Didn't try to call the method");
+			
+			called_callMethod = false;
+			retrier.fire();
+			Y.Assert.areEqual(false, called_callMethod, "Shouldn't be pulling tasks again right after firing");
+			
+			this.wait(function() {
+					retrier.fire();
+					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
+				},
+				120);
 		}
 
 	});
