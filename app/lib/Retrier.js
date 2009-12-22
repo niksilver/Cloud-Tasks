@@ -26,7 +26,11 @@
  */
 function Retrier(rtm) {
 	this.rtm = rtm;
-	this.eventSpacer = new EventSpacer(15*60*1000); // Pull no more than every 15 mins
+	this.resetPullEventSpacer();
+}
+
+Retrier.prototype.resetPullEventSpacer = function() {
+	this.pullEventSpacer = new EventSpacer(15*60*1000); // Pull no more than every 15 mins
 }
 
 /**
@@ -96,8 +100,8 @@ Retrier.prototype.firePushChangesSequence = function() {
 }
 
 Retrier.prototype.firePullTasksSequence = function() {
-	if (!this.eventSpacer.isReady()) {
-		Mojo.Log.info("Too soon after last pull to pull tasks again");
+	if (!this.pullEventSpacer.isReady()) {
+		Mojo.Log.info("Retrier.firePullTasksSequence: Too soon after last pull to pull tasks again");
 		return;
 	}
 	else if (!this.rtm.haveNetworkConnectivity) {
@@ -125,7 +129,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 				inst.taskListModel.sort();
 				inst.taskListModel.saveTaskList();
 				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
-				inst.eventSpacer.haveFired();
+				inst.pullEventSpacer.haveFired();
 				inst.onTaskListModelChange();
 			},
 			function(err_msg) {

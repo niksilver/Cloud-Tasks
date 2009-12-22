@@ -452,3 +452,10 @@ RTM.prototype.fireNextEvent = function() {
 	Mojo.Log.info("RTM.fireNextEvent: Entering");
 	this.retrier.fire();
 }
+
+/**
+ * Reset the mechanism which prevents pull events happening too often.
+ */
+RTM.prototype.resetPullEventSpacer = function() {
+	this.retrier.resetPullEventSpacer();
+}

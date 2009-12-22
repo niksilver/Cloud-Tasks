@@ -308,7 +308,7 @@ testCases.push( function(Y) {
 			var task_list_model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 
 			retrier.taskListModel = task_list_model;
-			retrier.eventSpacer = new EventSpacer(100);
+			retrier.pullEventSpacer = new EventSpacer(100);
 			retrier.firePushChangesSequence = function() {};
 
 			rtm.connectionManager = "Some dummy connection manager";

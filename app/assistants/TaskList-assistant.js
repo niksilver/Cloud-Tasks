@@ -94,6 +94,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				break;
 			case 'do-sync':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-sync");
+				this.rtm.resetPullEventSpacer();
 				this.rtm.fireNextEvent();
 				break;
 			default:
