@@ -143,6 +143,20 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('83601519', task.taskID, "Bad task ID");
 			Y.Assert.areEqual(true, task.deleted, "Deleted flag set wrong");
 		},
+		
+		testTaskseriesObjectToTasks: function() {
+			var taskseries_obj = SampleTestData.taskseries_obj_with_multiple_tasks;
+			var task_array = TaskListModel.taskseriesObjectToTasks(taskseries_obj, '11223');
+			
+			Y.Assert.areEqual('58500785', task_array[0].taskseriesID, "Taskseries ID not picked up for first task");
+			Y.Assert.areEqual('83992704', task_array[0].taskID, "Task ID not picked up for first task");
+			Y.Assert.areEqual('2010-01-04T00:00:00Z', task_array[0].due, "Due date not picked up for first task");
+
+			Y.Assert.areEqual('58500785', task_array[0].taskseriesID, "Taskseries ID not picked up for second task");
+			Y.Assert.areEqual('83954367', task_array[1].taskID, "Task ID not picked up for second task");
+			Y.Assert.areEqual('2009-12-24T00:00:00Z', task_array[1].due, "Due date not picked up for second task");
+
+		},
 
 		testDueTasksFlagged: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);

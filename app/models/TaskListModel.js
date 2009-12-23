@@ -39,21 +39,10 @@ TaskListModel.objectToTaskList = function(data_obj) {
 		
 		var taskseries_array = TaskListModel.makeArray(list_obj.taskseries);
 		taskseries_array.each(function(taskseries_obj) {
-			var taskseries_id = taskseries_obj.id;
-			var name = taskseries_obj.name;
-			var task_obj = taskseries_obj.task;
-			var task_id = task_obj.id;
-			var due = task_obj.due;
-			var modified = taskseries_obj.modified;
-			var task = new TaskModel({
-				listID: list_id,
-				taskseriesID: taskseries_id,
-				taskID: task_id,
-				name: name,
-				due: due,
-				modified: modified
+			var task_array = TaskListModel.taskseriesObjectToTasks(taskseries_obj, list_id);
+			task_array.each(function(task) {
+				task_list.push(task);
 			});
-			task_list.push(task);
 		});
 
 		var deleted_obj = list_obj.deleted;
@@ -77,6 +66,35 @@ TaskListModel.objectToTaskList = function(data_obj) {
 	});
 	
 	return task_list;
+}
+
+/**
+ * Take the value of the "taskseries" property from the RTM response and convert it
+ * into an array TaskModel objects.
+ * @param {Object} taskseries_obj  The taskseries object from RTM. Its "id" property will
+ *     hold the value of the taskseries ID, etc.
+ * @param {String} list_id  ID of the list that the taskseries lives in.
+ */
+TaskListModel.taskseriesObjectToTasks = function(taskseries_obj, list_id) {
+	var taskseries_id = taskseries_obj.id;
+	var name = taskseries_obj.name;
+	var task_array = TaskListModel.makeArray(taskseries_obj.task);
+	var task_model_array = [];
+	task_array.each(function(task_obj) {
+		var task_id = task_obj.id;
+		var due = task_obj.due;
+		var modified = taskseries_obj.modified;
+		var task = new TaskModel({
+			listID: list_id,
+			taskseriesID: taskseries_id,
+			taskID: task_id,
+			name: name,
+			due: due,
+			modified: modified
+		});
+		task_model_array.push(task);
+	});
+	return task_model_array;
 }
 
 /**
@@ -257,11 +275,14 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
  * @param {TaskModel} task  The task to be merged.
  */
 TaskListModel.prototype.mergeTask = function(task) {
+	Mojo.Log.info("TaskListModel.mergeTask: merging task " + task);
 	var task_index = this.getTaskIndex(task);
 	if (task_index == -1) {
+		Mojo.Log.info("TaskListModel.mergeTask: task is new");
 		this._task_list.push(task);
 	}
 	else {
+		Mojo.Log.info("TaskListModel.mergeTask: merging with " + this._task_list[task_index]);
 		task.takeLocalChanges(this._task_list[task_index]);
 		this._task_list[task_index] = task;
 	}

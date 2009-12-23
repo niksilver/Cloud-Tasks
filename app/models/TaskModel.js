@@ -12,6 +12,14 @@ function TaskModel(properties) {
 	this.update();
 }
 
+TaskModel.prototype.toString = function() {
+	return "TaskModel{listID: " + this.listID + ", "
+		+ "taskseriesID: " + this.taskseriesID + ", "
+		+ "taskID: " + this.taskID + ", "
+		+ "name: " + this.name + ", "
+		+ "due: " + this.due + "}";
+}
+
 TaskModel.createFromObject = function(obj) {
 	var task = new TaskModel(obj);
 	if (obj.localChanges) {

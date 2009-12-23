@@ -102,7 +102,6 @@ RTM.prototype.networkRequestsForPullingTasks = function() {
  */
 RTM.prototype.callMethod = function(method_name, param_object, successCallback, failureCallback){
 	param_object.method = method_name
-	var rtm = this;
 	var request_params = this.addStandardParams(param_object);
 	
 	this.ajaxRequest(this._REST_URL + "?" + Object.toQueryString(request_params),
@@ -114,6 +113,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 					failureCallback(err_msg);
 				}
 				else {
+					//RTM.logGetListResponse(response);
 					successCallback(response);
 				}
 			},
@@ -129,6 +129,15 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 			},
 			rtmMethodPurpose: this.methodPurpose[method_name] || 'forOther'
 		});
+}
+
+RTM.logGetListResponse = function() {
+	if (method_name == 'rtm.tasks.getList') {
+		var text = response.responseText;
+		for (var i = 0; i < text.length; i += 70) {
+			Mojo.Log.info(text.substr(i, 70));
+		}
+	}
 }
 
 /**

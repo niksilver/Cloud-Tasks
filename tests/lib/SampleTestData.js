@@ -936,6 +936,47 @@ SampleTestData = {
 	         }
 	      }
 	   }
-	} // last_sync_response_deleting_task_5
+	}, // last_sync_response_deleting_task_5
+
+	taskseries_obj_with_multiple_tasks: {
+	   "id":"58500785",
+	   "created":"2009-12-22T17:05:52Z",
+	   "modified":"2009-12-23T12:28:06Z",
+	   "name":"(i)DSG report - Plan\/send",
+	   "source":"js",
+	   "url":"",
+	   "location_id":"",
+	   "rrule":{
+	      "every":"1",
+	      "$t":"FREQ=MONTHLY;INTERVAL=1;BYDAY=1MO"
+	   },
+	   "tags":[],
+	   "participants":[],
+	   "notes":[],
+	   "task":[
+	      {
+	         "id":"83992704",
+	         "due":"2010-01-04T00:00:00Z",
+	         "has_due_time":"0",
+	         "added":"2009-12-23T00:01:32Z",
+	         "completed":"",
+	         "deleted":"",
+	         "priority":"N",
+	         "postponed":"0",
+	         "estimate":""
+	      },
+	      {
+	         "id":"83954367",
+	         "due":"2009-12-24T00:00:00Z",
+	         "has_due_time":"0",
+	         "added":"2009-12-22T17:05:52Z",
+	         "completed":"",
+	         "deleted":"",
+	         "priority":"N",
+	         "postponed":"1",
+	         "estimate":""
+	      }
+	   ] // task array
+	} // taskseries_obj_with_postponed_recurring_tasks
 
 }		

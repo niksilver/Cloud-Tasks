@@ -1,5 +1,5 @@
 /**
- * Test the MD5 function
+ * Test the Retrier mechanism
  */
 
 testCases.push( function(Y) {

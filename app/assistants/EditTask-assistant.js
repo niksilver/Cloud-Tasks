@@ -39,6 +39,12 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 	
+	var delete_task_attributes = {
+		label: "Delete"
+	};
+	this.controller.setupWidget('DeleteTask', delete_task_attributes, {});
+	this.controller.listen('DeleteTask', Mojo.Event.tap, this.handleDeleteTaskEvent.bind(this));
+	
 	//Mojo.Event.back.stopPropagation();
 }
 
@@ -54,15 +60,26 @@ EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 	this.config.task.setForPush('due', this.config.task.due);
 }
 
+EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
+	this.config.task.setForPush('delete', true);
+	this.popScene();
+}
+
 EditTaskAssistant.prototype.handleCommand = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCommand: Entering");
 	if (event.type == Mojo.Event.back) {
 		Mojo.Log.info("TaskListAssistant.handleCommand: Got back event");
-		Mojo.Controller.stageController.popScene({
-			lastScene: 'EditTask',
-			task: this.config.task
-		});
+		this.popScene();
 	}
+}
+
+EditTaskAssistant.prototype.popScene = function() {
+	Mojo.Log.info("EditTaskAssistant.popScene: Entering");
+	Mojo.Controller.stageController.popScene({
+		lastScene: 'EditTask',
+		task: this.config.task
+	});
 }
 
 EditTaskAssistant.prototype.activate = function(event) {
