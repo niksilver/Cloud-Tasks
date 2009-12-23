@@ -275,14 +275,14 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
  * @param {TaskModel} task  The task to be merged.
  */
 TaskListModel.prototype.mergeTask = function(task) {
-	Mojo.Log.info("TaskListModel.mergeTask: merging task " + task);
+	Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task);
 	var task_index = this.getTaskIndex(task);
 	if (task_index == -1) {
-		Mojo.Log.info("TaskListModel.mergeTask: task is new");
+		Mojo.Log.info("TaskListModel.mergeTask: Task is new");
 		this._task_list.push(task);
 	}
 	else {
-		Mojo.Log.info("TaskListModel.mergeTask: merging with " + this._task_list[task_index]);
+		Mojo.Log.info("TaskListModel.mergeTask: Merging with " + this._task_list[task_index]);
 		task.takeLocalChanges(this._task_list[task_index]);
 		this._task_list[task_index] = task;
 	}

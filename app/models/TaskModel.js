@@ -16,8 +16,9 @@ TaskModel.prototype.toString = function() {
 	return "TaskModel{listID: " + this.listID + ", "
 		+ "taskseriesID: " + this.taskseriesID + ", "
 		+ "taskID: " + this.taskID + ", "
-		+ "name: " + this.name + ", "
-		+ "due: " + this.due + "}";
+		+ "name: '" + this.name + "', "
+		+ "due: '" + this.due + "', "
+		+ "deleted: " + this.deleted + "}";
 }
 
 TaskModel.createFromObject = function(obj) {
