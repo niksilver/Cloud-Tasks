@@ -134,7 +134,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		&& returnValue.task.localChanges.length > 0) {
 		var task = returnValue.task;
 		Mojo.Log.info("TaskListAssistant.activate: Task changed");
-		if (task.localChanges.indexOf('name') >= 0 || task.localChanges.indexOf('due') >= 0) {
+		if (task.hasLocalChangeOf('name') || task.hasLocalChangeOf('due')) {
 			this.taskListModel.sort();
 		}
 		this.onTaskListModelChange();

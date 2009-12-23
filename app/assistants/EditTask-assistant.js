@@ -62,7 +62,7 @@ EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
-	this.config.task.setForPush('delete', true);
+	this.config.task.setForPush('deleted', true);
 	this.popScene();
 }
 

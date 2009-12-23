@@ -105,6 +105,10 @@ TaskModel.prototype.hasLocalChanges = function() {
 	return (this.localChanges.length > 0);
 }
 
+TaskModel.prototype.hasLocalChangeOf = function(property) {
+	return (this.localChanges.indexOf(property) >= 0);
+}
+
 /**
  * Take any local changes made in another task.
  * They will also then be flagged as local changes in this.
