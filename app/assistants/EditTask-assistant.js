@@ -39,10 +39,11 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 	
-	var delete_task_attributes = {
+	var delete_task_model = {
+		buttonClass : 'negative',
 		label: "Delete"
 	};
-	this.controller.setupWidget('DeleteTask', delete_task_attributes, {});
+	this.controller.setupWidget('DeleteTask', {}, delete_task_model);
 	this.controller.listen('DeleteTask', Mojo.Event.tap, this.handleDeleteTaskEvent.bind(this));
 	
 	//Mojo.Event.back.stopPropagation();
