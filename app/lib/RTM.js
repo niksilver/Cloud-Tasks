@@ -24,7 +24,8 @@ function RTM() {
 		"rtm.timelines.create": "forPushingChanges",
 		"rtm.tasks.setName": "forPushingChanges",
 		"rtm.tasks.setDueDate": "forPushingChanges",
-		"rtm.tasks.getList": "forPullingTasks",
+		"rtm.tasks.delete": "forPushingChanges",
+		"rtm.tasks.getList": "forPullingTasks"
 	};
 }
 
@@ -393,7 +394,7 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 			var task_to_change = task;
 			this.pushLocalChange(task, property,
 				function(response) {
-					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task_to_change.name + "'");
+					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task_to_change.name + "', new value '" + task.property + "'");
 				},
 				function(err_msg) {
 					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);

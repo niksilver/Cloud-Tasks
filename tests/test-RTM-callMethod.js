@@ -57,6 +57,7 @@ testCases.push( function(Y) {
 			rtm.callMethod("rtm.tasks.setName", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.tasks.delete", {}, function(resp){ response = resp }, null);
 			
 			// Method for pulling tasks
 			rtm.callMethod("rtm.tasks.getList", {}, function(resp){ response = resp }, null);
@@ -64,8 +65,8 @@ testCases.push( function(Y) {
 			// Method that's not specified for either
 			rtm.callMethod("dont.fail.on.this", {}, function(resp){ response = resp }, null);
 			
-			Y.Assert.areEqual(8, rtm.networkRequests(), "Wrong number of network requests");
-			Y.Assert.areEqual(6, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
+			Y.Assert.areEqual(9, rtm.networkRequests(), "Wrong number of network requests");
+			Y.Assert.areEqual(7, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
 			Y.Assert.areEqual(1, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests for pulling tasks");
 			
 			this.wait(
