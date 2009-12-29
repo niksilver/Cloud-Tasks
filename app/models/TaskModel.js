@@ -1,3 +1,14 @@
+/**
+ * Model of a task.
+ * To introduce a new property, do the following:
+ *   - Add it to the TaskModel properties.
+ *   - The property can be interpreted from a server response.
+ *   - Rendering of the task is updated, if applicable.
+ *   - The Task UI is updated to show/edit the property.
+ *   - A change in the property is pushed out to the remote server.
+ *   - The method to push out the property change is given a purpose for network monitoring.
+ */
+
 function TaskModel(properties) {
 	if (properties) {
 		this.listID = properties.listID;

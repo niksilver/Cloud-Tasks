@@ -314,7 +314,8 @@ RTM.prototype.createTimeline = function() {
  * @param {Function} failureCallback  Takes parameter of error message
  */
 RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
-	Mojo.Log.info("RTM.pushLocalChange: Entering with property '" + property + "' for task '" + task.name + "'");
+	Mojo.Log.info("RTM.pushLocalChange: Entering with property '" + property
+		+ "' for task '" + task.name + "' and property '" + task[property] + "'");
 	
 	if (!this.getToken()) {
 		Mojo.Log.info("RTM.pushLocalChange: No auth token so won't push");
@@ -337,6 +338,8 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 		// Bug here: Asynchronous pushes mean the wrong
 		// properties get marked not for push. Should
 		// probably use a hash instead of an array.
+		// Also, what does the task list look like after
+		// a deletion has been pushed out?
 		// -------------------------------------------------
 		//
 		task.markNotForPush(property);

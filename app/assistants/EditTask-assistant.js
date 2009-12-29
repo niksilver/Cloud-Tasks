@@ -63,8 +63,24 @@ EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
-	this.config.task.setForPush('deleted', true);
-	this.popScene();
+	this.controller.showAlertDialog({
+		onChoose: this.handleDeleteTaskConfirmation.bind(this),
+		title: "Delete task",
+		message: "Really delete task?",
+		choices: [
+			{ label: "Delete", value: true, type: 'negative' },
+			{ label: "Cancel", value: false, type: 'dismiss' }
+		]
+	});
+}
+
+EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
+	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Entering");
+	if (choice == true) {
+		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion");
+		this.config.task.setForPush('deleted', true);
+		this.popScene();
+	}
 }
 
 EditTaskAssistant.prototype.handleCommand = function(event){
