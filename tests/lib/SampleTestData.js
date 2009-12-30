@@ -977,6 +977,316 @@ SampleTestData = {
 	         "estimate":""
 	      }
 	   ] // task array
-	} // taskseries_obj_with_postponed_recurring_tasks
+	}, // taskseries_obj_with_postponed_recurring_tasks
+	
+	taskseries_obj_with_multiple_and_recurring_deletions: {
+	   "rsp":{
+	      "stat":"ok",
+	      "tasks":{
+	         "list":[
+	            {
+	               "id":"11122940",
+	               "current":"2009-12-30T00:00:48Z",
+	               "taskseries":[
+	                  {
+	                     "id":"59027737",
+	                     "created":"2009-12-30T15:27:41Z",
+	                     "modified":"2009-12-30T15:27:41Z",
+	                     "name":"Delete me 5",
+	                     "source":"js",
+	                     "url":"",
+	                     "location_id":"",
+	                     "tags":[
+	
+	                     ],
+	                     "participants":[
+	
+	                     ],
+	                     "notes":[
+	
+	                     ],
+	                     "task":{
+	                        "id":"84833374", // Task 1, list id 11122940
+	                        "due":"",
+	                        "has_due_time":"0",
+	                        "added":"2009-12-30T15:27:41Z",
+	                        "completed":"",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     }
+	                  },
+	                  {
+	                     "id":"59027732",
+	                     "created":"2009-12-30T15:27:38Z",
+	                     "modified":"2009-12-30T15:27:38Z",
+	                     "name":"Delete me 4",
+	                     "source":"js",
+	                     "url":"",
+	                     "location_id":"",
+	                     "tags":[
+	
+	                     ],
+	                     "participants":[
+	
+	                     ],
+	                     "notes":[
+	
+	                     ],
+	                     "task":{
+	                        "id":"84833369", // Task 2, list id 11122940
+	                        "due":"",
+	                        "has_due_time":"0",
+	                        "added":"2009-12-30T15:27:38Z",
+	                        "completed":"",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     }
+	                  }
+	               ],
+	               "deleted":{
+	                  "taskseries":[
+	                     {
+	                        "id":"59026338",
+	                        "task":{
+	                           "id":"84830904", // Task 3, deleted, list id 11122940
+	                           "deleted":"2009-12-30T15:27:00Z"
+	                        }
+	                     },
+	                     {
+	                        "id":"59026332",
+	                        "task":{
+	                           "id":"84830799", // Task 4, deleted, list id 11122940
+	                           "deleted":"2009-12-30T15:26:56Z"
+	                        }
+	                     },
+	                     {
+	                        "id":"58975725",
+	                        "task":{
+	                           "id":"84743603", // Task 5, deleted, list id 11122940
+	                           "deleted":"2009-12-30T14:45:28Z"
+	                        }
+	                     },
+	                     {
+	                        "id":"58975720",
+	                        "task":{
+	                           "id":"84743598", // Task 6, deleted, list id 11122940
+	                           "deleted":"2009-12-30T14:56:40Z"
+	                        }
+	                     } // taskseries 59026338
+	                  ] // Array of taskseries in list id 11122940
+	               } // deleted object in list id 11122940
+	            }, // task list object, list id 11122940
+	            {
+	               "id":"2637966",
+	               "current":"2009-12-30T00:00:48Z",
+	               "taskseries":{
+	                  "id":"32135089",
+	                  "created":"2009-01-29T08:16:01Z",
+	                  "modified":"2009-12-30T00:00:48Z",
+	                  "name":"Misc notes - Update",
+	                  "source":"js",
+	                  "url":"",
+	                  "location_id":"",
+	                  "rrule":{
+	                     "every":"1",
+	                     "$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
+	                  },
+	                  "tags":[
+	
+	                  ],
+	                  "participants":[
+	
+	                  ],
+	                  "notes":[
+	
+	                  ],
+	                  "task":[
+	                     {
+	                        "id":"84757747", // Task 7, list id 2637966, taskseries id 32135089
+	                        "due":"2009-12-31T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-12-30T00:00:48Z",
+	                        "completed":"",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"84630592", // Task 8, list id 2637966, taskseries id 32135089
+	                        "due":"2009-12-30T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-12-29T00:01:30Z",
+	                        "completed":"",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"62349079", // Task 9, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-07-01T23:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-06-29T23:30:11Z",
+	                        "completed":"",
+	                        "deleted":"2009-07-01T17:22:21Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"59484931", // Task 10, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-06-03T23:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-06-01T23:09:45Z",
+	                        "completed":"",
+	                        "deleted":"2009-06-03T15:15:01Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"58325949", // Task 11, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-05-25T23:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-05-20T23:53:40Z",
+	                        "completed":"",
+	                        "deleted":"2009-05-26T08:30:59Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"56324020", // Task 12, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-05-04T23:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-05-04T00:09:07Z",
+	                        "completed":"",
+	                        "deleted":"2009-05-05T08:26:02Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"51791665", // Task 13, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-03-27T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-03-25T18:35:09Z",
+	                        "completed":"",
+	                        "deleted":"2009-03-26T13:15:26Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"51559643", // Task 14, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-03-25T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-03-24T00:37:19Z",
+	                        "completed":"",
+	                        "deleted":"2009-03-24T09:57:46Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"50769130", // Task 15, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-03-18T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-03-17T00:31:12Z",
+	                        "completed":"",
+	                        "deleted":"2009-03-17T10:40:54Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"49810071",
+	                        "due":"2009-03-11T00:00:00Z", // Task 16, deleted, list id 2637966, taskseries id 32135089
+	                        "has_due_time":"0",
+	                        "added":"2009-03-09T00:41:22Z",
+	                        "completed":"",
+	                        "deleted":"2009-03-10T18:28:01Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"49396549", // Task 17, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-03-09T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-03-05T00:33:47Z",
+	                        "completed":"",
+	                        "deleted":"2009-03-06T17:32:29Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"48551105", // Task 18, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-03-02T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-02-26T00:27:00Z",
+	                        "completed":"",
+	                        "deleted":"2009-02-27T17:23:43Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"48293847", // Task 19, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-02-26T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-02-24T00:20:57Z",
+	                        "completed":"",
+	                        "deleted":"2009-02-25T18:48:10Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"48152058", // Task 20, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-02-25T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-02-23T00:29:45Z",
+	                        "completed":"",
+	                        "deleted":"2009-02-25T08:49:23Z",
+	                        "priority":"N",
+	                        "postponed":"1",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"46937911", // Task 21, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-02-13T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-02-12T00:12:15Z",
+	                        "completed":"",
+	                        "deleted":"2009-02-13T13:11:00Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     },
+	                     {
+	                        "id":"46243142", // Task 22, deleted, list id 2637966, taskseries id 32135089
+	                        "due":"2009-02-09T00:00:00Z",
+	                        "has_due_time":"0",
+	                        "added":"2009-02-06T00:19:14Z",
+	                        "completed":"",
+	                        "deleted":"2009-02-06T18:00:05Z",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     }
+	                  ] // Array of tasks in taskseries 32135089
+	               } // taskseries object id 32135089
+	            } // task list object id 2637966
+	         ] // Array of task lists
+	      } // The tasks object
+	   } // The rsp object
+	} // taskseries_obj_with_multiple_and_recurring_deletions
 
 }		

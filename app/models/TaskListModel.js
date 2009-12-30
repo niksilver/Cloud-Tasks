@@ -84,13 +84,15 @@ TaskListModel.taskseriesObjectToTasks = function(taskseries_obj, list_id) {
 		var task_id = task_obj.id;
 		var due = task_obj.due;
 		var modified = taskseries_obj.modified;
+		var deleted = (task_obj.deleted ? true : false);
 		var task = new TaskModel({
 			listID: list_id,
 			taskseriesID: taskseries_id,
 			taskID: task_id,
 			name: name,
 			due: due,
-			modified: modified
+			modified: modified,
+			deleted: deleted
 		});
 		task_model_array.push(task);
 	});
@@ -325,4 +327,11 @@ TaskListModel.prototype.getListOfVisibleTasks = function() {
 		}
 	}
 	return list;
+}
+
+TaskListModel.prototype.logTaskList = function() {
+	Mojo.Log.info("TaskListModel.logTaskList: Entering");
+	this._task_list.each(function(task_model) {
+		Mojo.Log.info(task_model.toString());
+	});
 }

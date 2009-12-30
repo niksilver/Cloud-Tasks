@@ -86,14 +86,19 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
 		},
 		
+		getTaskIDToTaskHash: function(task_array) {
+			var task_hash = {};
+			task_array.each(function(task) {
+				task_hash[task.taskID] = task;
+			});
+			return task_hash;
+		},
+		
 		testObjectToTaskListWhenUsingArrays: function() {
 
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_two_lists);
 
-			var task_hash = {};
-			tasks.each(function(task) {
-				task_hash[task.taskID] = task;
-			});
+			var task_hash = this.getTaskIDToTaskHash(tasks);
 			
 			Y.Assert.areEqual('11122940', task_hash['79648346'].listID, "Test 1.1");
 			Y.Assert.areEqual('55630580', task_hash['79648346'].taskseriesID, "Test 1.2");
@@ -114,11 +119,7 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(4, tasks.length, "Wrong number of tasks");
 
-			var task_id_to_task = {};			
-			for (var i = 0; i < tasks.length; i++) {
-				var task = tasks[i];
-				task_id_to_task[task.taskID] = task;
-			}
+			var task_id_to_task = this.getTaskIDToTaskHash(tasks);
 			
 			Y.Assert.areEqual('Sixth task', task_id_to_task['83601522'].name, "Bad name for task ID 83601522");
 			Y.Assert.areEqual('Fifth task', task_id_to_task['83601519'].name, "Bad name for task ID 83601519");
@@ -131,17 +132,25 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(1, tasks.length, "Wrong number of tasks");
 
-			var task_id_to_task = {};			
-			for (var i = 0; i < tasks.length; i++) {
-				var task = tasks[i];
-				task_id_to_task[task.taskID] = task;
-			}
 			var task = tasks[0];
 			
 			Y.Assert.areEqual('11122940', task.listID, "Bad list ID");
 			Y.Assert.areEqual('58274350', task.taskseriesID, "Bad taskseries ID");
 			Y.Assert.areEqual('83601519', task.taskID, "Bad task ID");
 			Y.Assert.areEqual(true, task.deleted, "Deleted flag set wrong");
+		},
+		
+		testObjectToTaskListWithDeletedItemsMarkedByTime: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.taskseries_obj_with_multiple_and_recurring_deletions);
+			
+			Y.Assert.areEqual(22, tasks.length, "Wrong number of tasks");
+			
+			var task_id_to_task = this.getTaskIDToTaskHash(tasks);
+
+			Y.Assert.areEqual(false, task_id_to_task['84757747'].deleted, "Task ID 84757747 should not be marked deleted");
+			Y.Assert.areEqual(false, task_id_to_task['84630592'].deleted, "Task ID 84630592 should not be marked deleted");
+			Y.Assert.areEqual(true, task_id_to_task['62349079'].deleted, "Task ID 62349079 should be marked deleted");
+			Y.Assert.areEqual(true, task_id_to_task['59484931'].deleted, "Task ID 59484931 should be marked deleted");
 		},
 		
 		testTaskseriesObjectToTasks: function() {

@@ -122,6 +122,7 @@ Retrier.prototype.firePullTasksSequence = function() {
 			this.getListParameters(),
 			function(response) {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
+				RTM.logResponse(response);
 				var json = response.responseJSON;
 				var task_list = TaskListModel.objectToTaskList(json);
 				inst.taskListModel.mergeTaskList(task_list);

@@ -134,10 +134,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 
 RTM.logGetListResponse = function() {
 	if (method_name == 'rtm.tasks.getList') {
-		var text = response.responseText;
-		for (var i = 0; i < text.length; i += 70) {
-			Mojo.Log.info(text.substr(i, 70));
-		}
+		RTM.logResponse(reponse);
 	}
 }
 
@@ -397,7 +394,8 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 			var task_to_change = task;
 			this.pushLocalChange(task, property,
 				function(response) {
-					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '" + task_to_change.name + "', new value '" + task.property + "'");
+					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
+						+ task_to_change.name + "', new value '" + task_to_change.property + "'");
 				},
 				function(err_msg) {
 					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);
@@ -487,4 +485,12 @@ RTM.prototype.fireNextEvent = function() {
  */
 RTM.prototype.resetPullEventSpacer = function() {
 	this.retrier.resetPullEventSpacer();
+}
+
+RTM.logResponse = function(response) {
+	Mojo.Log.info("RTM.logResponse: Entering");
+	var text = response.responseText;
+	for (var i = 0; i < text.length; i += 80) {
+		Mojo.Log.info(text.substr(i, 80));
+	}
 }
