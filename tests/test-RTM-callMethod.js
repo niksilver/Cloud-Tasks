@@ -48,7 +48,7 @@ testCases.push( function(Y) {
 				);
 			};
 			
-			Y.Assert.areEqual(0, rtm.networkRequests(), "Some network requests before anything's happened");
+			Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Some network requests before anything's happened");
 
 			// Methods for pushing changes
 			rtm.callMethod("rtm.auth.getFrob", {}, function(resp){ response = resp }, null);
@@ -65,13 +65,13 @@ testCases.push( function(Y) {
 			// Method that's not specified for either
 			rtm.callMethod("dont.fail.on.this", {}, function(resp){ response = resp }, null);
 			
-			Y.Assert.areEqual(9, rtm.networkRequests(), "Wrong number of network requests");
+			Y.Assert.areEqual(9, rtm.networkRequestsTotal(), "Wrong number of network requests");
 			Y.Assert.areEqual(7, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
 			Y.Assert.areEqual(1, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests for pulling tasks");
 			
 			this.wait(
 				function() {
-					Y.Assert.areEqual(0, rtm.networkRequests(), "Wrong number of network requests at end");
+					Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Wrong number of network requests at end");
 					Y.Assert.areEqual(0, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes at end");
 					Y.Assert.areEqual(0, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests at end for pulling tasks");
 				},

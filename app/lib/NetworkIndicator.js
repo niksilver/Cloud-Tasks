@@ -25,15 +25,15 @@ NetworkIndicator.prototype.display = function(pos) {
 	element.setStyle("background-position-y: " + img_pos_y + "px");
 }
 
-NetworkIndicator.prototype.onNetworkRequestsChange = function(count) {
-	Mojo.Log.info("NetworkIndicator.onNetworkRequestsChange: Entering with count = " + count);
+NetworkIndicator.prototype.onNetworkRequestsChange = function(old_counter, new_counter) {
+	Mojo.Log.info("NetworkIndicator.onNetworkRequestsChange: Entering with count = " + new_counter.total);
 	// Cases:
 	//   Have activity, and already have animation
 	//   Have no activity, and have no animation
 	//   Have activity, but don't have animation
 	//   Have no activity, but do have animation
 	
-	var activity = (count > 0);
+	var activity = (new_counter.total > 0);
 	if (activity && this.animation) {
 		// Do nothing
 	}

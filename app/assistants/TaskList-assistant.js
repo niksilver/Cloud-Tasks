@@ -119,8 +119,10 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	Mojo.Log.info("TaskListAssistant.activate: Firing next event...");
 	// This may push local changes, or do what's needed before that.
 	this.rtm.fireNextEvent();
-	
+
 	if (!this.networkIndicator) {
+		// This setup has to go in the activate() method because it's only here
+		// that the document is set up, which is required.
 		this.setUpNetworkIndicator();
 	}
 	this.updateNetworkIndicator();
@@ -150,12 +152,14 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 TaskListAssistant.prototype.setUpNetworkIndicator = function(){
 	Mojo.Log.info("TaskListAssistant.setUpNetworkIndicator: Entering");
 	this.networkIndicator = new NetworkIndicator(this.rtm, this.controller);
-	this.rtm.onNetworkRequestsChange = this.networkIndicator.onNetworkRequestsChange.bind(this.networkIndicator);
+	this.rtm.addOnNetworkRequestsChangeListener(
+		this.networkIndicator.onNetworkRequestsChange.bind(this.networkIndicator)
+	);
 }
 
 TaskListAssistant.prototype.updateNetworkIndicator = function() {
 	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Entering");
-	this.networkIndicator.onNetworkRequestsChange(this.rtm.networkRequests());
+	this.networkIndicator.onNetworkRequestsChange(undefined, this.rtm.networkRequests());
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {

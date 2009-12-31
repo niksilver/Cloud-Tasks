@@ -85,7 +85,9 @@ RTM.prototype.ajaxRequest = function(url, options) {
  *     This is a hash just as for old_counters.
  */
 RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
+	Mojo.Log.info("RTM.onNetworkRequestsChange: Entering");
 	for (var i = 0; i < this._on_network_requests_change_listeners.length; i++) {
+		Mojo.Log.info("RTM.onNetworkRequestsChange: Calling listener " + i);
 		this._on_network_requests_change_listeners[i](old_counters, new_counters);
 	}
 }
@@ -96,13 +98,22 @@ RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
  *     passed into onNetworkRequestsChange().
  */
 RTM.prototype.addOnNetworkRequestsChangeListener = function(fn) {
+	Mojo.Log.info("RTM.addOnNetworkRequestsChangeListener: Entering");
 	this._on_network_requests_change_listeners.push(fn);
 }
 
 /**
- * Return the number of network requests currently running.
+ * Return the number and type of network requests currently running.
+ * This is a hash with properties total, forPushingChanges, forPullingTasks and forOther.
  */
 RTM.prototype.networkRequests = function() {
+	return this.numNetworkRequests;
+}
+
+/**
+ * Return the total number of current network requests.
+ */
+RTM.prototype.networkRequestsTotal = function() {
 	return this.numNetworkRequests.total;
 }
 
