@@ -490,7 +490,12 @@ RTM.prototype.resetPullEventSpacer = function() {
 RTM.logResponse = function(response) {
 	Mojo.Log.info("RTM.logResponse: Entering");
 	var text = response.responseText;
-	for (var i = 0; i < text.length; i += 80) {
-		Mojo.Log.info(text.substr(i, 80));
+	if (text) {
+		for (var i = 0; i < text.length; i += 80) {
+			Mojo.Log.info(text.substr(i, 80));
+		}
+	}
+	else {
+		Mojo.Log.info("RTM.logResponse: response.responseText not defined");
 	}
 }
