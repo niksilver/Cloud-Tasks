@@ -110,7 +110,7 @@ testCases.push( function(Y) {
 
 		},
 		
-		testAjaxRequestCallsOnNetworkRequestChange: function() {
+		testAjaxRequestCallsOnNetworkRequestsChange: function() {
 			var rtm = new RTM();
 			
 			rtm.rawAjaxRequest = function(url, options) {
@@ -147,6 +147,28 @@ testCases.push( function(Y) {
 				onSuccess: function(){},
 				rtmMethodPurpose: 'forPushingChanges'
 			});
+		},
+		
+		testOnNetworkRequestsChangeFiresEvents: function() {
+			var rtm = new RTM();
+			
+			var fired_listener_1 = false;
+			var fired_listener_2 = false;
+			
+			rtm.addOnNetworkRequestsChangeListener(function(v1, v2) {
+				fired_listener_1 = true;
+				Y.Assert.areEqual('Some value 1', v1, "Value 1 not passed in to listener 1");
+				Y.Assert.areEqual('Some value 2', v2, "Value 2 not passed in to listener 1");
+			});
+			rtm.addOnNetworkRequestsChangeListener(function(v1, v2) {
+				fired_listener_2 = true;
+				Y.Assert.areEqual('Some value 1', v1, "Value 1 not passed in to listener 2");
+				Y.Assert.areEqual('Some value 2', v2, "Value 2 not passed in to listener 2");
+			});
+			
+			rtm.onNetworkRequestsChange('Some value 1', 'Some value 2');
+			Y.Assert.areEqual(true, fired_listener_1, "Listener 1 should have fired");
+			Y.Assert.areEqual(true, fired_listener_2, "Listener 2 should have fired");
 		}
 
 	});

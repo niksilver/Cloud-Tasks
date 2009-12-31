@@ -27,6 +27,8 @@ function RTM() {
 		"rtm.tasks.delete": "forPushingChanges",
 		"rtm.tasks.getList": "forPullingTasks"
 	};
+	
+	this._on_network_requests_change_listeners = [];
 }
 
 /**
@@ -74,6 +76,7 @@ RTM.prototype.ajaxRequest = function(url, options) {
 
 /**
  * This gets called whenever the current number of live network requests changes.
+ * This function will in turn call all the listeners added.
  * @param {Object} old_counters  The old number of network requests, before
  *     the change. This is a hash with properties
  *     total, forPushingChanges, forPullingTasks and forOther.
@@ -82,7 +85,18 @@ RTM.prototype.ajaxRequest = function(url, options) {
  *     This is a hash just as for old_counters.
  */
 RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
-	
+	for (var i = 0; i < this._on_network_requests_change_listeners.length; i++) {
+		this._on_network_requests_change_listeners[i](old_counters, new_counters);
+	}
+}
+
+/**
+ * Add a listener for onNetworkRequestsChange().
+ * @param {Function} fn  A listener to add. Will be called with the same two parameters
+ *     passed into onNetworkRequestsChange().
+ */
+RTM.prototype.addOnNetworkRequestsChangeListener = function(fn) {
+	this._on_network_requests_change_listeners.push(fn);
 }
 
 /**
