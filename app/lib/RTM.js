@@ -330,15 +330,6 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	var method;
 	var parameters;
 	var augmented_success_callback = function(response) {
-		//
-		// -------------------------------------------------
-		// Bug here: Asynchronous pushes mean the wrong
-		// properties get marked not for push. Should
-		// probably use a hash instead of an array.
-		// Also, what does the task list look like after
-		// a deletion has been pushed out?
-		// -------------------------------------------------
-		//
 		task.markNotForPush(property);
 		successCallback(response);
 	}
