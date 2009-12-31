@@ -332,23 +332,6 @@ testCases.push( function(Y) {
 				options.onSuccess(SampleTestData.simple_good_response);
 			};
 
-			var do_alert = function(title, old_values, new_values, task) {
-				alert(title + '\n'
-					+ 'old: {total: ' + old_values.total
-					+ ', forPushingChanges: ' + old_values.forPushingChanges
-					+ ', forPullingTasks: ' + old_values.forPullingTasks
-					+ ', forOther: ' + old_values.forOther
-					+ '},\n'
-					+ 'new: {total: ' + new_values.total
-					+ ', forPushingChanges: ' + new_values.forPushingChanges
-					+ ', forPullingTasks: ' + new_values.forPullingTasks
-					+ ', forOther: ' + new_values.forOther
-					+ '},\n'
-					+ 'task is ' + task + '\n'
-					+ 'task.deleted is ' + task.deleted + '\n'
-					+ 'task.hasLocalChanges() is ' + task.hasLocalChanges());
-			};
-			
 			var task = new TaskModel({
 				listID: '112233',
 				taskseriesID: '445566',
@@ -357,12 +340,12 @@ testCases.push( function(Y) {
 				deleted: true,
 				localChanges: ['deleted']
 			});
+
 			var task_list_model = new TaskListModel();
 			task_list_model.setTaskList([task]);
 			var called_purgeTaskList;
 			var orig_purgeTaskList = task_list_model.purgeTaskList.bind(task_list_model);
 			task_list_model.purgeTaskList = function() {
-				do_alert('In purgeTaskList()...', {}, {}, task_list_model._task_list[0]);
 				called_purgeTaskList = true;
 				orig_purgeTaskList();
 			}
@@ -378,9 +361,6 @@ testCases.push( function(Y) {
 			called_rawAjaxRequest = false;
 			called_pushLocalChange_onSuccess = false;
 			called_purgeTaskList = false;
-			rtm.addOnNetworkRequestsChangeListener(function(old_values, new_values) {
-				do_alert('Change listener...', old_values, new_values, task);
-			});
 			rtm.pushLocalChange(task, 'deleted', pushLocalChange_onSuccess, function(){});
 			
 			Y.Assert.areEqual(true, called_rawAjaxRequest, "Should have made Ajax call");
