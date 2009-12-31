@@ -52,27 +52,38 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
+		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
-		inst.onNetworkRequestsChange(--inst.numNetworkRequests.total);
+		--inst.numNetworkRequests.total
+		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 		orig_on_success(response);
 	};
 	options.onFailure = function(response) {
+		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
-		inst.onNetworkRequestsChange(--inst.numNetworkRequests.total);
+		--inst.numNetworkRequests.total
+		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 		orig_on_failure(response);
 	};
-	++inst.numNetworkRequests[options.rtmMethodPurpose];
-	this.onNetworkRequestsChange(++this.numNetworkRequests.total);
+	var old_counters = Object.clone(this.numNetworkRequests);
+	++this.numNetworkRequests[options.rtmMethodPurpose];
+	++this.numNetworkRequests.total
+	this.onNetworkRequestsChange(old_counters, this.numNetworkRequests);
 	this.rawAjaxRequest(url, options);
 }
 
 /**
- * This gets called with the current number of live network requests
- * whenever that number changes.
- * This function is meant to be overridden; the default implementation does nothing.
- * @param {Object} count  The current number of network requests.
+ * This gets called whenever the current number of live network requests changes.
+ * @param {Object} old_counters  The old number of network requests, before
+ *     the change. This is a hash with properties
+ *     total, forPushingChanges, forPullingTasks and forOther.
+ *     The value of each is an integer.
+ * @param {Object} new_counters  The current number of network requests, after the change.
+ *     This is a hash just as for old_counters.
  */
-RTM.prototype.onNetworkRequestsChange = function(count) {};
+RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
+	
+}
 
 /**
  * Return the number of network requests currently running.

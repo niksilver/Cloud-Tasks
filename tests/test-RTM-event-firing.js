@@ -108,6 +108,45 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 
+		},
+		
+		testAjaxRequestCallsOnNetworkRequestChange: function() {
+			var rtm = new RTM();
+			
+			rtm.rawAjaxRequest = function(url, options) {
+				options.onSuccess( {/* Some successful response */} );
+			}
+			
+			var called_first_on_change_fn = false;
+			var called_second_on_change_fn = false;
+			
+			var second_on_change_fn = function(old_values, new_values) {
+				called_second_on_change_fn = true;
+				Y.Assert.isNotUndefined(old_values, "Second call: Old values should be defined");
+				Y.Assert.isNotUndefined(new_values, "Second call: New values should be defined");
+				Y.Assert.areEqual(1, old_values.total, "Second call: Should be starting from 1 connection in total");
+				Y.Assert.areEqual(1, old_values.forPushingChanges, "Second call: Should be starting from 1 connection for pushing changes");
+				Y.Assert.areEqual(0, new_values.total, "Second call: Should have moved to 0 connections in total");
+				Y.Assert.areEqual(0, new_values.forPushingChanges, "Second call: Should have moved to 0 connections for pushing changes");
+			}
+			
+			var first_on_change_fn = function(old_values, new_values) {
+				called_first_on_change_fn = true;
+				Y.Assert.isNotUndefined(old_values, "First call: Old values should be defined");
+				Y.Assert.isNotUndefined(new_values, "First call: New values should be defined");
+				Y.Assert.areEqual(0, old_values.total, "First call: Should be starting from 0 connections in total");
+				Y.Assert.areEqual(0, old_values.forPushingChanges, "First call: Should be starting from 0 connections for pushing changes");
+				Y.Assert.areEqual(1, new_values.total, "First call: Should have moved to 1 connection in total");
+				Y.Assert.areEqual(1, new_values.forPushingChanges, "First call: Should have moved to 1 connection for pushing changes");
+				rtm.onNetworkRequestsChange = second_on_change_fn;
+			}
+			
+			rtm.onNetworkRequestsChange = first_on_change_fn;
+			
+			rtm.ajaxRequest("http://some.url.here", {
+				onSuccess: function(){},
+				rtmMethodPurpose: 'forPushingChanges'
+			});
 		}
 
 	});
