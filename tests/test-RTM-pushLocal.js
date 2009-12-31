@@ -318,6 +318,75 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task_2_marked_not_for_push, "Task 2 should be marked not for push now");
 			Y.Assert.areEqual(true, task_3_marked_not_for_push, "Task 3 should be marked not for push now");
 			Y.Assert.areEqual("", errs, "Wrong tasks pushed: " + errs);
+		},
+		
+		testPushLocalDeletionCausesTaskListPurge: function() {
+			var rtm = new RTM();
+			rtm.fireNextEvent = function() {};
+			rtm.timeline = '87654';
+			rtm.setToken('mydummytoken');
+			
+			var called_rawAjaxRequest;
+			rtm.rawAjaxRequest = function(url, options) {
+				called_rawAjaxRequest = true;
+				options.onSuccess(SampleTestData.simple_good_response);
+			};
+
+			var do_alert = function(title, old_values, new_values, task) {
+				alert(title + '\n'
+					+ 'old: {total: ' + old_values.total
+					+ ', forPushingChanges: ' + old_values.forPushingChanges
+					+ ', forPullingTasks: ' + old_values.forPullingTasks
+					+ ', forOther: ' + old_values.forOther
+					+ '},\n'
+					+ 'new: {total: ' + new_values.total
+					+ ', forPushingChanges: ' + new_values.forPushingChanges
+					+ ', forPullingTasks: ' + new_values.forPullingTasks
+					+ ', forOther: ' + new_values.forOther
+					+ '},\n'
+					+ 'task is ' + task + '\n'
+					+ 'task.deleted is ' + task.deleted + '\n'
+					+ 'task.hasLocalChanges() is ' + task.hasLocalChanges());
+			};
+			
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				deleted: true,
+				localChanges: ['deleted']
+			});
+			var task_list_model = new TaskListModel();
+			task_list_model.setTaskList([task]);
+			var called_purgeTaskList;
+			var orig_purgeTaskList = task_list_model.purgeTaskList.bind(task_list_model);
+			task_list_model.purgeTaskList = function() {
+				do_alert('In purgeTaskList()...', {}, {}, task_list_model._task_list[0]);
+				called_purgeTaskList = true;
+				orig_purgeTaskList();
+			}
+			rtm.retrier.taskListModel = task_list_model;
+			
+			var called_pushLocalChange_onSuccess;
+			var pushLocalChange_onSuccess = function() {
+				called_pushLocalChange_onSuccess = true;
+			}
+			
+			Y.Assert.areEqual(1, task_list_model.getTaskList().length, "Should be just one task in the list");
+			
+			called_rawAjaxRequest = false;
+			called_pushLocalChange_onSuccess = false;
+			called_purgeTaskList = false;
+			rtm.addOnNetworkRequestsChangeListener(function(old_values, new_values) {
+				do_alert('Change listener...', old_values, new_values, task);
+			});
+			rtm.pushLocalChange(task, 'deleted', pushLocalChange_onSuccess, function(){});
+			
+			Y.Assert.areEqual(true, called_rawAjaxRequest, "Should have made Ajax call");
+			Y.Assert.areEqual(true, called_pushLocalChange_onSuccess, "Should have called the onSuccess callback of pushLocalChange()");
+			Y.Assert.areEqual(true, called_purgeTaskList, "Should have tried to purge the task list");
+			Y.Assert.areEqual(0, task_list_model.getTaskList().length, "Should be no tasks in the list");
 		}
 
 	});

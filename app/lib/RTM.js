@@ -55,20 +55,20 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	options.onSuccess = function(response) {
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
-		--inst.numNetworkRequests.total
-		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
+		--inst.numNetworkRequests.total;
 		orig_on_success(response);
+		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 	};
 	options.onFailure = function(response) {
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
-		--inst.numNetworkRequests.total
-		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
+		--inst.numNetworkRequests.total;
 		orig_on_failure(response);
+		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 	};
 	var old_counters = Object.clone(this.numNetworkRequests);
 	++this.numNetworkRequests[options.rtmMethodPurpose];
-	++this.numNetworkRequests.total
+	++this.numNetworkRequests.total;
 	this.onNetworkRequestsChange(old_counters, this.numNetworkRequests);
 	this.rawAjaxRequest(url, options);
 }

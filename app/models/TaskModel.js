@@ -19,7 +19,7 @@ function TaskModel(properties) {
 		this.modified = properties.modified;
 		this.deleted = properties.deleted || false;
 	}
-	this.localChanges = [];
+	this.localChanges = (properties && properties.localChanges) || [];
 	this.update();
 }
 

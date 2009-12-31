@@ -27,7 +27,7 @@
 function Retrier(rtm) {
 	this.rtm = rtm;
 	this.resetPullEventSpacer();
-	rtm.addOnNetworkRequestsChangeListener(this.onNetworkRequestsChange);
+	rtm.addOnNetworkRequestsChangeListener(this.onNetworkRequestsChange.bind(this));
 }
 
 Retrier.prototype.resetPullEventSpacer = function() {
@@ -152,5 +152,11 @@ Retrier.prototype.getListParameters = function() {
 }
 
 Retrier.prototype.onNetworkRequestsChange = function(old_values, new_values) {
-	// Something to go here
+	Mojo.Log.info("Retrier.onNetworkRequestsChange: Entering");
+	if (this.taskListModel
+			&& new_values.forPushingChanges == 0
+			&& old_values.forPushingChanges > 0) {
+		this.taskListModel.purgeTaskList();
+		this.taskListModel.saveTaskList();
+	}
 }
