@@ -65,8 +65,7 @@ EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
 	this.controller.showAlertDialog({
 		onChoose: this.handleDeleteTaskConfirmation.bind(this),
-		title: "Delete task",
-		message: "Really delete task?",
+		title: "Are you sure?",
 		choices: [
 			{ label: "Delete", value: true, type: 'negative' },
 			{ label: "Cancel", value: false, type: 'dismiss' }
