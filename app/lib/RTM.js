@@ -9,6 +9,7 @@ function RTM() {
 	this.timeline = null;
 	this.haveNetworkConnectivity = false;
 	this.connectionManager = undefined;
+	this.onNetworkRequestsChangeListeners = [];
 	this.retrier = new Retrier(this);
 
 	this.numNetworkRequests = {
@@ -27,8 +28,6 @@ function RTM() {
 		"rtm.tasks.delete": "forPushingChanges",
 		"rtm.tasks.getList": "forPullingTasks"
 	};
-	
-	this._on_network_requests_change_listeners = [];
 }
 
 /**
@@ -86,9 +85,9 @@ RTM.prototype.ajaxRequest = function(url, options) {
  */
 RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
 	Mojo.Log.info("RTM.onNetworkRequestsChange: Entering");
-	for (var i = 0; i < this._on_network_requests_change_listeners.length; i++) {
+	for (var i = 0; i < this.onNetworkRequestsChangeListeners.length; i++) {
 		Mojo.Log.info("RTM.onNetworkRequestsChange: Calling listener " + i);
-		this._on_network_requests_change_listeners[i](old_counters, new_counters);
+		this.onNetworkRequestsChangeListeners[i](old_counters, new_counters);
 	}
 }
 
@@ -99,7 +98,7 @@ RTM.prototype.onNetworkRequestsChange = function(old_counters, new_counters) {
  */
 RTM.prototype.addOnNetworkRequestsChangeListener = function(fn) {
 	Mojo.Log.info("RTM.addOnNetworkRequestsChangeListener: Entering");
-	this._on_network_requests_change_listeners.push(fn);
+	this.onNetworkRequestsChangeListeners.push(fn);
 }
 
 /**

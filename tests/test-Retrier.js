@@ -339,6 +339,24 @@ testCases.push( function(Y) {
 					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
 				},
 				120);
+		},
+		
+		testRetrierHandlesOnNetworkRequestsChange: function() {
+			var rtm = new RTM();
+			
+			var called_onNetworkRequestsChange = false;
+			var onNetworkRequestsChange = function(old_values, new_values) {
+				called_onNetworkRequestsChange = true;
+				Y.Assert.areEqual('some old values', old_values, "Old values not passed in");
+				Y.Assert.areEqual('some new values', new_values, "New values not passed in");
+			};
+			var RetrierExtended = Utils.extend(Retrier, {
+				onNetworkRequestsChange: onNetworkRequestsChange
+			});
+			
+			var retrier = new RetrierExtended(rtm);
+			rtm.onNetworkRequestsChange('some old values', 'some new values');
+			Y.Assert.areEqual(true, called_onNetworkRequestsChange, "onNetworkRequestsChange not called");
 		}
 
 	});

@@ -23,20 +23,6 @@ testCases.push( function(Y) {
 			return depot;
 		},
 		
-		// Adapted from http://www.lshift.net/blog/2006/08/03/subclassing-in-javascript-part-2
-		extend: function(superclass, prototype) {
-		    var res = function () {
-		        superclass.apply(this, arguments);
-		    };
-		    var withoutcon = function () {};
-		    withoutcon.prototype = superclass.prototype;
-		    res.prototype = new withoutcon();
-		    for (var k in prototype) {
-		        res.prototype[k] = prototype[k];
-		    }
-		    return res;
-		},
-		
 		_should: {
 			error: {
 				testSetTaskListShouldErrorWithoutTaskModelObjects: true
@@ -403,7 +389,7 @@ testCases.push( function(Y) {
 		testMergeTaskUsingNewTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
-			var TaskModelExtended = this.extend(TaskModel, {
+			var TaskModelExtended = Utils.extend(TaskModel, {
 				today: function() { return Date.parse('2010-01-01T00:00:00Z') }
 			});
 
@@ -433,7 +419,7 @@ testCases.push( function(Y) {
 			var existing_task = model.getTaskList()[5];
 			
 			// Make make a task model that thinks it is the due date
-			var TaskModelExtended = this.extend(TaskModel, {
+			var TaskModelExtended = Utils.extend(TaskModel, {
 				today: function() { return Date.parse(existing_task.due) }
 			});
 			var updated_name = existing_task.name + " again";
@@ -463,7 +449,7 @@ testCases.push( function(Y) {
 			var original_task = model.getTaskList()[5];
 			
 			// Make make a task model that thinks it is not yet the due date
-			var TaskModelExtended = this.extend(TaskModel, {
+			var TaskModelExtended = Utils.extend(TaskModel, {
 				today: function() {	return Date.parse(original_task.due).add({ days: -1 }) }
 			});
 			var remotely_updated_name = original_task.name + " again";

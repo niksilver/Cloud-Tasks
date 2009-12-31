@@ -305,10 +305,13 @@ TaskListModel.prototype.mergeTaskList = function(task_list) {
  * Remove all those tasks that don't need to be shown
  */
 TaskListModel.prototype.purgeTaskList = function() {
+	Mojo.Log.info("TaskListModel.purgeTaskList: Entering");
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
 		if (task.deleted && !task.hasLocalChanges()) {
 			// Need to purge this task
+			var task_str = task.toString();
+			Mojo.Log.info("TaskListModel.purgeTaskList: Purging " + task_str);
 			this._task_list.splice(i, 1);
 		}
 	}

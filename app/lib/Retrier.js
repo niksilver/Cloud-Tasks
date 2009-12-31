@@ -27,6 +27,7 @@
 function Retrier(rtm) {
 	this.rtm = rtm;
 	this.resetPullEventSpacer();
+	rtm.addOnNetworkRequestsChangeListener(this.onNetworkRequestsChange);
 }
 
 Retrier.prototype.resetPullEventSpacer = function() {
@@ -148,4 +149,8 @@ Retrier.prototype.getListParameters = function() {
 		params.last_sync = this.rtm.getLatestModified();
 	}
 	return params;
+}
+
+Retrier.prototype.onNetworkRequestsChange = function(old_values, new_values) {
+	// Something to go here
 }
