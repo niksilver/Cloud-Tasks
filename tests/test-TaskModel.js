@@ -216,7 +216,8 @@ testCases.push( function(Y) {
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z',
 				modified: '2008-06-20T21:11:26Z',
-				deleted: true
+				deleted: true,
+				rrule: 'Something'
 			};
 			var TaskModelCopy = Object.clone(TaskModel);
 			TaskModelCopy.today = function() { return Date.parse('2008-07-13T00:00:00Z') };
@@ -229,6 +230,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Due date not created");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time not created");
 			Y.Assert.areEqual(true, task.deleted, "Deleted flag not created");
+			Y.Assert.areEqual('Something', task.rrule, "Recurrence rule not created");
 			Y.Assert.isArray(task.localChanges, "Local changes not set up");
 			Y.Assert.areEqual(0, task.localChanges.length, "Local changes recorded incorrectly");
 			Y.Assert.areEqual(true, task.isDueFlag, "Due flag not set correctly");

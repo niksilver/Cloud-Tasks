@@ -85,6 +85,7 @@ TaskListModel.taskseriesObjectToTasks = function(taskseries_obj, list_id) {
 		var due = task_obj.due;
 		var modified = taskseries_obj.modified;
 		var deleted = (task_obj.deleted ? true : false);
+		var rrule = Object.clone(taskseries_obj.rrule);
 		var task = new TaskModel({
 			listID: list_id,
 			taskseriesID: taskseries_id,
@@ -92,7 +93,8 @@ TaskListModel.taskseriesObjectToTasks = function(taskseries_obj, list_id) {
 			name: name,
 			due: due,
 			modified: modified,
-			deleted: deleted
+			deleted: deleted,
+			rrule: rrule
 		});
 		task_model_array.push(task);
 	});

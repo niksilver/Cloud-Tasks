@@ -1,8 +1,8 @@
 /**
  * Model of a task.
  * To introduce a new property, do the following:
- *   - Add it to the TaskModel properties in the constructor.
- *   - The property can be interpreted from a server response.
+ *   - Add it to the TaskModel properties in the constructor and toString().
+ *   - In TaskListModel, ensure the property can be interpreted from a server response.
  *   - Rendering of the task is updated, if applicable.
  *   - The Task UI is updated to show/edit the property.
  *   - A change in the property is pushed out to the remote server.
@@ -30,7 +30,8 @@ TaskModel.prototype.toString = function() {
 		+ "taskID: " + this.taskID + ", "
 		+ "name: '" + this.name + "', "
 		+ "due: '" + this.due + "', "
-		+ "deleted: " + this.deleted + "}";
+		+ "deleted: " + this.deleted + ", "
+		+ "rrule: " + this.rrule + "}";
 }
 
 TaskModel.createFromObject = function(obj) {

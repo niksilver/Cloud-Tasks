@@ -99,6 +99,18 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
 		},
 		
+		testObjectToTaskListWithRecurrenceRule: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_with_rrule = task_hash['78909702'];
+			
+			Y.Assert.isNotUndefined(task_with_rrule, "Could not find intended task");
+			Y.Assert.areEqual("Legal - Check updatedoc", task_with_rrule.name, "Didn't pick up right task");
+			Y.Assert.isNotUndefined(task_with_rrule.rrule, "Task didn't get rrule");
+			Y.Assert.areEqual("1", task_with_rrule.rrule.every, "Rrule didn't have right 'every' property");
+			Y.Assert.areEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO", task_with_rrule.rrule['$t'], "Rrule didn't have right '$t' property");
+		},
+		
 		testObjectToTaskListWithDeletedItems: function() {
 			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response);
