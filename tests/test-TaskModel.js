@@ -146,20 +146,20 @@ testCases.push( function(Y) {
 
 		},
 		
-		testUpdateSetsHasRRule: function() {
+		testUpdateSetsHasRRuleFlag: function() {
 			var task;
 			
 			task = new TaskModel({ name: 'Do something once' });
 			task.update();
-			Y.Assert.areEqual(false, task.hasRRule, "hasRRule property not set correctly to false");
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly to false");
 			
 			task = new TaskModel({ rrule: 'Some rrule object' });
 			task.update();
-			Y.Assert.areEqual(true, task.hasRRule, "hasRRule property not set correctly to true");
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly to true");
 			
 			task = new TaskModel({ rrule: undefined });
 			task.update();
-			Y.Assert.areEqual(false, task.hasRRule, "hasRRule property not set correctly when undefined");
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when undefined");
 		},
 		
 		testSortByDueThenName: function(){

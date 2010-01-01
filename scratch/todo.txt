@@ -5,7 +5,6 @@
   - Add task completion
   - Handle task completion of recurring tasks
 - Recurring tasks
-  - Indicate recurring tasks in task list
   - Add these
 - Postponing tasks
   - Allow task postponing
@@ -21,4 +20,6 @@ Done
 
 - Deleting tasks
   - Allow purging of deleted tasks after pushing out changes
+- Recurring tasks
+  - Indicate recurring tasks in task list
   

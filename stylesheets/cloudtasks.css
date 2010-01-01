@@ -19,6 +19,14 @@
 	padding: 6px 6px 7px 12px;
 }
 
+#TaskList .task-name .has-rrule-true {
+	vertical-align: baseline;
+}
+
+#TaskList .task-name .has-rrule-false {
+	display: none;
+}
+
 /* ----------------- Due and overdue tasks -------------- */
 
 #TaskList .due-false .task-name {

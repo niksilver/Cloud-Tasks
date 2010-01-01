@@ -58,7 +58,7 @@ TaskModel.prototype.toObject = function() {
 TaskModel.prototype.update = function() {
 	this.isDueFlag = this.isDue();
 	this.isOverdueFlag = this.isOverdue();
-	this.hasRRule = (typeof this.rrule !== 'undefined')
+	this.hasRRuleFlag = (typeof this.rrule !== 'undefined')
 }
 
 TaskModel.prototype.today = function() {
