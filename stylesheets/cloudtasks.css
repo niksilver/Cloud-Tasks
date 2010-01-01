@@ -19,12 +19,14 @@
 	padding: 6px 6px 7px 12px;
 }
 
-#TaskList .task-name .has-rrule-true {
-	vertical-align: baseline;
+/* ----------------- Recurrence symbol ------------------ */
+
+#TaskList .task-name .rrule-symbol .has-rrule-false {
+	display: none;
 }
 
-#TaskList .task-name .has-rrule-false {
-	display: none;
+#TaskList .task-name .rrule-symbol .has-rrule-true {
+	vertical-align: baseline;
 }
 
 /* ----------------- Due and overdue tasks -------------- */
