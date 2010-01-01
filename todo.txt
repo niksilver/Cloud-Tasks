@@ -1,8 +1,6 @@
 - Auth screen:
   - Tidy up text formatting
   - Put spinner on Go and Finish buttons
-- Deleting tasks
-  - Allow purging of deleted tasks after pushing out changes
 - Completing tasks
   - Add task completion
   - Handle task completion of recurring tasks
@@ -16,4 +14,11 @@
   - Have tasks with no due dates appear after overdue tasks
   - Have tasks with no due dates have a blank where due date usually appears.
   - Have better date input mechanism
+
+  
+Done
+----
+
+- Deleting tasks
+  - Allow purging of deleted tasks after pushing out changes
   
