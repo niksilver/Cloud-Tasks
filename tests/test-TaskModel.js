@@ -33,7 +33,8 @@ testCases.push( function(Y) {
 				name: 'My test task',
 				due: '2008-07-13T00:00:00Z',
 				modified: '2008-06-20T21:11:26Z',
-				deleted: false
+				deleted: false,
+				rrule: 'Something'
 			});
 			
 			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
@@ -43,6 +44,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Task due date doesn't get set");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time doesn't get set");
 			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set");
+			Y.Assert.areEqual('Something', task.rrule, "Task rrule not set");
 		},
 		
 		testConstructorSetsDeletedDefault: function() {

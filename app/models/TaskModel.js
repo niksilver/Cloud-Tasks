@@ -1,7 +1,7 @@
 /**
  * Model of a task.
  * To introduce a new property, do the following:
- *   - Add it to the TaskModel properties.
+ *   - Add it to the TaskModel properties in the constructor.
  *   - The property can be interpreted from a server response.
  *   - Rendering of the task is updated, if applicable.
  *   - The Task UI is updated to show/edit the property.
@@ -18,6 +18,7 @@ function TaskModel(properties) {
 		this.due = properties.due;
 		this.modified = properties.modified;
 		this.deleted = properties.deleted || false;
+		this.rrule = properties.rrule;
 	}
 	this.localChanges = (properties && properties.localChanges) || [];
 	this.update();
