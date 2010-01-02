@@ -420,10 +420,24 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 }
 
 /**
- * Push any local changes for the given task
+ * Push any local changes for the given task, which might mean creating the
+ * task remotely.
  * @param {TaskModel} task  The task which might have local changes to be pushed out.
  */
 RTM.prototype.pushLocalChangesForTask = function(task) {
+	if (task.hasNoIDs()) {
+		this.addTask(task);
+	}
+	else {
+		this.pushLocalPropertyChangesForTask(task);
+	}
+}
+
+/**
+ * Push out any property changes marked in the task.
+ * @param {TaskModel} task  The task with (possible) properties which have changes.
+ */
+RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 	for (var j = 0; j < task.localChanges.length; j++) {
 		var property = task.localChanges[j];
 		var task_to_change = task;
@@ -437,6 +451,16 @@ RTM.prototype.pushLocalChangesForTask = function(task) {
 			}
 		);
 	}
+}
+
+/**
+ * Add a new task remotely.
+ * Will update the IDs and mark the 'name' as no longer needing to be pushed,
+ * since that has to be set with the new task.
+ * @param {Object} task  The task to be created remotely.
+ */
+RTM.prototype.addTask = function(task) {
+	// To do
 }
 
 /**

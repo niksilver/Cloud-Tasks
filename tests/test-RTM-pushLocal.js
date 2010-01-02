@@ -367,6 +367,30 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, called_pushLocalChange_onSuccess, "Should have called the onSuccess callback of pushLocalChange()");
 			Y.Assert.areEqual(true, called_purgeTaskList, "Should have tried to purge the task list");
 			Y.Assert.areEqual(0, task_list_model.getTaskList().length, "Should be no tasks in the list");
+		},
+		
+		testPushLocalChangesForTaskCreatesNewRemotelyFirstIfNeeded: function() {
+			var rtm = new RTM();
+			var task_created_locally = new TaskModel({
+				name: 'My local task'
+			});
+			var task_created_remotely = new TaskModel({
+				listID: '12345',
+				taskseriesID: '67890',
+				taskID: '87654',
+				name: 'My remote task',
+				localChanges: ['name']
+			});
+			
+			var tasks_created = [];
+			rtm.addTask = function(task) {
+				tasks_created.push(task);
+			}
+			rtm.pushLocalChangesForTask(task_created_locally);
+			rtm.pushLocalChangesForTask(task_created_remotely);
+			
+			Y.Assert.areEqual(1, tasks_created.length, "Should only have tried to create one task");
+			Y.Assert.areSame(task_created_locally, tasks_created[0], "Didn't try to push out locally created task");
 		}
 
 	});
