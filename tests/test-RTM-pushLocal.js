@@ -6,11 +6,6 @@ testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 500;
 	
-	var assertContains = function(string_to_test, substring_sought, failure_message) {
-		Y.assert(string_to_test.indexOf(substring_sought) >= 0,
-			failure_message + " (string to test is '" + string_to_test + "')");
-	}
-	
 	return new Y.Test.Case({
 		
 		setUp: function() {
@@ -112,12 +107,12 @@ testCases.push( function(Y) {
 			);
 			this.wait(
 				function() {
-					assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
-					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
-					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
-					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
-					assertContains(url_used, 'timeline=87654', "Timeline not being used");
-					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
+					TestUtils.assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
+					TestUtils.assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
 					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
 				},
 				WAIT_TIMEOUT
@@ -155,11 +150,11 @@ testCases.push( function(Y) {
 			this.wait(
 				function() {
 					Y.Assert.isNotUndefined(url_used, "No URL called");
-					assertContains(url_used, 'method=rtm.tasks.delete', "rtm.tasks.delete not called");
-					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
-					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
-					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
-					assertContains(url_used, 'timeline=87654', "Timeline not being used");
+					TestUtils.assertContains(url_used, 'method=rtm.tasks.delete', "rtm.tasks.delete not called");
+					TestUtils.assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
 					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
 				},
 				WAIT_TIMEOUT
@@ -236,12 +231,12 @@ testCases.push( function(Y) {
 			);
 			this.wait(
 				function() {
-					assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
-					assertContains(url_used, 'list_id=112233', "List ID not set correctly");
-					assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
-					assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
-					assertContains(url_used, 'timeline=87654', "Timeline not being used");
-					assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'method=rtm.tasks.setName', "setName not called");
+					TestUtils.assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
+					TestUtils.assertContains(url_used, 'name=Do%20testing', "Task ID not set correctly");
 					Y.Assert.areEqual("RTM error 11: Funny failure message", err_msg_returned, "Didn't return error message");
 				},
 				WAIT_TIMEOUT

@@ -6,11 +6,6 @@ testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 500;
 	
-	var assertContains = function(string_to_test, substring_sought, failure_message) {
-		Y.assert(string_to_test.indexOf(substring_sought) >= 0,
-			failure_message + " (string to test is '" + string_to_test + "')");
-	}
-	
 	return new Y.Test.Case({
 		
 		setUp: function() {
