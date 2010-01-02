@@ -350,7 +350,7 @@ testCases.push( function(Y) {
 				Y.Assert.areEqual('some old values', old_values, "Old values not passed in");
 				Y.Assert.areEqual('some new values', new_values, "New values not passed in");
 			};
-			var RetrierExtended = Utils.extend(Retrier, {
+			var RetrierExtended = TestUtils.extend(Retrier, {
 				onNetworkRequestsChange: onNetworkRequestsChange
 			});
 			

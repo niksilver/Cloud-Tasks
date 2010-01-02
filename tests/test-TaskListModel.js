@@ -111,6 +111,16 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO", task_with_rrule.rrule['$t'], "Rrule didn't have right '$t' property");
 		},
 		
+		testObjectToTaskListWithNoRecurrenceRule: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_with_no_rrule = task_hash['75724449'];
+			
+			Y.Assert.isNotUndefined(task_with_no_rrule, "Could not find intended task");
+			Y.Assert.areEqual("O2 - Expect deposit credited", task_with_no_rrule.name, "Didn't pick up right task");
+			Y.Assert.isUndefined(task_with_no_rrule.rrule, "Task didn't get rrule correctly");
+		},
+		
 		testObjectToTaskListWithDeletedItems: function() {
 			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response);
@@ -401,7 +411,7 @@ testCases.push( function(Y) {
 		testMergeTaskUsingNewTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
-			var TaskModelExtended = Utils.extend(TaskModel, {
+			var TaskModelExtended = TestUtils.extend(TaskModel, {
 				today: function() { return Date.parse('2010-01-01T00:00:00Z') }
 			});
 
@@ -431,7 +441,7 @@ testCases.push( function(Y) {
 			var existing_task = model.getTaskList()[5];
 			
 			// Make make a task model that thinks it is the due date
-			var TaskModelExtended = Utils.extend(TaskModel, {
+			var TaskModelExtended = TestUtils.extend(TaskModel, {
 				today: function() { return Date.parse(existing_task.due) }
 			});
 			var updated_name = existing_task.name + " again";
@@ -461,7 +471,7 @@ testCases.push( function(Y) {
 			var original_task = model.getTaskList()[5];
 			
 			// Make make a task model that thinks it is not yet the due date
-			var TaskModelExtended = Utils.extend(TaskModel, {
+			var TaskModelExtended = TestUtils.extend(TaskModel, {
 				today: function() {	return Date.parse(original_task.due).add({ days: -1 }) }
 			});
 			var remotely_updated_name = original_task.name + " again";

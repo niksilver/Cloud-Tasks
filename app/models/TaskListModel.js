@@ -85,7 +85,7 @@ TaskListModel.taskseriesObjectToTasks = function(taskseries_obj, list_id) {
 		var due = task_obj.due;
 		var modified = taskseries_obj.modified;
 		var deleted = (task_obj.deleted ? true : false);
-		var rrule = Object.clone(taskseries_obj.rrule);
+		var rrule = Utils.clone(taskseries_obj.rrule);
 		var task = new TaskModel({
 			listID: list_id,
 			taskseriesID: taskseries_id,
@@ -175,7 +175,8 @@ TaskListModel.prototype.saveTaskList = function() {
 	for (i = 0; i < num_tasks; i++) {
 		var task_cookie = new Mojo.Model.Cookie('task' + i);
 		var task = this._task_list[i];
-		task_cookie.put(task.toObject());
+		var task_obj = task.toObject();
+		task_cookie.put(task_obj);
 	}
 	
 	// Put an end-of-list marker, and clean up any extra cookies

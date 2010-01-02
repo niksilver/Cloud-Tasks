@@ -54,7 +54,7 @@ TaskModel.prototype.toObject = function() {
 		due: this.due,
 		modified: this.modified,
 		deleted: this.deleted,
-		rrule: Object.clone(this.rrule),
+		rrule: Utils.clone(this.rrule),
 		localChanges: this.localChanges.clone()
 	}
 }

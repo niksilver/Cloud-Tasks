@@ -21,11 +21,12 @@
 
 /* ----------------- Recurrence symbol ------------------ */
 
-#TaskList .task-name .rrule-symbol .has-rrule-false {
+#TaskList .task-name img {
 	display: none;
 }
 
-#TaskList .task-name .rrule-symbol .has-rrule-true {
+#TaskList .task-name img.has-rrule-true {
+	display: inline;
 	vertical-align: baseline;
 }
 

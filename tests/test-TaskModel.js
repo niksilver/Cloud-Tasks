@@ -268,7 +268,9 @@ testCases.push( function(Y) {
 		},
 		
 		testToObject: function() {
-			var task = new TaskModel({
+			var task, task_obj;
+			
+			task = new TaskModel({
 				listID: '123456',
 				taskseriesID:'223344',
 				taskID: '667788',
@@ -278,7 +280,7 @@ testCases.push( function(Y) {
 				deleted: true,
 				rrule: {'every': '0', '$t': 'Some $t here'}
 			});
-			var task_obj = task.toObject();
+			task_obj = task.toObject();
 			
 			Y.Assert.areEqual('My test task', task_obj.name, "Name not recorded in object");
 			Y.Assert.areEqual(true, task_obj.deleted, "Deleted property not recorded in object");
@@ -287,16 +289,17 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('0', task_obj.rrule.every, "Every property of rrule not recorded in object");
 			Y.Assert.areEqual('Some $t here', task_obj.rrule['$t'], "$t property of rrule not recorded in object");
 
-			var task_with_undefined_rrule = new TaskModel({
+			task = new TaskModel({
 				name: 'My test task 2',
 				due: '2008-07-13T00:00:00Z',
 				modified: '2008-06-20T21:11:26Z',
 				deleted: true
+				// RRule is undefined
 			});
-			var task_obj = task.toObject();
+			task_obj = task.toObject();
 			
-			Y.Assert.areEqual('My test task 2', task_with_undefined_rrule.name, "Name not recorded in object with undefined rrule");
-			Y.Assert.isUndefined(task_with_undefined_rrule.rrule, "Undefined rrule not recorded in object");
+			Y.Assert.areEqual('My test task 2', task_obj.name, "Name not recorded in object with undefined rrule");
+			Y.Assert.isUndefined(task_obj.rrule, "Undefined rrule not recorded correctly in object");
 		}
 
 	});
