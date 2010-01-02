@@ -82,7 +82,8 @@ TaskListAssistant.prototype.handleListTap = function(event) {
 	var task_config = {
 		rtm: this.rtm,
 		taskListModel: this.taskListModel,
-		task: event.item
+		task: event.item,
+		isNew: false
 	};
 	Mojo.Controller.stageController.pushScene('EditTask', task_config);
 }
@@ -107,6 +108,7 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				break;
 			case 'do-add':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-add");
+				this.handleAddTaskCommand();
 				break;
 			default:
 				Mojo.Log.info("TaskListAssistant.handleCommand: Unrecognised event command");
@@ -115,17 +117,44 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 	}
 }
 
+TaskListAssistant.prototype.handleAddTaskCommand = function() {
+	Mojo.Log.info("TaskListAssistant.handleAddTaskCommnad: Entering");
+	var task = new TaskModel({
+		name: '',
+		due: Date.today().toISOString()
+	});
+	var task_config = {
+		rtm: this.rtm,
+		taskListModel: this.taskListModel,
+		task: task,
+		isNew: true
+	};
+	Mojo.Controller.stageController.pushScene('EditTask', task_config);
+}
+
 TaskListAssistant.prototype.onTaskListModelChange = function() {
 	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Entering");
 	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
 	this.controller.modelChanged(this.taskListWidgetModel);
 }
 
+/**
+ * 
+ * @param {Object} returnValue  An object with parameters:
+ *     - lastScene (is 'EditTask' or 'Auth')
+ *     - task
+ *     - isNew (boolean)
+ */
 TaskListAssistant.prototype.activate = function(returnValue) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
+	
+	// Add in a new task if we've got one
+	if (returnValue && returnValue.isNew) {
+		this.addNewTask(returnValue.task);
+	}
 
 	Mojo.Log.info("TaskListAssistant.activate: Firing next event...");
 	// This may push local changes, or do what's needed before that.
@@ -171,6 +200,13 @@ TaskListAssistant.prototype.setUpNetworkIndicator = function(){
 TaskListAssistant.prototype.updateNetworkIndicator = function() {
 	Mojo.Log.info("TaskListAssistant.updateNetworkIndicator: Entering");
 	this.networkIndicator.onNetworkRequestsChange(undefined, this.rtm.networkRequests());
+}
+
+TaskListAssistant.prototype.addNewTask = function(task) {
+	Mojo.Log.info("TaskListAssistant.addNewTask: Entering");
+	this.taskListModel.addTask(task);
+	this.taskListModel.sort();
+	this.taskListModel.saveTaskList();
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {

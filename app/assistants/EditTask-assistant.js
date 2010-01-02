@@ -5,6 +5,12 @@ function EditTaskAssistant(config) {
 	   that needs the scene controller should be done in the setup function below. */
 
 	Mojo.Log.info("EditTaskAssistant: Entering constructor");
+	
+	// this.config has properties
+	//   - rtm
+	//   - taskListModel
+	//   - task
+	//   - isNew (boolean)
 	this.config = config;
 }
 
@@ -94,7 +100,8 @@ EditTaskAssistant.prototype.popScene = function() {
 	Mojo.Log.info("EditTaskAssistant.popScene: Entering");
 	Mojo.Controller.stageController.popScene({
 		lastScene: 'EditTask',
-		task: this.config.task
+		task: this.config.task,
+		isNew: this.config.isNew
 	});
 }
 

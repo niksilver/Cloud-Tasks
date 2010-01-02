@@ -300,6 +300,40 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual('My test task 2', task_obj.name, "Name not recorded in object with undefined rrule");
 			Y.Assert.isUndefined(task_obj.rrule, "Undefined rrule not recorded correctly in object");
+		},
+		
+		testHasNoIDs: function() {
+			var task;
+			
+			task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			Y.Assert.areEqual(false, task.hasNoIDs(task), "Task with three IDs not correctly identified");
+
+			task = new TaskModel({
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			Y.Assert.areEqual(false, task.hasNoIDs(task), "Task with two IDs not correctly identified");
+
+			task = new TaskModel({
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			Y.Assert.areEqual(false, task.hasNoIDs(task), "Task with one ID not correctly identified");
+
+			task = new TaskModel({
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			Y.Assert.areEqual(true, task.hasNoIDs(task), "Task with no IDs not correctly identified");
 		}
 
 	});

@@ -272,6 +272,13 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
 	return -1;
 }
 
+TaskListModel.prototype.addTask = function(task) {
+	if (!(task instanceof TaskModel)) {
+		throw Error("TaskListModel.addTask: Tried to add task not of type TaskModel");
+	}
+	this._task_list.push(task);
+}
+
 /**
  * Merge a given task into the list.
  * If it is entirely new it will be added.
@@ -284,7 +291,7 @@ TaskListModel.prototype.mergeTask = function(task) {
 	var task_index = this.getTaskIndex(task);
 	if (task_index == -1) {
 		// Mojo.Log.info("TaskListModel.mergeTask: Task is new");
-		this._task_list.push(task);
+		this.addTask(task);
 	}
 	else {
 		// Mojo.Log.info("TaskListModel.mergeTask: Merging with " + this._task_list[task_index]);

@@ -139,3 +139,7 @@ TaskModel.prototype.takeLocalChanges = function(other_task) {
 		this.setForPush(property, other_task[property]);
 	}
 }
+
+TaskModel.prototype.hasNoIDs = function() {
+	return !this.listID && !this.taskseriesID && !this.taskID;
+}
