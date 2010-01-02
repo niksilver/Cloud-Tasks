@@ -415,19 +415,27 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
 	Mojo.Log.info("RTM.pushLocalChanges: Entering");
 	for (var i = 0; i < task_list_model.getTaskList().length; i++) {
 		var task = task_list_model.getTaskList()[i];
-		for (var j = 0; j < task.localChanges.length; j++) {
-			var property = task.localChanges[j];
-			var task_to_change = task;
-			this.pushLocalChange(task, property,
-				function(response) {
-					Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
-						+ task_to_change.name + "', new value '" + task_to_change.property + "'");
-				},
-				function(err_msg) {
-					Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);
-				}
-			);
-		}
+		this.pushLocalChangesForTask(task);
+	}
+}
+
+/**
+ * Push any local changes for the given task
+ * @param {TaskModel} task  The task which might have local changes to be pushed out.
+ */
+RTM.prototype.pushLocalChangesForTask = function(task) {
+	for (var j = 0; j < task.localChanges.length; j++) {
+		var property = task.localChanges[j];
+		var task_to_change = task;
+		this.pushLocalChange(task, property,
+			function(response) {
+				Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
+					+ task_to_change.name + "', new value '" + task_to_change.property + "'");
+			},
+			function(err_msg) {
+				Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);
+			}
+		);
 	}
 }
 
