@@ -1,5 +1,8 @@
+- Deleting tasks:
+  - Allow optional deletion of all tasks in a series
+- Adding tasks
+  - Allow new tasks to be added
 - Auth screen:
-  - Tidy up text formatting
   - Put spinner on Go and Finish buttons
 - Completing tasks
   - Add task completion
@@ -22,4 +25,6 @@ Done
   - Allow purging of deleted tasks after pushing out changes
 - Recurring tasks
   - Indicate recurring tasks in task list
+- Auth screen:
+  - Tidy up text formatting
   

@@ -21,6 +21,13 @@ function TaskListAssistant(config) {
 		]
 	};
 	this.setUpAppMenuItemListeners();
+	
+	this.commandMenuModel = {
+		visible: true,
+		items: [
+			{ label: 'Add', command: 'do-add' }
+		]
+	}
 }
 
 TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
@@ -43,9 +50,10 @@ TaskListAssistant.prototype.setup = function() {
 	
 	Mojo.Log.info("TaskListAssistant.setup: Entering");
 
-	// Set up the app menu
+	// Set up the app menu and command menu
 	
-	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);	
+	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);
+	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.commandMenuModel);
 	
 	// Set up the task list
 
@@ -96,6 +104,9 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-sync");
 				this.rtm.resetPullEventSpacer();
 				this.rtm.fireNextEvent();
+				break;
+			case 'do-add':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-add");
 				break;
 			default:
 				Mojo.Log.info("TaskListAssistant.handleCommand: Unrecognised event command");
