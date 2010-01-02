@@ -70,3 +70,9 @@
 #TaskListHeader {
 	text-align: center;
 }
+
+/* ----------------- Auth scene ----------------- */
+
+.blurb {
+	padding: 8px 8px 8px 8px;
+}
