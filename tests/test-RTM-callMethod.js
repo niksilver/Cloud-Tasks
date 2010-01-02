@@ -4,7 +4,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 500;
+	var WAIT_TIMEOUT = 100;
 	
 	return new Y.Test.Case({
 		
@@ -39,7 +39,7 @@ testCases.push( function(Y) {
 				setTimeout(function() {
 						options.onSuccess(successfulResponse);
 					},
-					250
+					50
 				);
 			};
 			
@@ -70,7 +70,7 @@ testCases.push( function(Y) {
 					Y.Assert.areEqual(0, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes at end");
 					Y.Assert.areEqual(0, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests at end for pulling tasks");
 				},
-				500
+				100
 			);
 		},
 		

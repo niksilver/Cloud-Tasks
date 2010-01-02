@@ -4,6 +4,8 @@
 
 testCases.push( function(Y) {
 
+	var WAIT_TIMEOUT = 100;
+
 	return new Y.Test.Case({
 
 		constructDepotSynchronously: function(name, assert_failure_msg) {

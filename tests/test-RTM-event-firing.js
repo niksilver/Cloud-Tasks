@@ -4,7 +4,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 500;
+	var WAIT_TIMEOUT = 100;
 
 	return new Y.Test.Case({
 
@@ -35,7 +35,7 @@ testCases.push( function(Y) {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up");
 					Y.Assert.areEqual(true, rtm.haveNetworkConnectivity, "Network connectivity not flagged");
 				},
-				1000
+				500
 			);
 
 		},

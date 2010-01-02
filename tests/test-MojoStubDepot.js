@@ -4,7 +4,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 500;
+	var WAIT_TIMEOUT = 100;
 
 	return new Y.Test.Case({
 

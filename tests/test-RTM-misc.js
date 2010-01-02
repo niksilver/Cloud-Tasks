@@ -128,22 +128,22 @@ testCases.push( function(Y) {
 			};
 			
 			Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Testing 1: Should be no network requests in progress at start");
-			fireOffAjaxRequests(1, 1000);
+			fireOffAjaxRequests(1, 200);
 			Y.Assert.areEqual(1, rtm.networkRequestsTotal(), "Testing 1: Should be one network request after initial kick-off");
 			this.wait(
 				function() {
 					Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Testing 1: Should be no network requests after 1 second");
 				},
-				1500)
+				300)
 
 			Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Testing 20: Should be no network requests in progress at start");
-			fireOffAjaxRequests(20, 500);
+			fireOffAjaxRequests(20, 100);
 			Y.Assert.areEqual(20, rtm.networkRequestsTotal(), "Testing 20: Should be 20 network requests after initial kick-off");
 			this.wait(
 				function() {
 					Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Testing 20: Should be no network requests after more than 500ms");
 				},
-				1000
+				200
 			);
 
 		},

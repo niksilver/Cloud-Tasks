@@ -3,8 +3,6 @@
  */
 
 testCases.push( function(Y) {
-
-	var WAIT_TIMEOUT = 500;
 	
 	return new Y.Test.Case({
 		
@@ -53,7 +51,7 @@ testCases.push( function(Y) {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
 					Y.Assert.areEqual(true, called_setHaveNetworkConnectivity, "Didn't handle status change");
 				},
-				1000
+				500
 			);
 		},
 		
@@ -78,7 +76,7 @@ testCases.push( function(Y) {
 					Y.Assert.isInstanceOf(serviceRequestConstructor, rtm.connectionManager, "Connection manager not set up properly");
 					Y.Assert.areEqual(true, called_setHaveNetworkConnectivity, "Didn't handle status change");
 				},
-				1000
+				500
 			);
 		},
 		
