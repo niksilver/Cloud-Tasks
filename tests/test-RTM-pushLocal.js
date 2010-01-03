@@ -92,6 +92,46 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		},
+
+		testPushLocalChangeCallsRightURLForCompleted: function() {
+			var rtm = new RTM();
+			rtm.timeline = '87654';
+			
+			var url_used;
+			var good_response = SampleTestData.simple_good_response;
+			rtm.rawAjaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess(good_response);
+			};
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				completed: true,
+				localChanges: ['completed']
+			});
+			
+			var response_returned;
+			rtm.pushLocalChange(task,
+				'completed',
+				function(resp) { response_returned = resp },
+				null
+			);
+			this.wait(
+				function() {
+					Y.Assert.isNotUndefined(url_used, "No URL called");
+					TestUtils.assertContains(url_used, 'method=rtm.tasks.complete', "rtm.tasks.complete not called");
+					TestUtils.assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
+					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
+				},
+				WAIT_TIMEOUT
+			);
+		},
 		
 		testPushLocalChangeThenEnsuresMarkedNotForPush: function() {
 			var rtm = new RTM();
