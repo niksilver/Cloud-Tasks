@@ -357,6 +357,40 @@ testCases.push( function(Y) {
 				due: '2008-07-13T00:00:00Z'
 			});
 			Y.Assert.areEqual(true, task.hasNoIDs(task), "Task with no IDs not correctly identified");
+		},
+		
+		testRestoreFromObject: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z',
+				deleted: false,
+				rrule: {'every': '0', '$t': 'Some $t here'},
+				completed: true,
+				localChanges: ['name', 'deleted']
+			});
+			
+			var saved_obj = task.toObject();
+			
+			task.setForPush('deleted', true);
+			task.setForPush('rrule', {'every': '1', '$t': 'Some other $t'});
+			
+			Y.Assert.areEqual(true, task.deleted, "Didn't set up deleted flag properly");
+			Y.Assert.areEqual('1', task.rrule.every, "Didn't set up rrule.every properly");
+			Y.Assert.areEqual('Some other $t', task.rrule['$t'], "Didn't set up rrule.$t properly");
+			
+			task.restoreFromObject(saved_obj);
+			
+			Y.Assert.areEqual('My test task', task.name, "Mistakenly changed name");
+			Y.Assert.areEqual(false, task.deleted, "Didn't restore deleted flag");
+			Y.Assert.areEqual('0', task.rrule.every, "Didn't restore rrule.every");
+			Y.Assert.areEqual('Some $t here', task.rrule['$t'], "Didn't restore rrule.$t");
+			
+			Y.Assert.areEqual(2, task.localChanges.length, "Local changes array is wrong length");
+			Y.Assert.areEqual('name', task.localChanges[0], "First local change not restored");
+			Y.Assert.areEqual('deleted', task.localChanges[1], "Second local change not restored");
 		}
 
 	});

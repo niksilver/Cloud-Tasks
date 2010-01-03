@@ -12,6 +12,7 @@ function EditTaskAssistant(config) {
 	//   - task
 	//   - isNew (boolean)
 	this.config = config;
+	this.savedTaskProperties = this.config.task.toObject();
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -59,7 +60,12 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('CompleteTask', {}, complete_task_model);
 	this.controller.listen('CompleteTask', Mojo.Event.tap, this.handleCompleteTaskEvent.bind(this));
 	
-	//Mojo.Event.back.stopPropagation();
+	var cancel_task_model = {
+		buttonClass : 'dismissal',
+		label: "Cancel"
+	};
+	this.controller.setupWidget('CancelTask', {}, cancel_task_model);
+	this.controller.listen('CancelTask', Mojo.Event.tap, this.handleCancelTaskEvent.bind(this));
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
@@ -91,30 +97,37 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 	if (choice == true) {
 		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion");
 		this.config.task.setForPush('deleted', true);
-		this.popScene();
+		this.popScene(false);
 	}
 }
 
 EditTaskAssistant.prototype.handleCompleteTaskEvent = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCompleteTaskEvent: Entering");
 	this.config.task.setForPush('completed', true);
-	this.popScene();
+	this.popScene(false);
+}
+
+EditTaskAssistant.prototype.handleCancelTaskEvent = function(event){
+	Mojo.Log.info("EditTaskAssistant.handleCancelTaskEvent: Entering");
+	this.config.task.restoreFromObject(this.savedTaskProperties);
+	this.popScene(true);
 }
 
 EditTaskAssistant.prototype.handleCommand = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCommand: Entering");
 	if (event.type == Mojo.Event.back) {
 		Mojo.Log.info("TaskListAssistant.handleCommand: Got back event");
-		this.popScene();
+		this.popScene(false);
 	}
 }
 
-EditTaskAssistant.prototype.popScene = function() {
+EditTaskAssistant.prototype.popScene = function(wasCancelled) {
 	Mojo.Log.info("EditTaskAssistant.popScene: Entering");
 	Mojo.Controller.stageController.popScene({
 		lastScene: 'EditTask',
 		task: this.config.task,
-		isNew: this.config.isNew
+		isNew: this.config.isNew,
+		wasCancelled: wasCancelled
 	});
 }
 

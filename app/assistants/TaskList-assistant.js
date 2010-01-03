@@ -145,6 +145,7 @@ TaskListAssistant.prototype.onTaskListModelChange = function() {
  *     - lastScene (is 'EditTask' or 'Auth')
  *     - task
  *     - isNew (boolean)
+ *     - wasCancelled (boolean)
  */
 TaskListAssistant.prototype.activate = function(returnValue) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
@@ -153,7 +154,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 	
 	// Add in a new task if we've got one
-	if (returnValue && returnValue.isNew) {
+	if (returnValue && returnValue.isNew && !returnValue.wasCancelled) {
 		this.addNewTask(returnValue.task);
 	}
 

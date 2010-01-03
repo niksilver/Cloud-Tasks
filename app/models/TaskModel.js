@@ -145,3 +145,10 @@ TaskModel.prototype.hasNoIDs = function() {
 TaskModel.prototype.shouldNotBeVisible = function() {
 	return this.deleted || this.completed;
 }
+
+TaskModel.prototype.restoreFromObject = function(obj) {
+	for (var property in obj) {
+		this[property] = obj[property];
+	}
+	this.update();
+}
