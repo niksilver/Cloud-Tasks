@@ -583,16 +583,16 @@ testCases.push( function(Y) {
 			var task_7 = model.getTaskList()[7];
 			var task_8 = model.getTaskList()[8];
 			
-			// Set three tasks to be deleted.
+			// Set three tasks to be deleted or completed.
 			// These should not be visible
 			task_3.deleted = true;
 			task_5.deleted = true;
-			task_7.deleted = true;
+			task_7.completed = true;
 			
-			// Set two tasks to be deleted locally, but changes need to be pushed
+			// Set two tasks to be deleted or completed locally, but changes need to be pushed
 			// These should not be visible, either
 			task_4.setForPush('deleted', true);
-			task_8.setForPush('deleted', true);
+			task_8.setForPush('completed', true);
 			
 			// Set one task which has local changes which need to be pushed, but is not to be deleted.
 			// This should still be visible

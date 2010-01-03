@@ -338,7 +338,7 @@ TaskListModel.prototype.getListOfVisibleTasks = function() {
 	var list = [];
 	for (var i = 0; i < this._task_list.length; i++) {
 		var task = this._task_list[i];
-		if (!task.deleted) {
+		if (!task.shouldNotBeVisible()) {
 			list.push(task);
 		}
 	}
