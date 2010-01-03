@@ -23,6 +23,7 @@ function RTM() {
 		"rtm.auth.getFrob": "forPushingChanges",
 		"rtm.auth.getToken": "forPushingChanges",
 		"rtm.timelines.create": "forPushingChanges",
+		"rtm.tasks.add": "forPushingChanges",
 		"rtm.tasks.setName": "forPushingChanges",
 		"rtm.tasks.setDueDate": "forPushingChanges",
 		"rtm.tasks.delete": "forPushingChanges",
@@ -460,7 +461,24 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
  * @param {Object} task  The task to be created remotely.
  */
 RTM.prototype.addTask = function(task) {
-	// To do
+	Mojo.Log.info("RTM.addTask: Entering");
+	var parameters = {
+		name: task.name,
+		timeline: this.timeline
+	};
+	this.callMethod('rtm.tasks.add', parameters,
+		function(response) {
+			Mojo.Log.info("RTM.addTask.onSuccess: Got response");
+			RTM.logResponse(response);
+			var json = response.responseJSON;
+			task.listID = json.rsp.list.id;
+			task.taskseriesID = json.rsp.list.taskseries.id;
+			task.taskID = json.rsp.list.taskseries.task.id;
+			task.markNotForPush('name');
+		},
+		function(err_msg) {
+			Mojo.Log.warn("RTM.addTask.onFailure: " + err_msg);
+		});
 }
 
 /**

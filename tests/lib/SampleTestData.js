@@ -1287,6 +1287,45 @@ SampleTestData = {
 	         ] // Array of task lists
 	      } // The tasks object
 	   } // The rsp object
-	} // taskseries_obj_with_multiple_and_recurring_deletions
+	}, // taskseries_obj_with_multiple_and_recurring_deletions
+	
+	response_from_add_task: {
+		status: 200,
+		responseJSON: {
+			"rsp": {
+				"stat": "ok",
+				"transaction": {
+					"id": "1444866919",
+					"undoable": "0"
+				},
+				"list": {
+					"id": "2637966",
+					"taskseries": {
+						"id": "59222465",
+						"created": "2010-01-02T22:02:49Z",
+						"modified": "2010-01-02T22:02:49Z",
+						"name": "Local task 2",
+						"source": "api",
+						"url": "",
+						"location_id": "",
+						"tags": [],
+						"participants": [],
+						"notes": [],
+						"task": {
+							"id": "85191014",
+							"due": "",
+							"has_due_time": "0",
+							"added": "2010-01-02T22:02:49Z",
+							"completed": "",
+							"deleted": "",
+							"priority": "N",
+							"postponed": "0",
+							"estimate": ""
+						} // task object
+					} // taskseries object
+				} // list object
+			} // rsp
+		} // responseJSON
+	} // response_from_add_task
 
 }		

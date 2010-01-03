@@ -4,7 +4,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 500;
+	var WAIT_TIMEOUT = 100;
 	
 	return new Y.Test.Case({
 		
@@ -228,6 +228,75 @@ testCases.push( function(Y) {
 			
 			rtm.deleteLatestModified();
 			Y.Assert.isUndefined(rtm.getLatestModified(), "Latest modified not deleted");
+		},
+		
+		testAddTaskCallsAddMethodCorrectly: function() {
+			var rtm = new RTM();
+			rtm.timeline = '87654';
+			
+			var method_called;
+			var param_used;
+			rtm.callMethod = function(method_name, param_object, successCallback, failureCallback) {
+				method_called = method_name;
+				param_used = param_object;
+			}
+			
+			var task = new TaskModel({
+				name: 'My locally-created task',
+				due: '2009-11-18T16:58:19Z',
+				localChanges: ['name', 'due']
+			});
+			
+			rtm.addTask(task);
+			Y.Assert.areEqual('rtm.tasks.add', method_called, "Wrong method called");
+			Y.Assert.areEqual('My locally-created task', param_used.name, "Didn't pass task name");
+			Y.Assert.areEqual('87654',param_used.timeline, "Didn't pass timeline");
+		},
+		
+		testAddTaskMakesAppropriateAjaxRequest: function() {
+			var rtm = new RTM();
+			rtm.timeline = '87654';
+			
+			var called_ajaxRequest;
+			rtm.ajaxRequest = function(url, options) {
+				called_ajaxRequest = true;
+				Y.Assert.areEqual('forPushingChanges', options.rtmMethodPurpose);
+				TestUtils.assertContains(url, 'method=rtm.tasks.add', "Method not specified");
+				TestUtils.assertContains(url, 'timeline=87654', "Timeline not specified");
+			}
+			
+			var task = new TaskModel({
+				name: 'My locally-created task',
+				due: '2009-11-18T16:58:19Z',
+				localChanges: ['name', 'due']
+			});
+			
+			rtm.addTask(task);
+			Y.Assert.areEqual(true, called_ajaxRequest, "Ajax request not made");
+		},
+		
+		testAddTaskOnSuccess: function() {
+			var rtm = new RTM();
+			
+			var called_rawAjaxRequest;
+			rtm.rawAjaxRequest = function(url, options) {
+				called_rawAjaxRequest = true;
+				options.onSuccess(SampleTestData.response_from_add_task);
+			};
+
+			var task = new TaskModel({
+				name: 'My locally-created task',
+				due: '2009-11-18T16:58:19Z',
+				localChanges: ['name', 'due']
+			});
+			
+			rtm.addTask(task);
+			Y.Assert.areEqual(true, called_rawAjaxRequest, "Didn't make Ajax request");
+			Y.Assert.areEqual("2637966", task.listID, "Didn't set list ID");
+			Y.Assert.areEqual("59222465", task.taskseriesID, "Didn't set taskseries ID");
+			Y.Assert.areEqual("85191014", task.taskID, "Didn't set task ID");
+			Y.Assert.areEqual(-1, task.localChanges.indexOf('name'), "Name still marked for change");
+			Y.Assert.areEqual(0, task.localChanges.indexOf('due'), "Due date not marked for change");
 		}
 
 	});
