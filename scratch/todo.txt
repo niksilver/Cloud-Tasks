@@ -1,12 +1,11 @@
 - Deleting tasks:
   - Allow optional deletion of all tasks in a series
+- Licence
+  - Add GPL licence.
 - Auth screen:
   - Put spinner on Go and Finish buttons
 - Adding tasks
   - Remove Delete button
-  - Add Cancel button
-- Editing tasks
-  - Add Cancel button
 - Completing tasks
   - Handle task completion of recurring tasks
 - Recurring tasks
@@ -31,6 +30,9 @@ Done
   - Tidy up text formatting
 - Adding tasks
   - Allow new tasks to be added
+  - Add Cancel button
 - Completing tasks
   - Add task completion
+- Editing tasks
+  - Add Cancel button
   

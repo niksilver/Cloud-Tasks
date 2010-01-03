@@ -123,6 +123,10 @@ EditTaskAssistant.prototype.handleCommand = function(event){
 
 EditTaskAssistant.prototype.popScene = function(wasCancelled) {
 	Mojo.Log.info("EditTaskAssistant.popScene: Entering");
+	if (this.config.task.name == '') {
+		// Don't allow a blank name to be entered
+		this.config.task.name = this.savedTaskProperties.name;
+	}
 	Mojo.Controller.stageController.popScene({
 		lastScene: 'EditTask',
 		task: this.config.task,
@@ -134,8 +138,22 @@ EditTaskAssistant.prototype.popScene = function(wasCancelled) {
 EditTaskAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+
+	this.setVisibilityOfButtons();
 }
 
+EditTaskAssistant.prototype.setVisibilityOfButtons = function() {
+	if (this.config.isNew) {
+		this.controller.get('DeleteTask').setStyle({ display: 'none' });
+		this.controller.get('CancelTask').setStyle({ display: 'inline' });
+		this.controller.get('CompleteTask').setStyle({ display: 'none' });
+	}
+	else {
+		this.controller.get('CompleteTask').setStyle({ display: 'inline' });
+		this.controller.get('CancelTask').setStyle({ display: 'inline' });
+		this.controller.get('DeleteTask').setStyle({ display: 'inline' });
+	}
+}
 
 EditTaskAssistant.prototype.deactivate = function(event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before

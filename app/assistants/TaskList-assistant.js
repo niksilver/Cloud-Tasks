@@ -153,8 +153,11 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 	
-	// Add in a new task if we've got one
-	if (returnValue && returnValue.isNew && !returnValue.wasCancelled) {
+	// Add in a new task if we've got one with a proper name
+	if (returnValue
+			&& returnValue.isNew
+			&& !returnValue.wasCancelled
+			&& returnValue.task.name != '') {
 		this.addNewTask(returnValue.task);
 	}
 
