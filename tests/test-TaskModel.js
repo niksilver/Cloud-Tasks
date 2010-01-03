@@ -34,7 +34,8 @@ testCases.push( function(Y) {
 				due: '2008-07-13T00:00:00Z',
 				modified: '2008-06-20T21:11:26Z',
 				deleted: false,
-				rrule: 'Something'
+				rrule: 'Something',
+				completed: false
 			});
 			
 			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
@@ -45,6 +46,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time doesn't get set");
 			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set");
 			Y.Assert.areEqual('Something', task.rrule, "Task rrule not set");
+			Y.Assert.areEqual(false, task.completed, "Task completed flag not set");
 		},
 		
 		testConstructorSetsDeletedDefault: function() {
@@ -61,6 +63,22 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID doesn't get set");
 			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
 			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set to default");
+		},
+		
+		testConstructorSetsCompletedDefault: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z',
+				modified: '2008-06-20T21:11:26Z'
+			});
+			
+			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
+			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID doesn't get set");
+			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
+			Y.Assert.areEqual(false, task.completed, "Task completed flag not set to default");
 		},
 		
 		testIsDue: function() {

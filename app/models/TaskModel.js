@@ -20,6 +20,7 @@ function TaskModel(properties) {
 		this.modified = properties.modified;
 		this.deleted = properties.deleted || false;
 		this.rrule = properties.rrule;
+		this.completed = properties.completed || false;
 	}
 	this.localChanges = (properties && properties.localChanges) || [];
 	this.update();
@@ -32,7 +33,8 @@ TaskModel.prototype.toString = function() {
 		+ "name: '" + this.name + "', "
 		+ "due: '" + this.due + "', "
 		+ "deleted: " + this.deleted + ", "
-		+ "rrule: " + this.rrule + "}";
+		+ "rrule: " + this.rrule + ", "
+		+ "completed: " + this.completed + "}";
 }
 
 TaskModel.createFromObject = function(obj) {
