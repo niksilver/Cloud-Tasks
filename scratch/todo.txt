@@ -1,9 +1,12 @@
 - Deleting tasks:
   - Allow optional deletion of all tasks in a series
-- Adding tasks
-  - Allow new tasks to be added
 - Auth screen:
   - Put spinner on Go and Finish buttons
+- Adding tasks
+  - Remove Delete button
+  - Add Cancel button
+- Editing tasks
+  - Add Cancel button
 - Completing tasks
   - Add task completion
   - Handle task completion of recurring tasks
@@ -27,4 +30,6 @@ Done
   - Indicate recurring tasks in task list
 - Auth screen:
   - Tidy up text formatting
+- Adding tasks
+  - Allow new tasks to be added
   
