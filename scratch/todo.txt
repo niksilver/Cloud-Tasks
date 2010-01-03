@@ -8,7 +8,6 @@
 - Editing tasks
   - Add Cancel button
 - Completing tasks
-  - Add task completion
   - Handle task completion of recurring tasks
 - Recurring tasks
   - Add these
@@ -32,4 +31,6 @@ Done
   - Tidy up text formatting
 - Adding tasks
   - Allow new tasks to be added
+- Completing tasks
+  - Add task completion
   
