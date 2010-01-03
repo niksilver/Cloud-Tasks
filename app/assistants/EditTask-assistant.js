@@ -52,6 +52,13 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('DeleteTask', {}, delete_task_model);
 	this.controller.listen('DeleteTask', Mojo.Event.tap, this.handleDeleteTaskEvent.bind(this));
 	
+	var complete_task_model = {
+		buttonClass : 'affirmative',
+		label: "Complete"
+	};
+	this.controller.setupWidget('CompleteTask', {}, complete_task_model);
+	this.controller.listen('CompleteTask', Mojo.Event.tap, this.handleCompleteTaskEvent.bind(this));
+	
 	//Mojo.Event.back.stopPropagation();
 }
 
@@ -86,6 +93,12 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 		this.config.task.setForPush('deleted', true);
 		this.popScene();
 	}
+}
+
+EditTaskAssistant.prototype.handleCompleteTaskEvent = function(event){
+	Mojo.Log.info("EditTaskAssistant.handleCompleteTaskEvent: Entering");
+	this.config.task.setForPush('completed', true);
+	this.popScene();
 }
 
 EditTaskAssistant.prototype.handleCommand = function(event){
