@@ -163,6 +163,34 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task_id_to_task['59484931'].deleted, "Task ID 59484931 should be marked deleted");
 		},
 		
+		testObjectToTaskListWithSomeCompletions: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
+			
+			Y.Assert.areEqual(4, tasks.length, "Wrong number of tasks");
+			
+			var task_hash = this.getTaskIDToTaskHash(tasks);
+			
+			Y.Assert.areEqual("Some test task", task_hash['85269951'].name, "Didn't get new task correctly");
+			Y.Assert.areEqual('11122940', task_hash['85269951'].listID, "Didn't get new task's list ID correctly");
+			Y.Assert.areEqual('59269714', task_hash['85269951'].taskseriesID, "Didn't get new task's taskseries ID correctly");
+			Y.Assert.areEqual(false, task_hash['85269951'].completed, "Didn't get new task's completed status correctly");
+			
+			Y.Assert.areEqual("Simple task to be completed", task_hash['85269908'].name, "Didn't get simple completed task");
+			Y.Assert.areEqual("11122940", task_hash['85269908'].listID, "Didn't get simple completed task's list ID correctly");
+			Y.Assert.areEqual("59269674", task_hash['85269908'].taskseriesID, "Didn't get simple completed task's taskseries ID correctly");
+			Y.Assert.areEqual(true, task_hash['85269908'].completed, "Did get simple completed task's completed property");
+			
+			Y.Assert.areEqual("Recurring task to be completed", task_hash['85269921'].name, "Didn't get recurring completed task");
+			Y.Assert.areEqual('11122940', task_hash['85269921'].listID, "Didn't get recurring completed task's list ID property");
+			Y.Assert.areEqual('59269686', task_hash['85269921'].taskseriesID, "Didn't get recurring completed task's taskseries ID property");
+			Y.Assert.areEqual(true, task_hash['85269921'].completed, "Didn't get recurring completed task's completed property");
+			
+			Y.Assert.areEqual("Recurring task to be completed", task_hash['85270009'].name, "Didn't get recurring created task");
+			Y.Assert.areEqual("11122940", task_hash['85270009'].listID, "Didn't get recurring created task's list ID correctly");
+			Y.Assert.areEqual("59269686", task_hash['85270009'].taskseriesID, "Didn't get recurring created task's taskseries ID correctly");
+			Y.Assert.areEqual(false, task_hash['85270009'].completed, "Didn't get recurring created task's completed property");
+		},
+		
 		testTaskseriesObjectToTasks: function() {
 			var taskseries_obj = SampleTestData.taskseries_obj_with_multiple_tasks;
 			var task_array = TaskListModel.taskseriesObjectToTasks(taskseries_obj, '11223');

@@ -1326,6 +1326,116 @@ SampleTestData = {
 				} // list object
 			} // rsp
 		} // responseJSON
-	} // response_from_add_task
+	}, // response_from_add_task
+
+	response_with_basic_and_recurring_completion: {
+	   "rsp":{
+	      "stat":"ok",
+	      "tasks":{
+	         "list":[
+	            {
+	               "id":"2637970",
+	               "current":"2010-01-03T14:47:27Z"
+	            },
+	            {
+	               "id":"11122940",
+	               "current":"2010-01-03T14:47:27Z",
+	               "taskseries":[
+	                  {
+	                     "id":"59269714",
+	                     "created":"2010-01-03T14:47:27Z",
+	                     "modified":"2010-01-03T14:47:27Z",
+	                     "name":"Some test task",
+	                     "source":"js",
+	                     "url":"",
+	                     "location_id":"",
+	                     "tags":[],
+	                     "participants":[],
+	                     "notes":[],
+	                     "task":{
+	                        "id":"85269951", // Task 1
+	                        "due":"",
+	                        "has_due_time":"0",
+	                        "added":"2010-01-03T14:47:27Z",
+	                        "completed":"",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     }
+	                  },
+	                  {
+	                     "id":"59269674",
+	                     "created":"2010-01-03T14:46:55Z",
+	                     "modified":"2010-01-03T14:48:22Z",
+	                     "name":"Simple task to be completed",
+	                     "source":"js",
+	                     "url":"",
+	                     "location_id":"",
+	                     "tags":[],
+	                     "participants":[],
+	                     "notes":[],
+	                     "task":{
+	                        "id":"85269908", // Task 2
+	                        "due":"",
+	                        "has_due_time":"0",
+	                        "added":"2010-01-03T14:46:55Z",
+	                        "completed":"2010-01-03T14:48:22Z",
+	                        "deleted":"",
+	                        "priority":"N",
+	                        "postponed":"0",
+	                        "estimate":""
+	                     }
+	                  },
+	                  {
+	                     "id":"59269686",
+	                     "created":"2010-01-03T14:47:03Z",
+	                     "modified":"2010-01-03T14:48:11Z",
+	                     "name":"Recurring task to be completed",
+	                     "source":"js",
+	                     "url":"",
+	                     "location_id":"",
+	                     "rrule":{
+	                        "every":"1",
+	                        "$t":"FREQ=DAILY;INTERVAL=1"
+	                     },
+	                     "tags":[],
+	                     "participants":[],
+	                     "notes":[],
+	                     "task":[
+	                        {
+	                           "id":"85269921", // Task 3
+	                           "due":"",
+	                           "has_due_time":"0",
+	                           "added":"2010-01-03T14:47:03Z",
+	                           "completed":"2010-01-03T14:48:11Z",
+	                           "deleted":"",
+	                           "priority":"N",
+	                           "postponed":"0",
+	                           "estimate":""
+	                        },
+	                        {
+	                           "id":"85270009", // Task 4
+	                           "due":"2010-01-04T00:00:00Z",
+	                           "has_due_time":"0",
+	                           "added":"2010-01-03T14:48:11Z",
+	                           "completed":"",
+	                           "deleted":"",
+	                           "priority":"N",
+	                           "postponed":"0",
+	                           "estimate":""
+	                        }
+	                     ] // array of tasks in taskseries ID 59269686
+	                  } // taskseries ID 59269686
+	               ] // array of taskseries in list ID 11122940
+	            }, // an element in the list array
+	            {
+	               "id":"2637966",
+	               "current":"2010-01-03T14:47:27Z"
+	            } // an element in the list array
+	         ] // list array
+	      } // tasks
+	   } // rsp
+	} // response_with_basic_and_recurring_completion
 
 }		

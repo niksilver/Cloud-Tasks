@@ -144,9 +144,12 @@ Retrier.prototype.firePullTasksSequence = function() {
 }
 
 Retrier.prototype.getListParameters = function() {
-	var params = { filter: 'status:incomplete' };
+	var params;
 	if (this.rtm.getLatestModified()) {
-		params.last_sync = this.rtm.getLatestModified();
+		params = { last_sync: this.rtm.getLatestModified() };
+	}
+	else {
+		params = { filter: 'status:incomplete' };
 	}
 	return params;
 }
