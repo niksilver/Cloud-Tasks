@@ -3,7 +3,8 @@
  * To introduce a new property, do the following:
  *   - Add it to the TaskModel properties in the constructor and toString().
  *   - In TaskListModel, ensure the property can be interpreted from a server response.
- *   - Ensure the property is saved in a cookie by updating TaskModel.toObject().
+ *   - Ensure the property is saved in a cookie by updating TaskModel.toObject()...
+ *   - ...and read from a cookie by updating TaskModel.createFromObject().
  *   - Rendering of the task is updated, if applicable.
  *   - The Task UI is updated to show/edit the property.
  *   - A change in the property is pushed out to the remote server.
@@ -57,7 +58,8 @@ TaskModel.prototype.toObject = function() {
 		modified: this.modified,
 		deleted: this.deleted,
 		rrule: Utils.clone(this.rrule),
-		localChanges: this.localChanges.clone()
+		localChanges: this.localChanges.clone(),
+		completed: this.completed
 	}
 }
 

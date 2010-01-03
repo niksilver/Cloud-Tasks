@@ -296,7 +296,8 @@ testCases.push( function(Y) {
 				due: '2008-07-13T00:00:00Z',
 				modified: '2008-06-20T21:11:26Z',
 				deleted: true,
-				rrule: {'every': '0', '$t': 'Some $t here'}
+				rrule: {'every': '0', '$t': 'Some $t here'},
+				completed: true
 			});
 			task_obj = task.toObject();
 			
@@ -306,18 +307,22 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(task_obj.rrule, "RRule not recorded in object");
 			Y.Assert.areEqual('0', task_obj.rrule.every, "Every property of rrule not recorded in object");
 			Y.Assert.areEqual('Some $t here', task_obj.rrule['$t'], "$t property of rrule not recorded in object");
+			Y.Assert.areEqual(true, task_obj.completed, "Completed property not recorded");
 
 			task = new TaskModel({
 				name: 'My test task 2',
 				due: '2008-07-13T00:00:00Z',
-				modified: '2008-06-20T21:11:26Z',
-				deleted: true
+				modified: '2008-06-20T21:11:26Z'
+				// Deleted is undefined
 				// RRule is undefined
+				// Completed is undefined
 			});
 			task_obj = task.toObject();
 			
 			Y.Assert.areEqual('My test task 2', task_obj.name, "Name not recorded in object with undefined rrule");
+			Y.Assert.areEqual(false, task_obj.deleted, "Deleted flag not recorded correctly in object");
 			Y.Assert.isUndefined(task_obj.rrule, "Undefined rrule not recorded correctly in object");
+			Y.Assert.areEqual(false, task_obj.completed, "Completed flag not recorded correctly in object");
 		},
 		
 		testHasNoIDs: function() {
