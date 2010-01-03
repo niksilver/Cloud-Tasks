@@ -307,6 +307,52 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(1, tasks_created.length, "Should only have tried to create one task");
 			Y.Assert.areSame(task_created_locally, tasks_created[0], "Didn't try to push out locally created task");
+		},
+		
+		testPushLocalCompletionCausesTaskListPurge: function() {
+			var rtm = new RTM();
+			
+			var called_rawAjaxRequest;
+			rtm.rawAjaxRequest = function(url, options) {
+				called_rawAjaxRequest = true;
+				options.onSuccess(SampleTestData.simple_good_response);
+			};
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				completed: true,
+				localChanges: ['completed']
+			});
+
+			var task_list_model = new TaskListModel();
+			task_list_model.setTaskList([task]);
+			var called_purgeTaskList;
+			var orig_purgeTaskList = task_list_model.purgeTaskList.bind(task_list_model);
+			task_list_model.purgeTaskList = function() {
+				called_purgeTaskList = true;
+				orig_purgeTaskList();
+			}
+			rtm.retrier.taskListModel = task_list_model;
+			
+			var called_pushLocalChange_onSuccess;
+			var pushLocalChange_onSuccess = function() {
+				called_pushLocalChange_onSuccess = true;
+			}
+			
+			Y.Assert.areEqual(1, task_list_model.getTaskList().length, "Should be just one task in the list");
+			
+			called_rawAjaxRequest = false;
+			called_pushLocalChange_onSuccess = false;
+			called_purgeTaskList = false;
+			rtm.pushLocalChange(task, 'completed', pushLocalChange_onSuccess, function(){});
+			
+			Y.Assert.areEqual(true, called_rawAjaxRequest, "Should have made Ajax call");
+			Y.Assert.areEqual(true, called_pushLocalChange_onSuccess, "Should have called the onSuccess callback of pushLocalChange()");
+			Y.Assert.areEqual(true, called_purgeTaskList, "Should have tried to purge the task list");
+			Y.Assert.areEqual(0, task_list_model.getTaskList().length, "Should be no tasks in the list");
 		}
 
 	});

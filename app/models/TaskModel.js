@@ -141,3 +141,7 @@ TaskModel.prototype.takeLocalChanges = function(other_task) {
 TaskModel.prototype.hasNoIDs = function() {
 	return !this.listID && !this.taskseriesID && !this.taskID;
 }
+
+TaskModel.prototype.shouldNotBeVisible = function() {
+	return this.deleted || this.completed;
+}

@@ -27,6 +27,7 @@ function RTM() {
 		"rtm.tasks.setName": "forPushingChanges",
 		"rtm.tasks.setDueDate": "forPushingChanges",
 		"rtm.tasks.delete": "forPushingChanges",
+		"rtm.tasks.complete": "forPushingChanges",
 		"rtm.tasks.getList": "forPullingTasks"
 	};
 }
@@ -378,6 +379,15 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	}
 	else if (property == 'deleted') {
 		method = 'rtm.tasks.delete';
+		parameters = {
+			list_id: task.listID,
+			taskseries_id: task.taskseriesID,
+			task_id: task.taskID,
+			timeline: this.timeline,
+		};
+	}
+	else if (property == 'completed') {
+		method = 'rtm.tasks.complete';
 		parameters = {
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
