@@ -13,6 +13,7 @@ function EditTaskAssistant(config) {
 	//   - isNew (boolean)
 	this.config = config;
 	this.savedTaskProperties = this.config.task.toObject();
+	this.dueDateModel = { date: Date.parse(this.config.task.due) };
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -36,14 +37,9 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
 	
 	var task_due_attributes = {
-		modelProperty: 'due',
-		hintText: 'Enter due time',
-		multiline: false,
-		autoFocus: false,
-		enterSubmits: true,
-		requiresEnterKey: true
+		modelProperty: 'date'
 	};
-	this.controller.setupWidget('TaskDue', task_due_attributes, this.config.task);
+	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 	
 	var delete_task_model = {
@@ -76,8 +72,11 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 
 EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Entering");
-	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.config.task.due + "'");
-	this.config.task.setForPush('due', this.config.task.due);
+	
+	var date_str = this.dueDateModel.date.toISOString();
+	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.dueDateModel.date
+		+ "', parsed as '" + date_str + "'");
+	this.config.task.setForPush('due', date_str);
 }
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {

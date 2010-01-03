@@ -4,10 +4,9 @@
   - Add GPL licence.
 - Auth screen:
   - Put spinner on Go and Finish buttons
-- Adding tasks
-  - Remove Delete button
 - Completing tasks
   - Handle task completion of recurring tasks
+  - Allow swipe to complete
 - Recurring tasks
   - Add these
 - Postponing tasks
@@ -31,6 +30,7 @@ Done
 - Adding tasks
   - Allow new tasks to be added
   - Add Cancel button
+  - Remove Delete button
 - Completing tasks
   - Add task completion
 - Editing tasks
