@@ -121,7 +121,8 @@ TaskListAssistant.prototype.handleAddTaskCommand = function() {
 	Mojo.Log.info("TaskListAssistant.handleAddTaskCommnad: Entering");
 	var task = new TaskModel({
 		name: '',
-		due: Date.today().toISOString()
+		due: Date.today().toISOString(),
+		localChanges: ['name', 'due']
 	});
 	var task_config = {
 		rtm: this.rtm,

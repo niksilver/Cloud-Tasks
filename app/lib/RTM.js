@@ -445,7 +445,7 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 		this.pushLocalChange(task, property,
 			function(response) {
 				Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
-					+ task_to_change.name + "', new value '" + task_to_change.property + "'");
+					+ task_to_change.name + "', new value '" + task_to_change[property] + "'");
 			},
 			function(err_msg) {
 				Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task_to_change.name + "'. Error message: " + err_msg);
