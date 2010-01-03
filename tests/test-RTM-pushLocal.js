@@ -11,72 +11,6 @@ testCases.push( function(Y) {
 		setUp: function() {
 			(new RTM()).deleteToken();
 		},
-		
-		testPushLocalChangeCreatesTimelineIfNeeded: function() {
-			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
-			rtm.setToken('mydummytoken');
-			
-			var url_used;
-			rtm.rawAjaxRequest = function(url, options) {
-				url_used = url;
-				options.onSuccess(SampleTestData.simple_good_response);
-			};
-			var called_createTimeline = false;
-			var createTimeline_call_count = 0;
-			rtm.createTimeline = function() {
-				if (!called_createTimeline) {
-					rtm.timeline = '87654';
-				}
-				called_createTimeline = true;
-				++createTimeline_call_count;
-			}
-
-			var task = new TaskModel({
-				listID: '112233',
-				taskseriesID: '445566',
-				taskID: '778899',
-				name: "Do testing",
-				localChanges: ['name']
-			});
-			
-			Y.Assert.isNull(rtm.timeline, "Timeline is not initially null");
-			rtm.pushLocalChange(task, 'name', function(){}, null);
-
-			Y.Assert.areEqual(true, called_createTimeline, "createTimeline not called when needed");
-			Y.Assert.areEqual(1, createTimeline_call_count, "createTimeline not called just once after first push");
-			Y.Assert.areEqual('87654', rtm.timeline, "Timeline not set to expected value");
-
-			rtm.pushLocalChange(task, 'name', function(){}, null);
-
-			Y.Assert.areEqual(1, createTimeline_call_count, "createTimeline not called just once after second push");
-		},
-		
-		testPushLocalChangeWontPushIfNotAuthorised: function() {
-			var rtm = new RTM();
-			var url_used;
-			var called_remote = false;
-			rtm.rawAjaxRequest = function(url, options) {
-				called_remote = true;
-			};
-			rtm.timeline = '87654';
-
-			var task = new TaskModel({
-				listID: '112233',
-				taskseriesID: '445566',
-				taskID: '778899',
-				name: "Do testing",
-				localChanges: ['name']
-			});
-			
-			rtm.pushLocalChange(task, 'name', function(){}, null);
-			this.wait(
-				function() {
-					Y.Assert.areEqual(false, called_remote, "Remote system mistakenly called");
-				},
-				WAIT_TIMEOUT
-			);
-		},
 
 		testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
@@ -121,9 +55,7 @@ testCases.push( function(Y) {
 
 		testPushLocalChangeCallsRightURLForDeleted: function() {
 			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
-			rtm.setToken('mydummytoken');
 			
 			var url_used;
 			var good_response = SampleTestData.simple_good_response;
@@ -163,9 +95,6 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeThenEnsuresMarkedNotForPush: function() {
 			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
-			rtm.timeline = '87654';
-			rtm.setToken('mydummytoken');
 			
 			rtm.rawAjaxRequest = function(url, options) {
 				url_used = url;
@@ -194,9 +123,7 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangeHandlesFailure: function() {
 			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
-			rtm.setToken('mydummytoken');
 			
 			var url_used;
 			rtm.rawAjaxRequest = function(url, options) {
@@ -245,9 +172,6 @@ testCases.push( function(Y) {
 		
 		testPushLocalChangesHandlesVariousProperties: function() {
 			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
-			rtm.timeline = '87654';
-			rtm.setToken('mydummytoken');
 			
 			var model = new TaskListModel();
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
@@ -317,9 +241,6 @@ testCases.push( function(Y) {
 		
 		testPushLocalDeletionCausesTaskListPurge: function() {
 			var rtm = new RTM();
-			rtm.fireNextEvent = function() {};
-			rtm.timeline = '87654';
-			rtm.setToken('mydummytoken');
 			
 			var called_rawAjaxRequest;
 			rtm.rawAjaxRequest = function(url, options) {

@@ -350,19 +350,6 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	Mojo.Log.info("RTM.pushLocalChange: Entering with property '" + property
 		+ "' for task '" + task.name + "' and property '" + task[property] + "'");
 	
-	if (!this.getToken()) {
-		Mojo.Log.info("RTM.pushLocalChange: No auth token so won't push");
-		return;
-	}
-	
-	if (!this.timeline) {
-		Mojo.Log.info("RTM.pushLocalChange: No timeline so won't push, but will fire next event which might get it");
-		this.createTimeline();
-		return;
-		// createTimeline will return asynchronously, so we'll have to
-		// do the push we wanted some other time.
-	}
-	
 	var method;
 	var parameters;
 	var augmented_success_callback = function(response) {
