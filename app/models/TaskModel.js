@@ -40,11 +40,6 @@ TaskModel.prototype.toString = function() {
 
 TaskModel.createFromObject = function(obj) {
 	var task = new TaskModel(obj);
-	if (obj.localChanges) {
-		obj.localChanges.each(function(property_name) {
-			task.setForPush(property_name, obj[property_name]);
-		})
-	}
 	return task;
 }
 
