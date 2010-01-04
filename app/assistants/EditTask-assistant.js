@@ -13,7 +13,6 @@ function EditTaskAssistant(config) {
 	//   - isNew (boolean)
 	this.config = config;
 	this.savedTaskProperties = this.config.task.toObject();
-	this.dueDateModel = { date: Date.parse(this.config.task.due) };
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -36,7 +35,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('TaskName', task_name_attributes, this.config.task);
 	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
 	
-	this.setUpDueWidgets();
+	this.setUpDueWidget();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -60,14 +59,8 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.listen('CancelTask', Mojo.Event.tap, this.handleCancelTaskEvent.bind(this));
 }
 
-EditTaskAssistant.prototype.setUpDueWidgets = function() {
-	var task_due_attributes = {
-		modelProperty: 'date'
-	};
-	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
-	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
-	
-	this.controller.listen('DueNone', Mojo.Event.tap, this.handleDueDateSelectorEvent.bind(this));
+EditTaskAssistant.prototype.setUpDueWidget = function() {
+	this.controller.listen('TaskDueDisplay', Mojo.Event.tap, this.handleDueDateSelectorEvent.bind(this));
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
@@ -76,20 +69,15 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	this.config.task.setForPush('name', this.config.task.name);
 }
 
-EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
-	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Entering");
-	
-	var date_str = this.dueDateModel.date.toISOString();
-	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.dueDateModel.date
-		+ "', parsed as '" + date_str + "'");
-	this.config.task.setForPush('due', date_str);
-}
-
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDueDateSelectorEvent: Entering");
 	this.controller.showDialog({
 		template: 'EditTask/DueDateSelector-dialog',
-		assistant: new DueDateSelectorAssistant(),
+		assistant: new DueDateSelectorAssistant({
+				task: this.config.task,
+				controller: this.controller,
+				updateTaskDueDisplayFromTask: this.updateTaskDueDisplayFromTask.bind(this)
+			}),
 		myTestParam: 'This is my parameter'
 	});
 }
@@ -154,7 +142,14 @@ EditTaskAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 
+	this.updateTaskDueDisplayFromTask(this.config.task);
 	this.setVisibilityOfButtons();
+}
+
+EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
+	Mojo.Log.info("EditTaskAssistant.updateTaskDueDisplayFromTask: Entering");
+	this.controller.get('TaskDueDisplay').update(task.due);
+	this.config.task.setForPush('due', task.due);
 }
 
 EditTaskAssistant.prototype.setVisibilityOfButtons = function() {
