@@ -23,9 +23,5 @@
     {
         "scenes": "EditTask",
         "source": "app/assistants/EditTask-assistant.js"
-    },
-    {
-        "scenes": "DueDateSelector",
-        "source": "app/assistants/DueDateSelector-assistant.js"
     }
 ]
