@@ -36,11 +36,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.setupWidget('TaskName', task_name_attributes, this.config.task);
 	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
 	
-	var task_due_attributes = {
-		modelProperty: 'date'
-	};
-	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
-	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
+	this.setUpDueWidgets();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -64,6 +60,16 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.listen('CancelTask', Mojo.Event.tap, this.handleCancelTaskEvent.bind(this));
 }
 
+EditTaskAssistant.prototype.setUpDueWidgets = function() {
+	var task_due_attributes = {
+		modelProperty: 'date'
+	};
+	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
+	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
+	
+	this.controller.listen('DueNone', Mojo.Event.tap, this.handleDueDateSelectorEvent.bind(this));
+}
+
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
@@ -77,6 +83,15 @@ EditTaskAssistant.prototype.handleTaskDueEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskDueEvent: Task due date is '" + this.dueDateModel.date
 		+ "', parsed as '" + date_str + "'");
 	this.config.task.setForPush('due', date_str);
+}
+
+EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleDueDateSelectorEvent: Entering");
+	this.controller.showDialog({
+		template: 'EditTask/DueDateSelector-dialog',
+		assistant: new DueDateSelectorAssistant(),
+		myTestParam: 'This is my parameter'
+	});
 }
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {

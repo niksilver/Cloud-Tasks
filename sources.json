@@ -7,10 +7,11 @@
     {"source": "app/lib/Retrier.js"},
     {"source": "app/lib/RTM.js"},
     {"source": "app/lib/Date-en-GB.js"},
-	{"source": "app/lib/ErrorHandler.js"},
+    {"source": "app/lib/ErrorHandler.js"},
     {"source": "app/lib/NetworkIndicator.js"},
     {"source": "app/models/TaskModel.js"},
     {"source": "app/models/TaskListModel.js"},
+    {"source": "app/assistants/DueDateSelector-assistant.js"},
     {
         "scenes": "TaskList",
         "source": "app/assistants/TaskList-assistant.js"
@@ -22,5 +23,9 @@
     {
         "scenes": "EditTask",
         "source": "app/assistants/EditTask-assistant.js"
+    },
+    {
+        "scenes": "DueDateSelector",
+        "source": "app/assistants/DueDateSelector-assistant.js"
     }
 ]
