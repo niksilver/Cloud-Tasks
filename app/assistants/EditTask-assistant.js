@@ -126,6 +126,7 @@ EditTaskAssistant.prototype.popScene = function(wasCancelled) {
 		// Don't allow a blank name to be entered
 		this.config.task.name = this.savedTaskProperties.name;
 	}
+	this.config.task.update();
 	Mojo.Controller.stageController.popScene({
 		lastScene: 'EditTask',
 		task: this.config.task,

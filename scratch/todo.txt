@@ -16,6 +16,8 @@
   - Have tasks with no due dates appear after overdue tasks
   - Have tasks with no due dates have a blank where due date usually appears.
   - Have better date input mechanism
+-Bugs:
+  - New date set as tomorrow shows as bold as if today.
 
   
 Done
