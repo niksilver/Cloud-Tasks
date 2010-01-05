@@ -7,6 +7,7 @@
     {"source": "app/lib/Retrier.js"},
     {"source": "app/lib/RTM.js"},
     {"source": "app/lib/Date-en-GB.js"},
+    {"source": "app/lib/CalendarGrid.js"},
     {"source": "app/lib/ErrorHandler.js"},
     {"source": "app/lib/NetworkIndicator.js"},
     {"source": "app/models/TaskModel.js"},
