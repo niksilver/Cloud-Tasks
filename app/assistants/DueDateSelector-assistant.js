@@ -13,6 +13,8 @@ function DueDateSelectorAssistant(config) {
 	Mojo.Log.info("DueDateSelectorAssistant: Entering");
 	
 	this.config = config;
+	this.task = config.task;
+	this.controller = config.controller;
 	this.dueDateModel = { date: Date.parse(this.config.task.due) };
 }
 
@@ -27,8 +29,10 @@ DueDateSelectorAssistant.prototype.setup = function() {
 	var task_due_attributes = {
 		modelProperty: 'date'
 	};
-	this.config.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
-	this.config.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
+	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
+	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
+	
+	this.fillCalendarGrid();
 }
 
 DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
@@ -37,8 +41,22 @@ DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
 	var date_str = this.dueDateModel.date.toISOString();
 	Mojo.Log.info("DueDateSelectorAssistant.handleTaskDueEvent: Task due date is '" + this.dueDateModel.date
 		+ "', parsed as '" + date_str + "'");
-	this.config.task.setForPush('due', date_str);
+	this.task.setForPush('due', date_str);
 	this.config.updateTaskDueDisplayFromTask(this.config.task);
+}
+
+DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
+	var grid = new CalendarGrid({
+		month: this.dueDateModel.date,
+		firstDay: 1
+	});
+	
+	this.controller.get('calendar-header').update(grid.getMonthAndYear());
+	for (var row = 0; row <= 5; row++) {
+		for (var col = 0; col <= 6; col++) {
+			this.controller.get('c' + row + col).update(grid.get(row, col));
+		}
+	}
 }
 
 DueDateSelectorAssistant.prototype.activate = function(event) {

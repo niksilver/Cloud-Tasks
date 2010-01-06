@@ -77,6 +77,15 @@
 	display: none;
 }
 
+/* ---------------- Due date dialog --------------- */
+
+#calendar-grid {
+	width: 100%;
+}
+#calendar-grid td {
+	-webkit-column-rule: 1px groove black;
+}
+
 /* ----------------- Auth scene ----------------- */
 
 .blurb {

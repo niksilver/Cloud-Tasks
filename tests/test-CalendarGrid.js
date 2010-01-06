@@ -77,6 +77,24 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('T', apr_2010_with_sunday.getDayOfWeekLetter(4), "Didn't get Thursday for April");
 			Y.Assert.areEqual('F', apr_2010_with_sunday.getDayOfWeekLetter(5), "Didn't get Friday for April");
 			Y.Assert.areEqual('S', apr_2010_with_sunday.getDayOfWeekLetter(6), "Didn't get Saturday for April");
+		},
+		
+		testGetMonthAndYear: function() {
+			var month1 = Date.parse('2010-01-05T00:00:00Z');
+			var jan_2010_with_monday = new CalendarGrid({
+				month: month1,
+				firstDay: 1
+			});
+			
+			Y.Assert.areEqual('January 2010', jan_2010_with_monday.getMonthAndYear(), "Didn't get Jan 2010");
+
+			var month7 = Date.parse('2009-07-05T00:00:00Z');
+			var jul_2009_with_monday = new CalendarGrid({
+				month: month7,
+				firstDay: 1
+			});
+
+			Y.Assert.areEqual('July 2009', jul_2009_with_monday.getMonthAndYear(), "Didn't get July 2009");
 		}
 
 	});

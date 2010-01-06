@@ -31,3 +31,7 @@ CalendarGrid.prototype.getDayOfWeekLetter = function(index) {
 CalendarGrid.prototype.get = function(row, col) {
 	return this.cell00.clone().add({ days: 7*row + col }).getUTCDate();
 }
+
+CalendarGrid.prototype.getMonthAndYear = function() {
+	return this.month.toString('MMMM yyyy');
+}
