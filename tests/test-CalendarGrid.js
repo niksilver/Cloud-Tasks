@@ -48,6 +48,30 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(26, jan_2010_with_sat.get(0, 0), "4: Didn't get Sat 26 Dec");
 			Y.Assert.areEqual(27, jan_2010_with_sat.get(0, 1), "4: Didn't get Sun 27 Dec");
 		},
+
+		testGetDate: function() {
+			var month1 = Date.parse('2010-01-05T00:00:00Z');
+			var jan_2010_with_monday = new CalendarGrid({
+				month: month1,
+				firstDay: 1,
+			});
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(28, jan_2010_with_monday.getDate(0, 0).getUTCDate(), "1: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(29, jan_2010_with_monday.getDate(0, 1).getUTCDate(), "1: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(1, jan_2010_with_monday.getDate(0, 4).getUTCDate(), "1: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(31, jan_2010_with_monday.getDate(4, 6).getUTCDate(), "1: Didn't get Sun 31 Jan");
+			Y.Assert.areEqual(1, jan_2010_with_monday.getDate(5, 0).getUTCDate(), "1: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(7, jan_2010_with_monday.getDate(5, 6).getUTCDate(), "1: Didn't get Sun 7 Jan");
+
+			Y.Assert.areEqual('Dec', jan_2010_with_monday.getDate(0, 0).toString('MMM'), "2: Didn't get Mon Dec 28");
+			Y.Assert.areEqual('Dec', jan_2010_with_monday.getDate(0, 1).toString('MMM'), "2: Didn't get Tue Dec 29");
+			Y.Assert.areEqual('Jan', jan_2010_with_monday.getDate(0, 4).toString('MMM'), "2: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual('Jan', jan_2010_with_monday.getDate(4, 6).toString('MMM'), "2: Didn't get Sun 31 Jan");
+			Y.Assert.areEqual('Feb', jan_2010_with_monday.getDate(5, 0).toString('MMM'), "2: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual('Feb', jan_2010_with_monday.getDate(5, 6).toString('MMM'), "2: Didn't get Sun 7 Jan");
+		},
+
 		
 		testGetDayOfWeekLetter: function() {
 			var month1 = Date.parse('2010-01-05T00:00:00Z');

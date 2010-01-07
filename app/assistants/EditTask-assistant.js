@@ -71,15 +71,20 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDueDateSelectorEvent: Entering");
-	this.controller.showDialog({
+	this.dueDateSelectorDialog = this.controller.showDialog({
 		template: 'EditTask/DueDateSelector-dialog',
 		assistant: new DueDateSelectorAssistant({
 				task: this.config.task,
 				controller: this.controller,
-				updateTaskDueDisplayFromTask: this.updateTaskDueDisplayFromTask.bind(this)
+				updateTaskDueDisplayFromTask: this.updateTaskDueDisplayFromTask.bind(this),
+				closeDueDateSelectorDialog: this.closeDueDateSelectorDialog.bind(this)
 			}),
 		myTestParam: 'This is my parameter'
 	});
+}
+
+EditTaskAssistant.prototype.closeDueDateSelectorDialog = function() {
+	this.dueDateSelectorDialog.mojo.close();
 }
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {

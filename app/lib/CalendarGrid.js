@@ -28,8 +28,22 @@ CalendarGrid.prototype.getDayOfWeekLetter = function(index) {
 	return 'SMTWTFS'.substr((this.firstDay + index) % 7, 1);
 }
 
+/**
+ * Get the date (day of month) that goes in the row and column.
+ * @param {Object} row  Row, from 0
+ * @param {Object} col  Column, from 0
+ */
 CalendarGrid.prototype.get = function(row, col) {
-	return this.cell00.clone().add({ days: 7*row + col }).getUTCDate();
+	return this.getDate(row, col).getUTCDate();
+}
+
+/**
+ * Get a Date object corresponding to the row and column.
+ * @param {Object} row  Row, from 0
+ * @param {Object} col  Column, from 0
+ */
+CalendarGrid.prototype.getDate = function(row, col) {
+	return this.cell00.clone().add({ days: 7*row + col });
 }
 
 CalendarGrid.prototype.getMonthAndYear = function() {

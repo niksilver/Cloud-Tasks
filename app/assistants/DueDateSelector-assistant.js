@@ -3,6 +3,7 @@
  *   - task
  *   - controller
  *   - updateTaskDueDisplayFromTask
+ *   - closeDueDateSelectorDialog
  */
 function DueDateSelectorAssistant(config) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
@@ -52,7 +53,7 @@ DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
 
 DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 	this.controller.get('month-name').update(this.grid.getMonthAndYear());
-	
+
 	for (var day = 0; day <= 6; day++) {
 		this.controller.get('day' + day).update(this.grid.getDayOfWeekLetter(day));
 	}
@@ -67,16 +68,38 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 DueDateSelectorAssistant.prototype.setUpCalendarGridListeners = function() {
 	this.controller.listen('month-back', Mojo.Event.tap, this.handleMonthBackEvent.bind(this));
 	this.controller.listen('month-forward', Mojo.Event.tap, this.handleMonthForwardEvent.bind(this));
+
+	for (var row = 0; row <= 5; row++) {
+		for (var col = 0; col <= 6; col++) {
+			this.controller.listen('c' + row + col, Mojo.Event.tap, this.handleCellEvent.bind(this));
+		}
+	}
+	
 }
 
-DueDateSelectorAssistant.prototype.handleMonthBackEvent = function() {
+DueDateSelectorAssistant.prototype.handleMonthBackEvent = function(event) {
 	this.grid = this.grid.getPrevious();
 	this.fillCalendarGrid();
 }
 
-DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function() {
+DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function(event) {
 	this.grid = this.grid.getNext();
 	this.fillCalendarGrid();
+}
+
+DueDateSelectorAssistant.prototype.handleCellEvent = function(event) {
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Entering");
+
+	var src = event.srcElement;
+	var row = parseInt(src.id.substr(1, 1));
+	var col = parseInt(src.id.substr(2, 1));
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Got tap event on cell " + row + ", " + col);
+	var date = this.grid.getDate(row, col);
+	var date_str = date.toISOString();
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Setting date " + date_str);
+	this.task.setForPush('due', date_str);
+	this.config.updateTaskDueDisplayFromTask(this.config.task);
+	this.config.closeDueDateSelectorDialog();
 }
 
 DueDateSelectorAssistant.prototype.activate = function(event) {
