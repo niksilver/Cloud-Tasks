@@ -79,11 +79,42 @@
 
 /* ---------------- Due date dialog --------------- */
 
-#calendar-grid {
-	width: 100%;
+#calendar-header {
+	font-size: 24px;
+	margin-bottom: 10px;
 }
-#calendar-grid td {
-	-webkit-column-rule: 1px groove black;
+
+#calendar #month-back, #calendar #month-forward {
+	float: left;
+	font-weight: bold;
+	font-size: 36px;
+	margin-left: 8px;
+	margin-right: 8px;
+	margin-top: -10px;
+}
+
+#calendar #month-back {
+	font-weight: bold;
+}
+
+#calendar #month-forward {
+	float: right;
+}
+
+#calendar #month-name {
+	text-align: center;
+}
+
+#calendar #days td {
+	padding-bottom: 10px;
+}
+
+#calendar #calendar-grid {
+	width: 100%;
+	font-size: 20px;
+}
+#calendar #calendar-grid td {
+	text-align: center;
 }
 
 /* ----------------- Auth scene ----------------- */

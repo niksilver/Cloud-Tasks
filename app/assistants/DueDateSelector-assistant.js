@@ -51,7 +51,10 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 		firstDay: 1
 	});
 	
-	this.controller.get('calendar-header').update(grid.getMonthAndYear());
+	this.controller.get('month-name').update(grid.getMonthAndYear());
+	for (var day = 0; day <= 6; day++) {
+		this.controller.get('day' + day).update(grid.getDayOfWeekLetter(day));
+	}
 	for (var row = 0; row <= 5; row++) {
 		for (var col = 0; col <= 6; col++) {
 			this.controller.get('c' + row + col).update(grid.get(row, col));
