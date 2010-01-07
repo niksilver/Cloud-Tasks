@@ -95,6 +95,32 @@ testCases.push( function(Y) {
 			});
 
 			Y.Assert.areEqual('July 2009', jul_2009_with_monday.getMonthAndYear(), "Didn't get July 2009");
+		},
+		
+		testGetPrevious: function() {
+			var month = Date.parse('2010-03-31T00:00:00Z');
+			var march = new CalendarGrid({
+				month: month,
+				firstDay: 3
+			});
+			
+			var february = march.getPrevious();
+			Y.Assert.areNotSame(march, february, "Calendar got reused");
+			Y.Assert.areEqual('February 2010', february.getMonthAndYear(), "Month and year not correct");
+			Y.Assert.areEqual(3, february.firstDay, "First day of week not preserved");
+		},
+		
+		testGetNext: function() {
+			var month = Date.parse('2010-01-31T00:00:00Z');
+			var january = new CalendarGrid({
+				month: month,
+				firstDay: 3
+			});
+			
+			var february = january.getNext();
+			Y.Assert.areNotSame(january, february, "Calendar got reused");
+			Y.Assert.areEqual('February 2010', february.getMonthAndYear(), "Month and year not correct");
+			Y.Assert.areEqual(3, february.firstDay, "First day of week not preserved");
 		}
 
 	});

@@ -35,3 +35,23 @@ CalendarGrid.prototype.get = function(row, col) {
 CalendarGrid.prototype.getMonthAndYear = function() {
 	return this.month.toString('MMMM yyyy');
 }
+
+/**
+ * Generate a new CalendarGrid which represents the previous month.
+ */
+CalendarGrid.prototype.getPrevious = function() {
+	return new CalendarGrid({
+		month: this.month.clone().set({ day: 1 }).add({ months: -1 }),
+		firstDay: this.firstDay
+	})
+}
+
+/**
+ * Generate a new CalendarGrid which represents the next month.
+ */
+CalendarGrid.prototype.getNext = function() {
+	return new CalendarGrid({
+		month: this.month.clone().set({ day: 1 }).add({ months: 1 }),
+		firstDay: this.firstDay
+	})
+}

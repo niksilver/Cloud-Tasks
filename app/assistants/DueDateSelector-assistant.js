@@ -16,6 +16,10 @@ function DueDateSelectorAssistant(config) {
 	this.task = config.task;
 	this.controller = config.controller;
 	this.dueDateModel = { date: Date.parse(this.config.task.due) };
+	this.grid = new CalendarGrid({
+		month: this.dueDateModel.date,
+		firstDay: 1
+	});
 }
 
 DueDateSelectorAssistant.prototype.setup = function() {
@@ -33,6 +37,7 @@ DueDateSelectorAssistant.prototype.setup = function() {
 	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
 	
 	this.fillCalendarGrid();
+	this.setUpCalendarGridListeners();
 }
 
 DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
@@ -46,20 +51,32 @@ DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
 }
 
 DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
-	var grid = new CalendarGrid({
-		month: this.dueDateModel.date,
-		firstDay: 1
-	});
+	this.controller.get('month-name').update(this.grid.getMonthAndYear());
 	
-	this.controller.get('month-name').update(grid.getMonthAndYear());
 	for (var day = 0; day <= 6; day++) {
-		this.controller.get('day' + day).update(grid.getDayOfWeekLetter(day));
+		this.controller.get('day' + day).update(this.grid.getDayOfWeekLetter(day));
 	}
+	
 	for (var row = 0; row <= 5; row++) {
 		for (var col = 0; col <= 6; col++) {
-			this.controller.get('c' + row + col).update(grid.get(row, col));
+			this.controller.get('c' + row + col).update(this.grid.get(row, col));
 		}
 	}
+}
+
+DueDateSelectorAssistant.prototype.setUpCalendarGridListeners = function() {
+	this.controller.listen('month-back', Mojo.Event.tap, this.handleMonthBackEvent.bind(this));
+	this.controller.listen('month-forward', Mojo.Event.tap, this.handleMonthForwardEvent.bind(this));
+}
+
+DueDateSelectorAssistant.prototype.handleMonthBackEvent = function() {
+	this.grid = this.grid.getPrevious();
+	this.fillCalendarGrid();
+}
+
+DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function() {
+	this.grid = this.grid.getNext();
+	this.fillCalendarGrid();
 }
 
 DueDateSelectorAssistant.prototype.activate = function(event) {
