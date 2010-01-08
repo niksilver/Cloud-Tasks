@@ -60,7 +60,7 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 	
 	for (var row = 0; row <= 5; row++) {
 		for (var col = 0; col <= 6; col++) {
-			this.controller.get('c' + row + col).update(this.grid.get(row, col));
+			this.controller.get('c' + row + col).update(this.grid.get(row, col).dayOfMonth);
 		}
 	}
 }
@@ -94,7 +94,7 @@ DueDateSelectorAssistant.prototype.handleCellEvent = function(event) {
 	var row = parseInt(src.id.substr(1, 1));
 	var col = parseInt(src.id.substr(2, 1));
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Got tap event on cell " + row + ", " + col);
-	var date = this.grid.getDate(row, col);
+	var date = this.grid.get(row, col).date;
 	var date_str = date.toISOString();
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Setting date " + date_str);
 	this.task.setForPush('due', date_str);

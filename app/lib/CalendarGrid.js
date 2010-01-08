@@ -29,21 +29,19 @@ CalendarGrid.prototype.getDayOfWeekLetter = function(index) {
 }
 
 /**
- * Get the date (day of month) that goes in the row and column.
+ * Get a hash that described what goes in the row and column.
  * @param {Object} row  Row, from 0
  * @param {Object} col  Column, from 0
+ * @returns  A hash with the following fields:
+ *     - date  A Date object of what's in the cell
+ *     - dayOfMonth  The numeric day of the month (1 to 31)
  */
 CalendarGrid.prototype.get = function(row, col) {
-	return this.getDate(row, col).getUTCDate();
-}
-
-/**
- * Get a Date object corresponding to the row and column.
- * @param {Object} row  Row, from 0
- * @param {Object} col  Column, from 0
- */
-CalendarGrid.prototype.getDate = function(row, col) {
-	return this.cell00.clone().add({ days: 7*row + col });
+	var date = this.cell00.clone().add({ days: 7*row + col });
+	return {
+		date: date,
+		dayOfMonth: date.getUTCDate()
+	};
 }
 
 CalendarGrid.prototype.getMonthAndYear = function() {
