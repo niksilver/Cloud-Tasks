@@ -33,14 +33,16 @@ CalendarGrid.prototype.getDayOfWeekLetter = function(index) {
  * @param {Object} row  Row, from 0
  * @param {Object} col  Column, from 0
  * @returns  A hash with the following fields:
- *     - date  A Date object of what's in the cell
- *     - dayOfMonth  The numeric day of the month (1 to 31)
+ *     - date  A Date object of what's in the cell;
+ *     - dayOfMonth  The numeric day of the month (1 to 31);
+ *     - isInMonth  True iff the date is in the month of the CalendarGrid.
  */
 CalendarGrid.prototype.get = function(row, col) {
 	var date = this.cell00.clone().add({ days: 7*row + col });
 	return {
 		date: date,
-		dayOfMonth: date.getUTCDate()
+		dayOfMonth: date.getUTCDate(),
+		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth())
 	};
 }
 

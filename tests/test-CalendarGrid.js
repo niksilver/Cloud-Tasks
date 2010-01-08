@@ -72,7 +72,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Feb', jan_2010_with_monday.get(5, 6).date.toString('MMM'), "2: Didn't get Sun 7 Jan");
 		},
 
-		
 		testGetDayOfWeekLetter: function() {
 			var month1 = Date.parse('2010-01-05T00:00:00Z');
 			var jan_2010_with_monday = new CalendarGrid({
@@ -145,6 +144,22 @@ testCases.push( function(Y) {
 			Y.Assert.areNotSame(january, february, "Calendar got reused");
 			Y.Assert.areEqual('February 2010', february.getMonthAndYear(), "Month and year not correct");
 			Y.Assert.areEqual(3, february.firstDay, "First day of week not preserved");
+		},
+
+		testIsInMonth: function() {
+			var month1 = Date.parse('2010-01-05T00:00:00Z');
+			var jan_2010_with_monday = new CalendarGrid({
+				month: month1,
+				firstDay: 1,
+			});
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, jan_2010_with_monday.get(0, 0).isInMonth, "Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, jan_2010_with_monday.get(0, 1).isInMonth, "Didn't get Tue Dec 29");
+			Y.Assert.areEqual(true, jan_2010_with_monday.get(0, 4).isInMonth, "Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(true, jan_2010_with_monday.get(4, 6).isInMonth, "Didn't get Sun 31 Jan");
+			Y.Assert.areEqual(false, jan_2010_with_monday.get(5, 0).isInMonth, "Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, jan_2010_with_monday.get(5, 6).isInMonth, "Didn't get Sun 7 Jan");
 		}
 
 	});
