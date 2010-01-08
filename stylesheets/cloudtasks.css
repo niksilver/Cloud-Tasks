@@ -113,8 +113,13 @@
 	width: 100%;
 	font-size: 20px;
 }
+
 #calendar #calendar-grid td {
 	text-align: center;
+}
+
+#calendar #calendar-grid td.date-not-in-month {
+	color: #666;
 }
 
 /* ----------------- Auth scene ----------------- */

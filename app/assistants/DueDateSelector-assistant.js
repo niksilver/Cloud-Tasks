@@ -60,7 +60,15 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 	
 	for (var row = 0; row <= 5; row++) {
 		for (var col = 0; col <= 6; col++) {
-			this.controller.get('c' + row + col).update(this.grid.get(row, col).dayOfMonth);
+			var cell = 	this.controller.get('c' + row + col);
+			var grid_data = this.grid.get(row, col);
+			cell.update(grid_data.dayOfMonth);
+			if (!grid_data.isInMonth) {
+				cell.addClassName('date-not-in-month');
+			}
+			else {
+				cell.removeClassName('date-not-in-month');
+			}
 		}
 	}
 }
