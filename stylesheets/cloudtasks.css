@@ -122,6 +122,12 @@
 	color: #666;
 }
 
+#calendar #calendar-grid td.selected {
+	color: #fff;
+	background-color: #666;
+	font-weight: bold;
+}
+
 /* ----------------- Auth scene ----------------- */
 
 .blurb {
