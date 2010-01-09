@@ -16,11 +16,12 @@ function DueDateSelectorAssistant(config) {
 	this.config = config;
 	this.task = config.task;
 	this.controller = config.controller;
-	this.dueDateModel = { date: Date.parse(this.config.task.due) };
+	
+	var selected_date = Date.parse(this.config.task.due);
 	this.grid = new CalendarGrid({
-		month: this.dueDateModel.date,
+		month: selected_date,
 		firstDay: 1,
-		selected: Date.parse(this.config.task.due)
+		selected: selected_date
 	});
 }
 
@@ -32,24 +33,8 @@ DueDateSelectorAssistant.prototype.setup = function() {
 	
 	Mojo.Log.info("DueDateSelectorAssistant.setup: Entering");
 
-	var task_due_attributes = {
-		modelProperty: 'date'
-	};
-	this.controller.setupWidget('TaskDue', task_due_attributes, this.dueDateModel);
-	this.controller.listen('TaskDue', Mojo.Event.propertyChange, this.handleTaskDueEvent.bind(this));
-	
 	this.fillCalendarGrid();
 	this.setUpCalendarGridListeners();
-}
-
-DueDateSelectorAssistant.prototype.handleTaskDueEvent = function(event) {
-	Mojo.Log.info("DueDateSelectorAssistant.handleTaskDueEvent: Entering");
-	
-	var date_str = this.dueDateModel.date.toISOString();
-	Mojo.Log.info("DueDateSelectorAssistant.handleTaskDueEvent: Task due date is '" + this.dueDateModel.date
-		+ "', parsed as '" + date_str + "'");
-	this.task.setForPush('due', date_str);
-	this.config.updateTaskDueDisplayFromTask(this.config.task);
 }
 
 DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
@@ -87,7 +72,7 @@ DueDateSelectorAssistant.prototype.setUpCalendarGridListeners = function() {
 
 	for (var row = 0; row <= 5; row++) {
 		for (var col = 0; col <= 6; col++) {
-			this.controller.listen('c' + row + col, Mojo.Event.tap, this.handleCellEvent.bind(this));
+			this.controller.listen('c' + row + col, Mojo.Event.tap, this.handleCellTapEvent.bind(this));
 		}
 	}
 	
@@ -103,8 +88,8 @@ DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function(event) {
 	this.fillCalendarGrid();
 }
 
-DueDateSelectorAssistant.prototype.handleCellEvent = function(event) {
-	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Entering");
+DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Entering");
 
 	// Remove the marking from the previously-selected cell
 	if (this.selectedCell) {
@@ -116,10 +101,10 @@ DueDateSelectorAssistant.prototype.handleCellEvent = function(event) {
 	var src = event.srcElement;
 	var row = parseInt(src.id.substr(1, 1));
 	var col = parseInt(src.id.substr(2, 1));
-	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Got tap event on cell " + row + ", " + col);
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Got tap event on cell " + row + ", " + col);
 	var date = this.grid.get(row, col).date;
 	var date_str = date.toISOString();
-	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Setting date " + date_str);
+	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Setting date " + date_str);
 	this.task.setForPush('due', date_str);
 	this.config.updateTaskDueDisplayFromTask(this.config.task);
 	this.config.closeDueDateSelectorDialog();
