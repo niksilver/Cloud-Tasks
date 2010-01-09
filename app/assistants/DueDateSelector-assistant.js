@@ -2,8 +2,8 @@
  * @param {Object} config  Has the following parameters:
  *   - task
  *   - controller
- *   - updateTaskDueDisplayFromTask
- *   - closeDueDateSelectorDialog
+ *   - updateTaskDueDisplayFromTask  Function to change the task due display, given the task
+ *   - closeDueDateSelectorDialog  Function to close the dialog.
  */
 function DueDateSelectorAssistant(config) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
@@ -17,9 +17,9 @@ function DueDateSelectorAssistant(config) {
 	this.task = config.task;
 	this.controller = config.controller;
 	
-	var selected_date = Date.parse(this.config.task.due);
+	var selected_date = this.task.due ? Date.parse(this.task.due) : '';
 	this.grid = new CalendarGrid({
-		month: selected_date,
+		month: selected_date || Date.today(),
 		firstDay: 1,
 		selected: selected_date
 	});
@@ -35,6 +35,12 @@ DueDateSelectorAssistant.prototype.setup = function() {
 
 	this.fillCalendarGrid();
 	this.setUpCalendarGridListeners();
+	
+	var no_due_date_model = {
+		label: "No date"
+	};
+	this.controller.setupWidget('NoDueDate', {}, no_due_date_model);
+	this.controller.listen('NoDueDate', Mojo.Event.tap, this.handleNoDueDateEvent.bind(this));
 }
 
 DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
@@ -91,10 +97,7 @@ DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function(event) {
 DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Entering");
 
-	// Remove the marking from the previously-selected cell
-	if (this.selectedCell) {
-		this.selectedCell.removeClassName('date-is-selected');
-	}
+	this.removeHighlightFromPreviouslySelectedCell();
 	
 	// Now work out what date the user has selected
 
@@ -106,7 +109,20 @@ DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
 	var date_str = date.toISOString();
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Setting date " + date_str);
 	this.task.setForPush('due', date_str);
-	this.config.updateTaskDueDisplayFromTask(this.config.task);
+	this.config.updateTaskDueDisplayFromTask(this.task);
+	this.config.closeDueDateSelectorDialog();
+}
+
+DueDateSelectorAssistant.prototype.removeHighlightFromPreviouslySelectedCell = function() {
+	if (this.selectedCell) {
+		this.selectedCell.removeClassName('date-is-selected');
+	}
+}
+
+DueDateSelectorAssistant.prototype.handleNoDueDateEvent = function(event) {
+	this.removeHighlightFromPreviouslySelectedCell();
+	this.task.setForPush('due', '');
+	this.config.updateTaskDueDisplayFromTask(this.task);
 	this.config.closeDueDateSelectorDialog();
 }
 
