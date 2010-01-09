@@ -112,18 +112,25 @@
 #calendar #calendar-grid {
 	width: 100%;
 	font-size: 20px;
+	border-spacing: 0px;
 }
 
 #calendar #calendar-grid td {
 	text-align: center;
+	padding: 0px;
 }
 
-#calendar #calendar-grid td.date-not-in-month {
+#calendar #calendar-grid .date-not-in-month {
 	color: #666;
 }
 
-#calendar #calendar-grid td.selected,        /* Selected by touch */
-#calendar #calendar-grid td.date-is-selected /* Selected as due date in task */ {
+#calendar div.cell {
+	border-width: 1px;
+	-webkit-border-image: url(../images/cell-8x8.png) 1 1 1 1 repeat repeat;
+}
+
+#calendar #calendar-grid .selected,        /* Selected by touch */
+#calendar #calendar-grid .date-is-selected /* Selected as due date in task */ {
 	color: #fff;
 	background-color: #666;
 	font-weight: bold;
