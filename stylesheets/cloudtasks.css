@@ -122,7 +122,8 @@
 	color: #666;
 }
 
-#calendar #calendar-grid td.selected {
+#calendar #calendar-grid td.selected,        /* Selected by touch */
+#calendar #calendar-grid td.date-is-selected /* Selected as due date in task */ {
 	color: #fff;
 	background-color: #666;
 	font-weight: bold;

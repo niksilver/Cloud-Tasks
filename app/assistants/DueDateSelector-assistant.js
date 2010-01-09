@@ -19,7 +19,8 @@ function DueDateSelectorAssistant(config) {
 	this.dueDateModel = { date: Date.parse(this.config.task.due) };
 	this.grid = new CalendarGrid({
 		month: this.dueDateModel.date,
-		firstDay: 1
+		firstDay: 1,
+		selected: Date.parse(this.config.task.due)
 	});
 }
 
@@ -69,6 +70,13 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 			else {
 				cell.removeClassName('date-not-in-month');
 			}
+			if (grid_data.isSelected) {
+				cell.addClassName('date-is-selected');
+				this.selectedCell = cell;
+			}
+			else {
+				cell.removeClassName('date-is-selected');
+			}
 		}
 	}
 }
@@ -97,6 +105,13 @@ DueDateSelectorAssistant.prototype.handleMonthForwardEvent = function(event) {
 
 DueDateSelectorAssistant.prototype.handleCellEvent = function(event) {
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellEvent: Entering");
+
+	// Remove the marking from the previously-selected cell
+	if (this.selectedCell) {
+		this.selectedCell.removeClassName('date-is-selected');
+	}
+	
+	// Now work out what date the user has selected
 
 	var src = event.srcElement;
 	var row = parseInt(src.id.substr(1, 1));
