@@ -4,11 +4,13 @@
  * @param {Object} config  Configuration with the following parameters:
  *     - month:  A Date object which specifies the month and year to display.
  *     - firstDay: The day which is the first day of the week. 0 = Sunday, 1 = Monday, etc.
- *     - selected: Optional. A Date object representing which day to have selected, if any. 
+ *     - selected: Optional. A Date object representing which day to have selected, if any.
+ *         The date selected may not be in the given month.
  */
 function CalendarGrid(config) {
-	this.month = config.month;
+	this.month = config.month.clone().clearTime();
 	this.firstDay = config.firstDay;
+	this.selected = config.selected ? config.selected.clone().clearTime() : undefined;
 	
 	var first_of_month = this.month.clone().set({ day: 1 });
 	var last_of_prev_month = first_of_month.clone().add({ days: -1 }); // This is on first row, row 0
@@ -42,7 +44,8 @@ CalendarGrid.prototype.get = function(row, col) {
 	return {
 		date: date,
 		dayOfMonth: date.getUTCDate(),
-		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth())
+		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth()),
+		isSelected: (typeof this.selected !== 'undefined' && this.selected.equals(date))
 	};
 }
 
@@ -56,8 +59,9 @@ CalendarGrid.prototype.getMonthAndYear = function() {
 CalendarGrid.prototype.getPrevious = function() {
 	return new CalendarGrid({
 		month: this.month.clone().set({ day: 1 }).add({ months: -1 }),
-		firstDay: this.firstDay
-	})
+		firstDay: this.firstDay,
+		selected: this.selected ? this.selected.clone() : undefined
+	});
 }
 
 /**
@@ -66,6 +70,7 @@ CalendarGrid.prototype.getPrevious = function() {
 CalendarGrid.prototype.getNext = function() {
 	return new CalendarGrid({
 		month: this.month.clone().set({ day: 1 }).add({ months: 1 }),
-		firstDay: this.firstDay
-	})
+		firstDay: this.firstDay,
+		selected: this.selected ? this.selected.clone() : undefined
+	});
 }

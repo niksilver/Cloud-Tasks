@@ -160,6 +160,85 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, jan_2010_with_monday.get(4, 6).isInMonth, "Didn't get Sun 31 Jan");
 			Y.Assert.areEqual(false, jan_2010_with_monday.get(5, 0).isInMonth, "Didn't get Mon 1 Feb");
 			Y.Assert.areEqual(false, jan_2010_with_monday.get(5, 6).isInMonth, "Didn't get Sun 7 Jan");
+		},
+		
+		testGetIsSelected: function() {
+			var jan_2010 = new CalendarGrid({
+				month: Date.parse('2010-01-05T01:23:45Z'), // Not midnight
+				firstDay: 1,
+				selected: Date.parse('2010-01-12T14:15:16Z') // Also not midnight
+			});
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, jan_2010.get(0, 0).isSelected, "1: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, jan_2010.get(0, 1).isSelected, "1: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, jan_2010.get(0, 4).isSelected, "1: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(12, jan_2010.get(2, 1).dayOfMonth, "1: Didn't get date of Tue 12 Jan");
+			Y.Assert.areEqual(true, jan_2010.get(2, 1).isSelected, "1: Didn't get selectedness Tue 12 Jan");
+			Y.Assert.areEqual(false, jan_2010.get(5, 0).isSelected, "1: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, jan_2010.get(5, 6).isSelected, "1: Didn't get Sun 7 Jan");
+			
+			// With no date selected
+			var jan_2010_none_selected = new CalendarGrid({
+				month: Date.parse('2010-01-05T00:00:00Z'),
+				firstDay: 1
+			});
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(0, 0).isSelected, "2: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(0, 1).isSelected, "2: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(0, 4).isSelected, "2: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(2, 1).isSelected, "2: Didn't get Tue 12 Jan");
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(5, 0).isSelected, "2: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, jan_2010_none_selected.get(5, 6).isSelected, "2: Didn't get Sun 7 Jan");
+			
+			// Date selected, but in another month
+			var jan_2010_other_selected = new CalendarGrid({
+				month: Date.parse('2010-01-05T02:34:56Z'), // Not midnight
+				firstDay: 1,
+				selected: Date.parse('2010-02-12T:11:22:33Z') // Not midnight
+			});
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(0, 0).isSelected, "3: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(0, 1).isSelected, "3: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(0, 4).isSelected, "3: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(2, 1).isSelected, "3: Didn't get Tue 12 Jan");
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(5, 0).isSelected, "3: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, jan_2010_other_selected.get(5, 6).isSelected, "3: Didn't get Sun 7 Jan");
+		},
+		
+		testGetIsSelectedSurvivesPreviousAndNext: function() {
+			var jan_2010 = new CalendarGrid({
+				month: Date.parse('2010-01-05T01:23:45Z'), // Not midnight
+				firstDay: 1,
+				selected: Date.parse('2010-01-12T14:15:16Z') // Also not midnight
+			});
+			
+			var other_jan_2010 = jan_2010.getPrevious().getNext();
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, other_jan_2010.get(0, 0).isSelected, "1: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, other_jan_2010.get(0, 1).isSelected, "1: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, other_jan_2010.get(0, 4).isSelected, "1: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(12, other_jan_2010.get(2, 1).dayOfMonth, "1: Didn't get date of Tue 12 Jan");
+			Y.Assert.areEqual(true, other_jan_2010.get(2, 1).isSelected, "1: Didn't get selectedness Tue 12 Jan");
+			Y.Assert.areEqual(false, other_jan_2010.get(5, 0).isSelected, "1: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, other_jan_2010.get(5, 6).isSelected, "1: Didn't get Sun 7 Jan");
+			
+			// With no date selected
+			var jan_2010_none_selected = new CalendarGrid({
+				month: Date.parse('2010-01-05T00:00:00Z'),
+				firstDay: 1
+			});
+			var other_jan_2010_none_selected = jan_2010_none_selected.getPrevious().getNext();
+			
+			// Cell 0,0 Should be Mon 28 Dec
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(0, 0).isSelected, "2: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(0, 1).isSelected, "2: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(0, 4).isSelected, "2: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(2, 1).isSelected, "2: Didn't get Tue 12 Jan");
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(5, 0).isSelected, "2: Didn't get Mon 1 Feb");
+			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(5, 6).isSelected, "2: Didn't get Sun 7 Jan");
 		}
 
 	});
