@@ -55,20 +55,19 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 			var cell = 	this.controller.get('c' + row + col);
 			var grid_data = this.grid.get(row, col);
 			cell.update(grid_data.dayOfMonth);
-			if (!grid_data.isInMonth) {
-				cell.addClassName('date-not-in-month');
-			}
-			else {
-				cell.removeClassName('date-not-in-month');
-			}
-			if (grid_data.isSelected) {
-				cell.addClassName('date-is-selected');
-				this.selectedCell = cell;
-			}
-			else {
-				cell.removeClassName('date-is-selected');
-			}
+			this.setOrRemoveClassName(cell, !grid_data.isInMonth, 'date-not-in-month');
+			this.setOrRemoveClassName(cell, grid_data.isSelected, 'date-is-selected');
+			this.setOrRemoveClassName(cell, grid_data.isWeekend, 'date-is-weekend');
 		}
+	}
+}
+
+DueDateSelectorAssistant.prototype.setOrRemoveClassName = function(element, condition, className) {
+	if (condition) {
+		element.addClassName(className);
+	}
+	else {
+		element.removeClassName(className);
 	}
 }
 

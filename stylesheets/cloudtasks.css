@@ -129,6 +129,10 @@
 	color: #666;
 }
 
+#calendar #calendar-grid .date-is-weekend {
+	background-color: #ccc;
+}
+
 #calendar div.cell {
 	border-width: 1px;
 	-webkit-border-image: url(../images/cell-8x8.png) 1 1 1 1 repeat repeat;

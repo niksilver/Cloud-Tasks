@@ -239,6 +239,20 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(2, 1).isSelected, "2: Didn't get Tue 12 Jan");
 			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(5, 0).isSelected, "2: Didn't get Mon 1 Feb");
 			Y.Assert.areEqual(false, other_jan_2010_none_selected.get(5, 6).isSelected, "2: Didn't get Sun 7 Jan");
+		},
+		
+		testGetIsWeekend: function() {
+			var month = Date.parse('2010-01-05T00:00:00Z');
+			var jan_2010 = new CalendarGrid({
+				month: month,
+				firstDay: 1
+			});
+			
+			Y.Assert.areEqual(false, jan_2010.get(0, 0).isWeekend, "1: Didn't get Mon Dec 28");
+			Y.Assert.areEqual(false, jan_2010.get(0, 1).isWeekend, "1: Didn't get Tue Dec 29");
+			Y.Assert.areEqual(false, jan_2010.get(0, 4).isWeekend, "1: Didn't get Fri 1 Jan");
+			Y.Assert.areEqual(true, jan_2010.get(5, 5).isWeekend, "1: Didn't get Sat 6 Jan");
+			Y.Assert.areEqual(true, jan_2010.get(5, 6).isWeekend, "1: Didn't get Sun 7 Jan");
 		}
 
 	});
