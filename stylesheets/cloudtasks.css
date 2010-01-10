@@ -109,19 +109,20 @@
 	text-align: center;
 }
 
-#calendar #days td {
-	padding-bottom: 10px;
-}
-
 #calendar #calendar-grid {
 	width: 100%;
 	font-size: 20px;
 	border-spacing: 0px;
+	padding-bottom: 20px;
 }
 
 #calendar #calendar-grid td {
 	text-align: center;
 	padding: 0px;
+}
+
+#calendar #days td {
+	padding-bottom: 10px;
 }
 
 #calendar #calendar-grid .date-not-in-month {
