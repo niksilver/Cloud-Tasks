@@ -57,6 +57,8 @@ EditTaskAssistant.prototype.setup = function() {
 	};
 	this.controller.setupWidget('CancelTask', {}, cancel_task_model);
 	this.controller.listen('CancelTask', Mojo.Event.tap, this.handleCancelTaskEvent.bind(this));
+
+	this.setVisibilityOfButtons();
 }
 
 EditTaskAssistant.prototype.setUpDueWidget = function() {
@@ -148,7 +150,6 @@ EditTaskAssistant.prototype.activate = function(event) {
 	   example, key handlers that are observing the document */
 
 	this.updateTaskDueDisplayFromTask(this.config.task);
-	this.setVisibilityOfButtons();
 }
 
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
