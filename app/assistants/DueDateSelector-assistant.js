@@ -58,6 +58,7 @@ DueDateSelectorAssistant.prototype.fillCalendarGrid = function() {
 			this.addOrRemoveClassName(cell, !grid_data.isInMonth, 'date-not-in-month');
 			this.addOrRemoveClassName(cell, grid_data.isSelected, 'date-is-selected');
 			this.addOrRemoveClassName(cell, grid_data.isWeekend, 'date-is-weekend');
+			this.addOrRemoveClassName(cell, grid_data.isToday, 'date-is-today');
 			if (grid_data.isSelected) {
 				this.selectedCell = cell;
 			}

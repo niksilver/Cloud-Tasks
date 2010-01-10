@@ -133,6 +133,10 @@
 	background-color: #ccc;
 }
 
+#calendar #calendar-grid .date-is-today {
+	color: #800;
+}
+
 #calendar div.cell {
 	border-width: 1px;
 	-webkit-border-image: url(../images/cell-8x8.png) 1 1 1 1 repeat repeat;
