@@ -46,8 +46,13 @@ CalendarGrid.prototype.get = function(row, col) {
 		dayOfMonth: date.getUTCDate(),
 		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth()),
 		isSelected: (typeof this.selected !== 'undefined' && this.selected.equals(date)),
-		isWeekend: (date.getUTCDay() == 0 || date.getUTCDay() == 6)
+		isWeekend: (date.getUTCDay() == 0 || date.getUTCDay() == 6),
+		isToday: (date.equals(this.today()))
 	};
+}
+
+CalendarGrid.prototype.today = function() {
+	return Date.today();
 }
 
 CalendarGrid.prototype.getMonthAndYear = function() {
