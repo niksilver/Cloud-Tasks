@@ -1,4 +1,4 @@
-/* -------------------- Basic task formatting ------------- */
+/* -------------------- Basic task list formatting ------------- */
 
 #TaskList .task {
 	background: url(../images/list-separator-light.png) repeat-x 0% 100%;
@@ -71,10 +71,14 @@
 	text-align: center;
 }
 
-/* ---------- Edit task button invisible by default ------------ */
+/* ---------- Edit task buttons invisible by default ------------ */
 
 #DeleteTask, #CancelTask, #CompleteTask {
 	display: none;
+}
+
+#TaskDueDisplay {
+	text-align: center;
 }
 
 /* ---------------- Due date dialog --------------- */
