@@ -105,6 +105,7 @@ DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
 	// Now work out what date the user has selected
 
 	var src = event.srcElement;
+	src.addClassName('date-is-selected');
 	var row = parseInt(src.id.substr(1, 1));
 	var col = parseInt(src.id.substr(2, 1));
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Got tap event on cell " + row + ", " + col);
