@@ -12,7 +12,6 @@
   - Handle postponing of recurring tasks
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
-  - Have tasks with no due dates have a blank where due date usually appears.
 
   
 Done
@@ -34,6 +33,7 @@ Done
   - Add Cancel button
 - Due dates
   - Have better date input mechanism
+  - Have tasks with no due dates have a blank where due date usually appears.
 - Auth screen:
   - Put spinner on Go and Finish buttons
 - Bugs (fixed):

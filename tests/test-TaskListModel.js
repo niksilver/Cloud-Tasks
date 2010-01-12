@@ -276,11 +276,11 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Thu 2 Dec 2010', model.dueDateFormatter('2010-12-02T14:54:22Z'), 'Test over year 2');
 			Y.Assert.areEqual('Fri 25 Feb 2011', model.dueDateFormatter('2011-02-25T14:54:22Z'), 'Test over year 3');
 			
-			// Non-times should give 'None'
-			Y.Assert.areEqual('None', model.dueDateFormatter(''), 'Test none-time 1');
-			Y.Assert.areEqual('None', model.dueDateFormatter('xxx'), 'Test none-time 2');
-			Y.Assert.areEqual('None', model.dueDateFormatter({}), 'Test none-time 3');
-			Y.Assert.areEqual('None', model.dueDateFormatter(), 'Test none-time 4');
+			// Non-times should give empty string
+			Y.Assert.areEqual('', model.dueDateFormatter(''), 'Test none-time 1');
+			Y.Assert.areEqual('', model.dueDateFormatter('xxx'), 'Test none-time 2');
+			Y.Assert.areEqual('', model.dueDateFormatter({}), 'Test none-time 3');
+			Y.Assert.areEqual('', model.dueDateFormatter(), 'Test none-time 4');
 			
 			// Overdue dates
 			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');

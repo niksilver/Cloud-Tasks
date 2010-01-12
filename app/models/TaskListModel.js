@@ -133,7 +133,7 @@ TaskListModel.prototype.today = function() {
 TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	var utc_date = Date.parse(utc_string);
 	if (utc_date == null) {
-		return 'None';
+		return '';
 	}
 	utc_date.set({ hour: 0, minute: 0, second: 0});
 
