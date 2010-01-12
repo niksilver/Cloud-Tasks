@@ -18,52 +18,117 @@ AuthAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 	
 	Mojo.Log.info("AuthAssistant.setup: Entering");
-		
-	this.controller.setupWidget('auth-go', {}, { buttonLabel: 'Go' });
+	
+	this.authGoModel = { disabled: false };
+	this.controller.setupWidget('auth-go', {
+			label: 'Go',
+			type: Mojo.Widget.activityButton
+		},
+		this.authGoModel);
 	this.controller.listen('auth-go', Mojo.Event.tap, this.handleGoTap.bind(this));
+	
+	this.authFinishModel = { disabled: true };
+	this.controller.setupWidget('auth-finish', {
+			label: 'Finish',
+			type: Mojo.Widget.activityButton
+		},
+		this.authFinishModel);
 	this.controller.listen('auth-finish', Mojo.Event.tap, this.handleFinishTap.bind(this));
 }
 
 AuthAssistant.prototype.handleGoTap = function(event){
 	Mojo.Log.info("AuthAssistant.handleGoTap: Entering");
-	var auth_assistant = this;
+	
+	// Get the Go button spinning
+	this.updateButtons(false, true, false, false);
+	
+	var inst = this;
 	this.rtm.fetchFrob(
 		function(frob){
 			Mojo.Log.info("AuthAssistant.handleGoTap: Got frob");
-			auth_assistant.frob = frob;
-			var auth_url = auth_assistant.rtm.getAuthURL(frob);
-			auth_assistant.makeAuthRequest(auth_url);
+			inst.frob = frob;
+			var auth_url = inst.rtm.getAuthURL(frob);
+			inst.makeAuthRequest(auth_url);
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleGoTap: Error: " + err_msg);
 			ErrorHandler.notify(err_msg);
+			// Make the Go button available again
+			inst.updateButtons(true, false, false, false);
 		}
 	);
 }
 
+/**
+ * Update the auth Go and Finish buttons.
+ * @param {Boolean} go_enabled  True if the Go button is enabled.
+ * @param {Boolean} go_active  True if the Go button's spinner needs to be spinning.
+ * @param {Boolean} finish_enabled  True if the Finish button is enabled.
+ * @param {Boolean} finish_active  True if the Finish button's spinner needs to be spinning.
+ */
+AuthAssistant.prototype.updateButtons = function(go_enabled, go_active, finish_enabled, finish_active) {
+	Mojo.Log.info("AuthAssistant.updateButtons: Entering");
+	
+	var go_disabled = !go_enabled;
+	if (go_disabled != this.authGoModel.disabled) {
+		this.authGoModel.disabled = go_disabled;
+		this.controller.modelChanged(this.authGoModel);
+	}
+	if (go_active) {
+		Mojo.Log.info("AuthAssistant.updateButtons: Activating Go button");
+		this.controller.get('auth-go').mojo.activate();
+	}
+	else {
+		this.controller.get('auth-go').mojo.deactivate();
+	}
+	
+	var finish_disabled = !finish_enabled;
+	if (finish_disabled != this.authFinishModel.disabled) {
+		this.authFinishModel.disabled = finish_disabled;
+		this.controller.modelChanged(this.authFinishModel);
+	}
+	if (finish_active) {
+		this.controller.get('auth-finish').mojo.activate();
+	}
+	else {
+		this.controller.get('auth-finish').mojo.deactivate();
+	}
+}
+
 AuthAssistant.prototype.makeAuthRequest = function(auth_url) {
 	Mojo.Log.info("AuthAssistant.makeAuthRequest: Entering with auth_url " + auth_url);
+	var inst = this;
 	this.controller.serviceRequest("palm://com.palm.applicationManager", {
 		method: "open",
 		parameters: {
 			  id: 'com.palm.app.browser',
-			  params: {
-			      target: auth_url
-			  }
-		}
+			  params: { target: auth_url }
+		},
+		// On success make the Finish button available
+		onSuccess: function() { inst.updateButtons(false, false, true, false) },
+		// On failure make the Go button available again
+		onFailure: function() { inst.updateButtons(true, false, false, false) }
 	});
 }
 
 AuthAssistant.prototype.handleFinishTap = function(event){
 	Mojo.Log.info("AuthAssistant.handleFinishTap: Entering");
-	var auth_assistant = this;
+	
+	// Have the Finish button start spinning as it fetches the token
+	this.updateButtons(false, false, false, true);
+	
+	var inst = this;
 	this.rtm.fetchToken(
 		this.frob,
 		function(token){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Got token " + token);
-			auth_assistant.rtm.setToken(token);
+			// Have the Finish button stop spinning
+			inst.updateButtons(false, false, false, false);
+			inst.rtm.setToken(token);
 			Mojo.Controller.stageController.popScene();
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Error: " + err_msg);
+			// Make the Finish button available again
+			inst.updateButtons(false, false, true, false);
 			ErrorHandler.notify(err_msg);
 		}
 	);

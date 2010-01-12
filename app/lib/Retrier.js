@@ -31,7 +31,7 @@ function Retrier(rtm) {
 }
 
 Retrier.prototype.resetPullEventSpacer = function() {
-	this.pullEventSpacer = new EventSpacer(15*60*1000); // Pull no more than every 15 mins
+	this.pullEventSpacer = new EventSpacer(60*60*1000); // Pull no more than every 60 mins
 }
 
 /**

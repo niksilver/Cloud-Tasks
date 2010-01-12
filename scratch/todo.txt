@@ -2,8 +2,6 @@
   - Allow optional deletion of all tasks in a series
 - Licence
   - Add GPL licence.
-- Auth screen:
-  - Put spinner on Go and Finish buttons
 - Completing tasks
   - Handle task completion of recurring tasks
   - Allow swipe to complete
@@ -15,7 +13,6 @@
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
   - Have tasks with no due dates have a blank where due date usually appears.
-  - Have better date input mechanism
 -Bugs:
   - New date set as tomorrow shows as bold as if today.
 
@@ -37,4 +34,8 @@ Done
   - Add task completion
 - Editing tasks
   - Add Cancel button
+- Due dates
+  - Have better date input mechanism
+- Auth screen:
+  - Put spinner on Go and Finish buttons
   
