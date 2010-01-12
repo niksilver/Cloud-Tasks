@@ -14,7 +14,7 @@
   - Have tasks with no due dates appear after overdue tasks
   - Have tasks with no due dates have a blank where due date usually appears.
 -Bugs:
-  - New date set as tomorrow shows as bold as if today.
+  - In task list, the momentary highlight on tasks of 3+ lines long does not cover the whole task. 
 
   
 Done
@@ -38,4 +38,6 @@ Done
   - Have better date input mechanism
 - Auth screen:
   - Put spinner on Go and Finish buttons
+- Bugs (fixed):
+  - New date set as tomorrow shows as bold as if today.
   
