@@ -43,7 +43,7 @@
 /* ---------------- When a task is tapped ------------- */
 
 #TaskList .task.selected {
-	background-image: url(../images/selection-gradient-default.png);
+	background-color: #666;
 }
 
 #TaskList .task.selected .task-name,
