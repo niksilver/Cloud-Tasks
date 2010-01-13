@@ -351,3 +351,19 @@ TaskListModel.prototype.logTaskList = function() {
 		Mojo.Log.info(task_model.toString());
 	});
 }
+
+/**
+ * Get an array of TaskModel objects which are all in the given taskseries.
+ * @param {Object} spec  A hash specifying ths taskseries. Needs to have properties
+ *     'listID' and 'taskseriesID'. 
+ */
+TaskListModel.prototype.getAllTasksInSeries = function(spec) {
+	var list = [];
+	for (var i = 0; i < this._task_list.length; i++) {
+		var task = this._task_list[i];
+		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
+			list.push(task);
+		}
+	}
+	return list;
+}

@@ -607,6 +607,20 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(visible_model.getTask(task_4), "Task 4 not omitted");
 			Y.Assert.isUndefined(visible_model.getTask(task_8), "Task 8 not omitted");
 			Y.Assert.isNotUndefined(visible_model.getTask(task_2), "Task 2 was mistakenly omitted");
+		},
+		
+		testGetAllTasksInSeries: function() {
+			var task_list = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
+			
+			Y.Assert.areEqual(4, task_list.length, "Got wrong number of tasks");
+			
+			var model = new TaskListModel(task_list);
+			
+			var taskseries = model.getAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686'});
+			Y.Assert.areEqual(2, taskseries.length, "Didn't right tasks in series");
+			var task_hash = this.getTaskIDToTaskHash(taskseries);
+			Y.Assert.isNotUndefined(task_hash['85269921'], "Didn't get task 85269921");
+			Y.Assert.isNotUndefined(task_hash['85270009'], "Didn't get task 85270009");
 		}
 
 	});
