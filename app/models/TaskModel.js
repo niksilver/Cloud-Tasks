@@ -60,7 +60,7 @@ TaskModel.prototype.toObject = function() {
 TaskModel.prototype.update = function() {
 	this.isDueFlag = this.isDue();
 	this.isOverdueFlag = this.isOverdue();
-	this.hasRRuleFlag = (typeof this.rrule !== 'undefined')
+	this.hasRRuleFlag = this.isRecurring();
 }
 
 TaskModel.prototype.today = function() {
@@ -84,6 +84,20 @@ TaskModel.prototype.isOverdue = function() {
 		return false;
 	}
 	return due_date.isBefore(this.today());
+}
+
+TaskModel.prototype.isRecurring = function() {
+	if (!this.rrule) {
+		return false;
+	}
+	
+	if ((typeof this.rrule.every == 'undefined' || this.rrule.every === '')
+			&& (typeof this.rrule['$t'] == 'undefined' || this.rrule['$t'] === '')) {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 TaskModel.sortByDueThenName = function(a, b) {

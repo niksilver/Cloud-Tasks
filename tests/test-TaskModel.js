@@ -157,13 +157,45 @@ testCases.push( function(Y) {
 			task.update();
 			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly to false");
 			
-			task = new TaskModel({ rrule: 'Some rrule object' });
+			task = new TaskModel({ rrule: {every: '0', '$t': 'something'} });
 			task.update();
 			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly to true");
 			
 			task = new TaskModel({ rrule: undefined });
 			task.update();
 			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when undefined");
+			
+			task = new TaskModel({ rrule: {every: '1', '$t': ''} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when 1/empty");
+			
+			task = new TaskModel({ rrule: {every: '0', '$t': ''} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when 0/empty");
+			
+			task = new TaskModel({ rrule: {every: '', '$t': ''} });
+			task.update();
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when empty/empty");
+			
+			task = new TaskModel({ rrule: {every: undefined, '$t': undefined} });
+			task.update();
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when undefined/undefined");
+			
+			task = new TaskModel({ rrule: {every: '', '$t': 'something'} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when empty/contentful");
+			
+			task = new TaskModel({ rrule: {every: '', '$t': '0'} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when empty/0");
+			
+			task = new TaskModel({ rrule: {every: 0, '$t': 0} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when 0/0");
+			
+			task = new TaskModel({ rrule: {every: '0', '$t': 'something'} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when 0/contentful");
 		},
 		
 		testSortByDueThenName: function(){

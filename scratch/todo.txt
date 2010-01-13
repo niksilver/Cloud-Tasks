@@ -12,7 +12,8 @@
   - Handle postponing of recurring tasks
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
-
+- Bugs
+  - Adding a task locally and then deleting should not sync task
   
 Done
 ----
