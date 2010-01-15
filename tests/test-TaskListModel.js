@@ -621,6 +621,29 @@ testCases.push( function(Y) {
 			var task_hash = this.getTaskIDToTaskHash(taskseries);
 			Y.Assert.isNotUndefined(task_hash['85269921'], "Didn't get task 85269921");
 			Y.Assert.isNotUndefined(task_hash['85270009'], "Didn't get task 85270009");
+		},
+		
+		testDeleteAllInSeries: function() {
+			var task_list = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
+			
+			Y.Assert.areEqual(4, task_list.length, "Got wrong number of tasks");
+			
+			var model = new TaskListModel(task_list);
+			var task_hash = this.getTaskIDToTaskHash(model.getTaskList());
+			Y.Assert.areEqual(false, task_hash['85269951'].deleted, "Task 85269951 mistakenly deleted");
+			Y.Assert.areEqual(false, task_hash['85269908'].deleted, "Task 85269908 mistakenly deleted");
+			Y.Assert.areEqual(false, task_hash['85269921'].deleted, "Task 85269921 mistakenly deleted");
+			Y.Assert.areEqual(true, task_hash['85269921'].isRecurring(), "Task 85269921 not recurring");
+			Y.Assert.areEqual(false, task_hash['85270009'].deleted, "Task 85270009 mistakenly deleted");
+			Y.Assert.areEqual(true, task_hash['85270009'].isRecurring(), "Task 85270009 not recurring");
+
+			model.markDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });			
+			Y.Assert.areEqual(false, task_hash['85269951'].deleted, "Task 85269951 mistakenly deleted");
+			Y.Assert.areEqual(false, task_hash['85269908'].deleted, "Task 85269908 mistakenly deleted");
+			Y.Assert.areEqual(true, task_hash['85269921'].deleted, "Task 85269921 not deleted");
+			Y.Assert.areEqual(false, task_hash['85269921'].isRecurring(), "Task 85269921 shouldn't be recurring");
+			Y.Assert.areEqual(true, task_hash['85270009'].deleted, "Task 85270009 not deleted");
+			Y.Assert.areEqual(false, task_hash['85270009'].isRecurring(), "Task 85270009 shouldn't be recurring");
 		}
 
 	});

@@ -367,3 +367,20 @@ TaskListModel.prototype.getAllTasksInSeries = function(spec) {
 	}
 	return list;
 }
+
+/**
+ * Mark for deletion all the tasks in the series specified.
+ * @param {Object} spec  The specification of the taskseries to delete.
+ *     A hash with properties listID and taskseriesID.
+ */
+TaskListModel.prototype.markDeletedAllTasksInSeries = function(spec) {
+	var list = [];
+	for (var i = 0; i < this._task_list.length; i++) {
+		var task = this._task_list[i];
+		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
+			task.setForPush('rrule', '');
+			task.setForPush('deleted', true);
+		}
+	}
+	return list;
+}
