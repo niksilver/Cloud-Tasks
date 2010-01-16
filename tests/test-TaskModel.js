@@ -161,6 +161,10 @@ testCases.push( function(Y) {
 			task.update();
 			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly to true");
 			
+			task = new TaskModel({ rrule: '' });
+			task.update();
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when empty");
+			
 			task = new TaskModel({ rrule: undefined });
 			task.update();
 			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when undefined");
