@@ -1,5 +1,6 @@
 - Deleting tasks:
   - Allow optional deletion of all tasks in a series
+  - Allow purgeTaskList to return whether it changed anything
 - Licence
   - Add GPL licence.
 - Completing tasks

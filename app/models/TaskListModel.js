@@ -315,10 +315,12 @@ TaskListModel.prototype.mergeTaskList = function(task_list) {
 }
 
 /**
- * Remove all those tasks that don't need to be shown
+ * Remove all those tasks that don't need to be shown.
+ * Returns boolean to whether any tasks were actually removed.
  */
 TaskListModel.prototype.purgeTaskList = function() {
 	Mojo.Log.info("TaskListModel.purgeTaskList: Entering");
+	var made_changes = false;
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
 		if (task.shouldNotBeVisible() && !task.hasLocalChanges()) {
@@ -326,8 +328,10 @@ TaskListModel.prototype.purgeTaskList = function() {
 			var task_str = task.toString();
 			Mojo.Log.info("TaskListModel.purgeTaskList: Purging " + task_str);
 			this._task_list.splice(i, 1);
+			made_changes = true;
 		}
 	}
+	return made_changes;
 }
 
 /**

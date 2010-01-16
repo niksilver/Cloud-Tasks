@@ -552,7 +552,8 @@ testCases.push( function(Y) {
 			// Set one task which has local changes which need to be pushed, but is not to be deleted
 			task_2.setForPush('name', "Do it again");
 			
-			model.purgeTaskList();
+			var made_changes = model.purgeTaskList();
+			Y.Assert.areEqual(true, made_changes, "Didn't flag if purging made changes");
 			Y.Assert.areEqual(num_tasks-3, model.getTaskList().length, "Wrong tasks purged");
 			Y.Assert.isUndefined(model.getTask(task_3), "Task 3 not purged");
 			Y.Assert.isUndefined(model.getTask(task_5), "Task 5 not purged");
@@ -560,6 +561,12 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(model.getTask(task_4), "Task 4 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_8), "Task 8 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_2), "Task 2 was mistakenly purged");
+		},
+
+		testPurgeTaskListReturnsFalseIfNoChanges: function() {
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var made_changes = model.purgeTaskList();
+			Y.Assert.areEqual(false, made_changes, "Mistakenly said purging made changes");
 		},
 		
 		testGetListOfVisibleTasks: function() {
