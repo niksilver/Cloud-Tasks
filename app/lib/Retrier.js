@@ -159,7 +159,9 @@ Retrier.prototype.onNetworkRequestsChange = function(old_values, new_values) {
 	if (this.taskListModel
 			&& new_values.forPushingChanges == 0
 			&& old_values.forPushingChanges > 0) {
-		this.taskListModel.purgeTaskList();
-		this.taskListModel.saveTaskList();
+		var made_changes = this.taskListModel.purgeTaskList();
+		if (made_changes) {
+			this.taskListModel.saveTaskList();
+		}
 	}
 }
