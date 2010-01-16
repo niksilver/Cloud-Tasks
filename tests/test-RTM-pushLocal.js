@@ -10,6 +10,11 @@ testCases.push( function(Y) {
 		
 		setUp: function() {
 			(new RTM()).deleteToken();
+			TestUtils.captureMojoLog();
+		},
+		
+		tearDown: function() {
+			TestUtils.restoreMojoLog();
 		},
 
 		testPushLocalChangeCallsRightURLForName: function() {
@@ -132,6 +137,47 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		},
+
+		testPushLocalChangeCallsRightURLForRRule: function() {
+			var rtm = new RTM();
+			rtm.timeline = '87654';
+			
+			var url_used;
+			var good_response = SampleTestData.simple_good_response;
+			rtm.rawAjaxRequest = function(url, options) {
+				url_used = url;
+				options.onSuccess(good_response);
+			};
+
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				rrule: '',
+				localChanges: ['rrule']
+			});
+			
+			var response_returned;
+			rtm.pushLocalChange(task,
+				'rrule',
+				function(resp) { response_returned = resp },
+				null
+			);
+			this.wait(
+				function() {
+					Y.Assert.isNotUndefined(url_used, "No URL called");
+					TestUtils.assertContains(url_used, 'method=rtm.tasks.setRecurrence', "rtm.tasks.setRecurrence not called");
+					TestUtils.assertContains(url_used, 'list_id=112233', "List ID not set correctly");
+					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
+					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
+					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
+					TestUtils.assertContains(url_used, 'repeat=&', "Empty repeat value not sent");
+					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
+				},
+				WAIT_TIMEOUT
+			);
+		},
 		
 		testPushLocalChangeThenEnsuresMarkedNotForPush: function() {
 			var rtm = new RTM();
@@ -223,6 +269,8 @@ testCases.push( function(Y) {
 			model.getTaskList()[2].setForPush('name', 'My new task name');
 			model.getTaskList()[3].setForPush('due', '2010-01-12T12:34:00Z');
 			
+			// Monitor calls to RTM.pushLocalChange()
+			
 			var errs = "";
 			var task_2_change_pushed = false;
 			var task_3_change_pushed = false;
@@ -240,17 +288,23 @@ testCases.push( function(Y) {
 				rtm.oldPushLocalChange(task, property, successCallback, failureCallback);
 			}
 			
+			// Monitor calls to markNotForPush()
+			
 			var task_2_marked_not_for_push = false;
 			var task_3_marked_not_for_push = false;
+			model.getTaskList()[2].oldMarkNotForPush = model.getTaskList()[2].markNotForPush;
 			model.getTaskList()[2].markNotForPush = function(property) {
 				if (property == 'name') {
 					task_2_marked_not_for_push = true;
 				}
+				this.oldMarkNotForPush(property);
 			};
+			model.getTaskList()[3].oldMarkNotForPush = model.getTaskList()[3].markNotForPush;
 			model.getTaskList()[3].markNotForPush = function(property) {
 				if (property == 'due') {
 					task_3_marked_not_for_push = true;
 				}
+				this.oldMarkNotForPush(property);
 			};
 			
 			rtm.callMethod = function(method, params, successCallback, failureCallback) {
@@ -393,6 +447,66 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, called_pushLocalChange_onSuccess, "Should have called the onSuccess callback of pushLocalChange()");
 			Y.Assert.areEqual(true, called_purgeTaskList, "Should have tried to purge the task list");
 			Y.Assert.areEqual(0, task_list_model.getTaskList().length, "Should be no tasks in the list");
+		},
+		
+		testMarkAsDeletedAllTasksInSeriesThenPushWaitsForRecursionToReturnBeforeDeleting: function() {
+			// Set up our RTM client and task list
+			
+			var rtm = new RTM();
+			var task_list = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
+			var model = new TaskListModel(task_list);	
+			
+			// Create a server:
+			//   - setRecurrence does not return immediately;
+			//   - delete asserts that setRecurrence has been called first
+			
+			var haveCalledSetRecurrence;
+			var haveCalledDelete;
+			rtm.rawAjaxRequest = function(url, options) {
+				Mojo.Log.info("rtm.rawAjaxRequest: Entering");
+				if (url.indexOf('rtm.tasks.delete') >= 0) {
+					Mojo.Log.info("rtm.rawAjaxRequest: Delete branch");
+					Y.Assert.areEqual(true, haveCalledSetRecurrence, "Delete called before setRecurrence");
+					haveCalledDelete = true;
+					options.onSuccess(SampleTestData.simple_good_response);
+				}
+				else if (url.indexOf('rtm.tasks.setRecurrence') >= 0) {
+					Mojo.Log.info("rtm.rawAjaxRequest: setRecurrence branch");
+					setTimeout( function() {
+							haveCalledSetRecurrence = true;
+							Mojo.Log.info("rtm.rawAjaxRequest: setRecurrence branch: calling onSuccess");
+							options.onSuccess(SampleTestData.simple_good_response);
+						},
+					100);
+				}
+				else {
+					Y.fail("rtm.rawAjaxRequest: Unknown call, URL " + url);
+				}
+			}
+			
+			// Set up deletion of a series
+			
+			var task_hash = TestUtils.getTaskIDToTaskHash(model.getTaskList());
+			Y.Assert.areEqual(true, task_hash['85269921'].isRecurring(), "Task 85269921 not recurring");
+			Y.Assert.areEqual(true, task_hash['85270009'].isRecurring(), "Task 85270009 not recurring");
+
+			model.markAsDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });			
+			
+			// Push the changes
+			
+			haveCalledDelete = false;
+			haveCalledSetRecurrence = false;
+			rtm.pushLocalChanges(model);
+			
+			// Check the changes were pushed out
+			
+			this.wait( function() {
+					Y.Assert.areEqual(true, haveCalledDelete, "Didn't delete the task");
+					Y.Assert.areEqual(true, haveCalledSetRecurrence, "Didn't cancel the recurrence");
+				},
+				200
+			);
+			
 		}
 
 	});

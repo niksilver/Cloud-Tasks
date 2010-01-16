@@ -74,19 +74,11 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
 		},
 		
-		getTaskIDToTaskHash: function(task_array) {
-			var task_hash = {};
-			task_array.each(function(task) {
-				task_hash[task.taskID] = task;
-			});
-			return task_hash;
-		},
-		
 		testObjectToTaskListWhenUsingArrays: function() {
 
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_two_lists);
 
-			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_hash = TestUtils.getTaskIDToTaskHash(tasks);
 			
 			Y.Assert.areEqual('11122940', task_hash['79648346'].listID, "Test 1.1");
 			Y.Assert.areEqual('55630580', task_hash['79648346'].taskseriesID, "Test 1.2");
@@ -103,7 +95,7 @@ testCases.push( function(Y) {
 		
 		testObjectToTaskListWithRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_hash = TestUtils.getTaskIDToTaskHash(tasks);
 			var task_with_rrule = task_hash['78909702'];
 			
 			Y.Assert.isNotUndefined(task_with_rrule, "Could not find intended task");
@@ -115,7 +107,7 @@ testCases.push( function(Y) {
 		
 		testObjectToTaskListWithNoRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_hash = TestUtils.getTaskIDToTaskHash(tasks);
 			var task_with_no_rrule = task_hash['75724449'];
 			
 			Y.Assert.isNotUndefined(task_with_no_rrule, "Could not find intended task");
@@ -129,7 +121,7 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(4, tasks.length, "Wrong number of tasks");
 
-			var task_id_to_task = this.getTaskIDToTaskHash(tasks);
+			var task_id_to_task = TestUtils.getTaskIDToTaskHash(tasks);
 			
 			Y.Assert.areEqual('Sixth task', task_id_to_task['83601522'].name, "Bad name for task ID 83601522");
 			Y.Assert.areEqual('Fifth task', task_id_to_task['83601519'].name, "Bad name for task ID 83601519");
@@ -155,7 +147,7 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(22, tasks.length, "Wrong number of tasks");
 			
-			var task_id_to_task = this.getTaskIDToTaskHash(tasks);
+			var task_id_to_task = TestUtils.getTaskIDToTaskHash(tasks);
 
 			Y.Assert.areEqual(false, task_id_to_task['84757747'].deleted, "Task ID 84757747 should not be marked deleted");
 			Y.Assert.areEqual(false, task_id_to_task['84630592'].deleted, "Task ID 84630592 should not be marked deleted");
@@ -168,7 +160,7 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(4, tasks.length, "Wrong number of tasks");
 			
-			var task_hash = this.getTaskIDToTaskHash(tasks);
+			var task_hash = TestUtils.getTaskIDToTaskHash(tasks);
 			
 			Y.Assert.areEqual("Some test task", task_hash['85269951'].name, "Didn't get new task correctly");
 			Y.Assert.areEqual('11122940', task_hash['85269951'].listID, "Didn't get new task's list ID correctly");
@@ -618,18 +610,18 @@ testCases.push( function(Y) {
 			
 			var taskseries = model.getAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686'});
 			Y.Assert.areEqual(2, taskseries.length, "Didn't right tasks in series");
-			var task_hash = this.getTaskIDToTaskHash(taskseries);
+			var task_hash = TestUtils.getTaskIDToTaskHash(taskseries);
 			Y.Assert.isNotUndefined(task_hash['85269921'], "Didn't get task 85269921");
 			Y.Assert.isNotUndefined(task_hash['85270009'], "Didn't get task 85270009");
 		},
 		
-		testDeleteAllInSeries: function() {
+		testMarkAsDeletedAllTasksInSeries: function() {
 			var task_list = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
 			
 			Y.Assert.areEqual(4, task_list.length, "Got wrong number of tasks");
 			
 			var model = new TaskListModel(task_list);
-			var task_hash = this.getTaskIDToTaskHash(model.getTaskList());
+			var task_hash = TestUtils.getTaskIDToTaskHash(model.getTaskList());
 			Y.Assert.areEqual(false, task_hash['85269951'].deleted, "Task 85269951 mistakenly deleted");
 			Y.Assert.areEqual(false, task_hash['85269908'].deleted, "Task 85269908 mistakenly deleted");
 			Y.Assert.areEqual(false, task_hash['85269921'].deleted, "Task 85269921 mistakenly deleted");
@@ -637,7 +629,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_hash['85270009'].deleted, "Task 85270009 mistakenly deleted");
 			Y.Assert.areEqual(true, task_hash['85270009'].isRecurring(), "Task 85270009 not recurring");
 
-			model.markDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });			
+			model.markAsDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });			
 			Y.Assert.areEqual(false, task_hash['85269951'].deleted, "Task 85269951 mistakenly deleted");
 			Y.Assert.areEqual(false, task_hash['85269908'].deleted, "Task 85269908 mistakenly deleted");
 			Y.Assert.areEqual(true, task_hash['85269921'].deleted, "Task 85269921 not deleted");

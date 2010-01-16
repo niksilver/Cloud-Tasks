@@ -28,6 +28,7 @@ function RTM() {
 		"rtm.tasks.setDueDate": "forPushingChanges",
 		"rtm.tasks.delete": "forPushingChanges",
 		"rtm.tasks.complete": "forPushingChanges",
+		"rtm.tasks.setRecurrence": "forPushingChanges",
 		"rtm.tasks.getList": "forPullingTasks"
 	};
 }
@@ -50,11 +51,13 @@ RTM.prototype.rawAjaxRequest = function(url, options) {
  *     which is "forPushingChanges" or "forPullingTasks".
  */
 RTM.prototype.ajaxRequest = function(url, options) {
+	Mojo.Log.info("RTM.ajaxRequest: Entering");
 	var orig_on_success = options.onSuccess;
 	var orig_on_failure = options.onFailure;
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
+		Mojo.Log.info("RTM.ajaxRequest.onSuccess: Entering");
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
 		--inst.numNetworkRequests.total;
@@ -139,6 +142,7 @@ RTM.prototype.networkRequestsForPullingTasks = function() {
  * @param {Object} failureCallback   Failure callback with an error string
  */
 RTM.prototype.callMethod = function(method_name, param_object, successCallback, failureCallback){
+	Mojo.Log.info("RTM.callMethod: Entering for method " + method_name);
 	param_object.method = method_name
 	var request_params = this.addStandardParams(param_object);
 	
@@ -146,6 +150,7 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 		{
 			evalJSON: 'force',
 			onSuccess: function(response) {
+				Mojo.Log.info("RTM.callMethod.onSuccess: Entering");
 				var err_msg = RTM.getMethodErrorMessage(response);
 				if (err_msg) {
 					failureCallback(err_msg);
@@ -344,7 +349,9 @@ RTM.prototype.createTimeline = function() {
  * If successfully pushed will also mark the task's property as no longer needed for push.
  * @param {Object} task  The TaskModel to be pushed.
  * @param {String} property  Name of property whose change needs to be pushed.
- * @param {Function} successCallback  Takes parameter of Ajax.Response
+ * @param {Function} successCallback  Takes parameter of Ajax.Response.
+ *     This is called only after the call has come back successfully and
+ *     after the property has been marked as now not needing to be pushed.
  * @param {Function} failureCallback  Takes parameter of error message
  */
 RTM.prototype.pushLocalChange = function(task, property, successCallback, failureCallback) {
@@ -355,6 +362,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	var parameters;
 	var augmented_success_callback = function(response) {
 		task.markNotForPush(property);
+		Mojo.Log.info("RTM.pushLocalChange: Marked not for change property " + property + " of task " + task.name);
 		successCallback(response);
 	}
 	if (property == 'name') {
@@ -383,7 +391,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
-			timeline: this.timeline,
+			timeline: this.timeline
 		};
 	}
 	else if (property == 'completed') {
@@ -392,7 +400,17 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
+			timeline: this.timeline
+		};
+	}
+	else if (property == 'rrule') {
+		method = 'rtm.tasks.setRecurrence';
+		parameters = {
+			list_id: task.listID,
+			taskseries_id: task.taskseriesID,
+			task_id: task.taskID,
 			timeline: this.timeline,
+			repeat: task.rrule
 		};
 	}
 
@@ -434,7 +452,6 @@ RTM.prototype.pushLocalChangesForTask = function(task) {
 /**
  * Push out any property changes marked in the task.
  * @param {TaskModel} task  The task with (possible) properties which have changes.
- */
 RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 	for (var j = 0; j < task.localChanges.length; j++) {
 		var property = task.localChanges[j];
@@ -449,6 +466,25 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 			}
 		);
 	}
+}
+ */
+RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
+	Mojo.Log.info("RTM.pushLocalPropertyChangesForTask: Entering for task named " + task.name);
+	var property = task.localChanges[0];
+	if (!property) {
+		return;
+	}
+	var inst = this;
+	this.pushLocalChange(task, property,
+		function(response) {
+			Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
+				+ task.name + "', new value '" + task[property] + "'");
+			inst.pushLocalPropertyChangesForTask(task);
+		},
+		function(err_msg) {
+			Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task.name + "'. Error message: " + err_msg);
+		}
+	);
 }
 
 /**
@@ -501,7 +537,7 @@ RTM.prototype.setUpConnectionManager = function(serviceRequestConstructor) {
 		   subscribe: true
 	   	},
 		onSuccess: function(request) {
-			// Delay setting the connection manager to give the constructor a change to complete
+			// Delay setting the connection manager to give the constructor a chance to complete
 			setTimeout(function(){
 					Mojo.Log.info("RTM.setUpConnectionManager: Success");
 					inst.connectionManager = connection_manager;

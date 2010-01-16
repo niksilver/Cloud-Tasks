@@ -25,6 +25,32 @@ YUI().use('test', function(Y){
 		assertContains: function(string_to_test, substring_sought, failure_message) {
 			Y.assert(string_to_test.indexOf(substring_sought) >= 0,
 				failure_message + " (string to test is '" + string_to_test + "')");
+		},
+		
+		getTaskIDToTaskHash: function(task_array) {
+			var task_hash = {};
+			task_array.each(function(task) {
+				task_hash[task.taskID] = task;
+			});
+			return task_hash;
+		},
+		
+		captureMojoLog: function() {
+			this._Mojo_Log_info = Mojo.Log.info;
+			this._Mojo_Log_warn = Mojo.Log.warn;
+			this._Mojo_Log_messages = "";
+			var inst = this;
+			Mojo.Log.info = function(msg) { inst._Mojo_Log_messages += "info: " + msg + "\n"; };
+			Mojo.Log.warn = function(msg) { inst._Mojo_Log_messages += "warn: " + msg + "\n"; };
+		},
+		
+		getMojoLog: function() {
+			return this._Mojo_Log_messages;
+		},
+		
+		restoreMojoLog: function() {
+			Mojo.Log.info = this._Mojo_Log_info;
+			Mojo.Log.warn = this._Mojo_Log_warn;
 		}
 	
 	}

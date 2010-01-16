@@ -45,7 +45,7 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual(0, rtm.networkRequestsTotal(), "Some network requests before anything's happened");
 
-			// Methods for pushing changes
+			// Methods for pushing changes: 8 calls in total
 			rtm.callMethod("rtm.auth.getFrob", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.auth.getToken", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.timelines.create", {}, function(resp){ response = resp }, null);
@@ -53,16 +53,17 @@ testCases.push( function(Y) {
 			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.tasks.setDueDate", {}, function(resp){ response = resp }, null);
 			rtm.callMethod("rtm.tasks.delete", {}, function(resp){ response = resp }, null);
+			rtm.callMethod("rtm.tasks.setRecurrence", {}, function(resp){ response = resp }, null);
 			
-			// Method for pulling tasks
+			// Method for pulling tasks: 1 call in total
 			rtm.callMethod("rtm.tasks.getList", {}, function(resp){ response = resp }, null);
 			
-			// Method that's not specified for either
+			// Method that's not specified for either: 1 call in total
 			rtm.callMethod("dont.fail.on.this", {}, function(resp){ response = resp }, null);
 			
-			Y.Assert.areEqual(9, rtm.networkRequestsTotal(), "Wrong number of network requests");
-			Y.Assert.areEqual(7, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
+			Y.Assert.areEqual(8, rtm.networkRequestsForPushingChanges(), "Wrong number of network requests for pushing changes");
 			Y.Assert.areEqual(1, rtm.networkRequestsForPullingTasks(), "Wrong number of network requests for pulling tasks");
+			Y.Assert.areEqual(8+1+1, rtm.networkRequestsTotal(), "Wrong number of network requests");
 			
 			this.wait(
 				function() {
