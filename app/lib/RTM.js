@@ -364,6 +364,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	var method;
 	var parameters;
 	var augmented_success_callback = function(response) {
+		RTM.logResponse(response);
 		task.markNotForPush(property);
 		Mojo.Log.info("RTM.pushLocalChange: Marked not for change property " + property + " of task " + task.name);
 		successCallback(response);

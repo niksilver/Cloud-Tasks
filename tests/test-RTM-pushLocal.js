@@ -323,7 +323,7 @@ testCases.push( function(Y) {
 					Y.Assert.fail("Calling method '" + method + "' on task '" + params.task_id + "',"
 						+ " while task 2 has id " + task_2_task_id +" and task 3 has id " + task_3_task_id);
 				}
-				successCallback();
+				successCallback(SampleTestData.simple_good_response);
 			};
 			
 			rtm.pushLocalChanges(model);

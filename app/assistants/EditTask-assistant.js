@@ -16,6 +16,7 @@ function EditTaskAssistant(config) {
 	//   - isNew (boolean)
 	this.config = config;
 	this.savedTaskProperties = this.config.task.toObject();
+	this.recurrenceModel = { displayText: this.config.task.getRecurrenceDisplayText() };
 }
 
 EditTaskAssistant.prototype.setup = function() {
@@ -39,6 +40,8 @@ EditTaskAssistant.prototype.setup = function() {
 	this.controller.listen('TaskName', Mojo.Event.propertyChange, this.handleTaskNameEvent.bind(this));
 	
 	this.setUpDueWidget();
+	
+	this.setUpRecurrenceWidget();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -68,10 +71,27 @@ EditTaskAssistant.prototype.setUpDueWidget = function() {
 	this.controller.listen('TaskDueDisplay', Mojo.Event.tap, this.handleDueDateSelectorEvent.bind(this));
 }
 
+EditTaskAssistant.prototype.setUpRecurrenceWidget = function() {
+		
+	var recurrence_attributes = {
+		modelProperty: 'displayText',
+		hintText: 'Enter recurrence or leave blank',
+		multiline: false,
+		autoFocus: false
+	};
+	var node = this.controller.get('TaskRecurrence');
+	this.controller.setupWidget('TaskRecurrence', recurrence_attributes, this.recurrenceModel);
+	Mojo.Event.listenForFocusChanges(node, this.handleRecurrenceFocusChange.bind(this));
+}
+
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
 	this.config.task.setForPush('name', this.config.task.name);
+}
+
+EditTaskAssistant.prototype.handleRecurrenceFocusChange = function(node) {
+	Mojo.Log.info("EditTaskAssistant.handleRecurrenceEvent: Entering with node " + node);
 }
 
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
@@ -178,7 +198,7 @@ EditTaskAssistant.prototype.activate = function(event) {
 	   example, key handlers that are observing the document */
 
 	this.updateTaskDueDisplayFromTask(this.config.task);
-	this.updateTaskRecurrenceDisplayFromTask();
+	this.updateTaskRecurrenceDisplay();
 }
 
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
@@ -196,10 +216,10 @@ EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 	this.addOrRemoveClassName(element, !task.due, 'has-no-due-date');
 }
 
-EditTaskAssistant.prototype.updateTaskRecurrenceDisplayFromTask = function() {
-	var element = this.controller.get('TaskRecurrenceDisplay');
+EditTaskAssistant.prototype.updateTaskRecurrenceDisplay = function() {
+	var element = this.controller.get('TaskRecurrence');
 	var recurrence_text = this.config.task.getRecurrenceDisplayText();
-	element.update(recurrence_text);
+	element.mojo.setValue(recurrence_text);
 	this.addOrRemoveClassName(element, !this.config.task.isRecurring(), 'is-not-recurring');
 }
 
