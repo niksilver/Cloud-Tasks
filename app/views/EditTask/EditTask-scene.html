@@ -7,36 +7,36 @@
 	
 	<div class="palm-group">
 	
-		<div class="palm-group-title" x-mojo-loc=''>Task description</div>
+		<div class="palm-group-title" x-mojo-loc=''>Task details</div>
 		<div class="palm-list">
-	   		<div class="palm-row single">
+			
+	   		<div class="palm-row first">
 				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
 					<div class="title">
 						<div id="TaskName" name="TaskName" x-mojo-element="TextField"></div>
 					</div>
 				</div>
 			</div>
-		</div>
-		
-	</div>
 
-	<div class="palm-group">
-	
-		<div class="palm-group-title" x-mojo-loc=''>Due date</div>
-		<div class="palm-list">
-	   		<div class="palm-row single">
+	   		<div class="palm-row">
 				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
 					<div class="title">
 						<div id="TaskDueDisplay"></div>
 					</div>
 				</div>
 			</div>
+
+	   		<div class="palm-row last">
+				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
+					<div class="title">
+						<div id="TaskRecurrenceDisplay"></div>
+					</div>
+				</div>
+			</div>
+			
 		</div>
 		
 	</div>
-	
-	<div id="TaskRecurrenceDisplay"></div>
-
 
 	<div id="CompleteTask" x-mojo-element="Button"></div>
 	<div id="CancelTask" x-mojo-element="Button"></div>
