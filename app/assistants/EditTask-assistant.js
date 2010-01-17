@@ -191,12 +191,25 @@ EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 		due_text = 'No due date';
 	}
 	Mojo.Log.info("EditTaskAssistant.updateTaskDueDisplayFromTask: Due text is " + due_text);
-	this.controller.get('TaskDueDisplay').update(due_text);
+	var element = this.controller.get('TaskDueDisplay');
+	element.update(due_text);
+	this.addOrRemoveClassName(element, !task.due, 'has-no-due-date');
 }
 
 EditTaskAssistant.prototype.updateTaskRecurrenceDisplayFromTask = function() {
+	var element = this.controller.get('TaskRecurrenceDisplay');
 	var recurrence_text = this.config.task.getRecurrenceDisplayText();
-	this.controller.get('TaskRecurrenceDisplay').update(recurrence_text);
+	element.update(recurrence_text);
+	this.addOrRemoveClassName(element, !this.config.task.isRecurring(), 'is-not-recurring');
+}
+
+EditTaskAssistant.prototype.addOrRemoveClassName = function(element, condition, className) {
+	if (condition) {
+		element.addClassName(className);
+	}
+	else {
+		element.removeClassName(className);
+	}
 }
 
 EditTaskAssistant.prototype.setVisibilityOfButtons = function() {

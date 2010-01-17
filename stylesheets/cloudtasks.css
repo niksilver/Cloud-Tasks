@@ -82,8 +82,14 @@
 	display: none;
 }
 
-#TaskDueDisplay {
+/* ---------- Edit task text display ------------ */
+
+#TaskDueDisplay, #TaskRecurrenceDisplay {
 	text-align: center;
+}
+
+.has-no-due-date, .is-not-recurring {
+	color: #666;
 }
 
 /* ---------------- Due date dialog --------------- */
