@@ -107,6 +107,10 @@ TaskModel.prototype.isRecurring = function() {
 		return false;
 	}
 	
+	if (this.rrule.userText) {
+		return true;
+	}
+	
 	if ((typeof this.rrule.every == 'undefined' || this.rrule.every === '')
 			&& (typeof this.rrule['$t'] == 'undefined' || this.rrule['$t'] === '')) {
 		return false;
@@ -190,4 +194,18 @@ TaskModel.prototype.getRecurrenceDisplayText = function() {
 	else {
 		return 'No recurrence';
 	}
+}
+
+/**
+ * Set the user-defined text to describe a recurrence rule.
+ * E.g. "Every weekday". Empty string means no recurrence.
+ * @param {String} user_text  The text describing the recurrence
+ */
+TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
+	if (typeof this.rrule !== 'object') {
+		this.rrule = {};
+	}
+	this.rrule.userText = user_text;
+	this.rrule.confirmation = 'no';
+	this.setForPush('rrule', this.rrule);
 }
