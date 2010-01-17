@@ -413,7 +413,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
 			timeline: this.timeline,
-			repeat: task.rrule
+			repeat: task.rrule.userText
 		};
 	}
 

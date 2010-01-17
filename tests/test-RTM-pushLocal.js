@@ -156,10 +156,9 @@ testCases.push( function(Y) {
 				listID: '112233',
 				taskseriesID: '445566',
 				taskID: '778899',
-				name: "Do testing",
-				rrule: '',
-				localChanges: ['rrule']
+				name: "Do testing"
 			});
+			task.setRecurrenceUserTextForPush('Every Friday');
 			
 			var response_returned;
 			rtm.pushLocalChange(task,
@@ -175,7 +174,7 @@ testCases.push( function(Y) {
 					TestUtils.assertContains(url_used, 'taskseries_id=445566', "Taskseries ID not set correctly");
 					TestUtils.assertContains(url_used, 'task_id=778899', "Task ID not set correctly");
 					TestUtils.assertContains(url_used, 'timeline=87654', "Timeline not being used");
-					TestUtils.assertContains(url_used, 'repeat=&', "Empty repeat value not sent");
+					TestUtils.assertContains(url_used, 'repeat=Every%20Friday&', "Repeat text not sent correctly");
 					Y.Assert.areEqual(good_response, response_returned, "Didn't return canned good response");
 				},
 				WAIT_TIMEOUT
