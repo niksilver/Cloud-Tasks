@@ -454,7 +454,6 @@ RTM.prototype.pushLocalChangesForTask = function(task) {
  * @param {TaskModel} task  The task with (possible) properties which have changes.
  */
 RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
-	Mojo.Log.info("RTM.pushLocalPropertyChangesForTask: Entering for task named " + task.name);
 	var property = task.localChanges[0];
 	if (!property) {
 		return;
