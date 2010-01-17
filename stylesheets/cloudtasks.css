@@ -76,7 +76,7 @@
 	text-align: center;
 }
 
-/* ---------- Edit task buttons invisible by default ------------ */
+/* ---------- Edit task recurrence edit field, buttons invisible by default ------------ */
 
 #DeleteTask, #CancelTask, #CompleteTask {
 	display: none;

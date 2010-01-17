@@ -97,6 +97,26 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Recurring', task.getRecurrenceDisplayText(), "Some non-empty rrule gives wrong display text");
 		},
 		
+		testGetRecurrenceEditTextForNoRecurrence: function() {
+			var task;
+			
+			task = new TaskModel(); // No recurrence
+			Y.Assert.areEqual('', task.getRecurrenceEditText(), "undefined rrule gives wrong edit text");
+
+			task = new TaskModel({ rrule: {userText: ''} });
+			Y.Assert.areEqual('', task.getRecurrenceEditText(), "Empty userText in rrule gives wrong edit text");
+		},
+		
+		testGetRecurrenceEditTextForSomeRecurrence: function() {
+			task = new TaskModel({
+				"rrule": {
+                	"every":"1",
+                	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
+                 }
+			});
+			Y.Assert.areEqual('To be defined!', task.getRecurrenceEditText(), "Some non-empty rrule gives wrong edit text");
+		},
+		
 		testSetRecurrenceUserTextForPush: function() {
 			var task = new TaskModel();
 			task.setRecurrenceUserTextForPush('');
