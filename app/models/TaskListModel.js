@@ -1,3 +1,6 @@
+// Copyright (C) Nik Silver 2010.
+// See licence.txt for terms and conditions not explicitly stated elsewhere.
+
 /**
  * Construct an empty task list or (if argument supplied) with a list of tasks set up.
  * @param {Object} optional_task_list  Optional array of TaskModel objects which is to be task list

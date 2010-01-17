@@ -1,3 +1,6 @@
+// Copyright (C) Nik Silver 2010.
+// See licence.txt for terms and conditions not explicitly stated elsewhere.
+
 /**
  * Class which allows the various dependent events to be retried.
  * The events are run in the following independent sequences...

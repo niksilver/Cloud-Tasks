@@ -1,3 +1,6 @@
+// Copyright (C) Nik Silver 2010.
+// See licence.txt for terms and conditions not explicitly stated elsewhere.
+
 /**
  * Creates a new calendar grid to render a calendar month.
  * The grid will be 7 across and 6 down.

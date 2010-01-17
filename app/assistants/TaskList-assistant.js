@@ -1,3 +1,6 @@
+// Copyright (C) Nik Silver 2010.
+// See licence.txt for terms and conditions not explicitly stated elsewhere.
+
 function TaskListAssistant(config) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference

@@ -1,3 +1,6 @@
+// Copyright (C) Nik Silver 2010.
+// See licence.txt for terms and conditions not explicitly stated elsewhere.
+
 /**
  * Model of a task.
  * To introduce a new property, do the following:

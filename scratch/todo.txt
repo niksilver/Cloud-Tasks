@@ -5,6 +5,7 @@
   - Allow swipe to complete
 - Recurring tasks
   - Add these
+  - Show recurrence in edit task scene
 - Postponing tasks
   - Allow task postponing
   - Handle postponing of recurring tasks
