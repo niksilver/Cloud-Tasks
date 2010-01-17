@@ -367,6 +367,7 @@ testCases.push( function(Y) {
 			rtm.retrier.taskListModel = {
 				purgeTaskList: function() {
 					called_purgeTaskList = true;
+					return true; // Pretend we purged some tasks
 				},
 				saveTaskList: function() {
 					called_saveTaskList = true;
