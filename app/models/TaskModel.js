@@ -11,6 +11,19 @@
  *   - The method to push out the property change is given a purpose for network monitoring.
  *   - Rendering of the task is updated, if applicable.
  *   - The Task UI is updated to show/edit the property.
+ * 
+ * The rrule is either undefined (meaning no recurrence defined) or
+ * a hash with the following properties:
+ *   - every: 0 or 1, defined by the remote server
+ *   - $t: recurrence description code, defined by the remote server
+ *   - userText: String description of the recurrence rule as entered by the user
+ *       and due to be sent to the remote server. So the empty string means no recurrence.
+ *   - confirmation: String as to whether the text string has been confirmed as good by
+ *       the remote server. Values can be:
+ *       - 'no', not yet confirmed, needs to be pushed to the remote server.
+ *           Should coincide with the rrule being marked for push.
+ *       - 'good', has been confirmed as good by the remote server
+ *       - 'bad', has been sent to the remote server and rejected
  */
 
 function TaskModel(properties) {
@@ -168,4 +181,8 @@ TaskModel.prototype.restoreFromObject = function(obj) {
 		this[property] = obj[property];
 	}
 	this.update();
+}
+
+TaskModel.prototype.getRecurrenceDisplayText = function() {
+	return 'No recurrence';
 }
