@@ -378,7 +378,6 @@ TaskListModel.prototype.getAllTasksInSeries = function(spec) {
  *     A hash with properties listID and taskseriesID.
  */
 TaskListModel.prototype.markAsDeletedAllTasksInSeries = function(spec) {
-	var list = [];
 	for (var i = 0; i < this._task_list.length; i++) {
 		var task = this._task_list[i];
 		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
@@ -386,5 +385,4 @@ TaskListModel.prototype.markAsDeletedAllTasksInSeries = function(spec) {
 			task.setForPush('deleted', true);
 		}
 	}
-	return list;
 }

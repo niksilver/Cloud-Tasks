@@ -91,21 +91,46 @@ EditTaskAssistant.prototype.closeDueDateSelectorDialog = function() {
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
+	var choices;
+	if (this.config.task.isRecurring()) {
+		choices = [
+			{ label: "Delete just this",     value: 'one',  type: 'negative' },
+			{ label: "Delete entire series", value: 'all',  type: 'negative' },
+			{ label: "Cancel",               value: 'none', type: 'dismiss' }
+		];
+	}
+	else {
+		choices = [
+			{ label: "Delete", value: 'one', type: 'negative' },
+			{ label: "Cancel", value: 'none', type: 'dismiss' }
+		]
+	}
 	this.controller.showAlertDialog({
 		onChoose: this.handleDeleteTaskConfirmation.bind(this),
 		title: "Are you sure?",
-		choices: [
-			{ label: "Delete", value: true, type: 'negative' },
-			{ label: "Cancel", value: false, type: 'dismiss' }
-		]
+		choices: choices
 	});
 }
 
+/**
+ * Handle confirmation (or not) of deleting a task.
+ * @param {String} choice  Values 'one' (for just this task), 'all' (for all
+ *     tasks in a series) or 'none' (for not deleting anything).
+ */
 EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Entering");
-	if (choice == true) {
-		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion");
-		this.config.task.setForPush('deleted', true);
+	var task = this.config.task;
+	if (choice == 'one') {
+		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of one");
+		task.setForPush('deleted', true);
+		this.popScene(false);
+	}
+	else if (choice == 'all'){
+		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of all in series");
+		this.config.taskListModel.markAsDeletedAllTasksInSeries({
+			listID: task.listID,
+			taskseriesID: task.taskSeriesID
+		});
 		this.popScene(false);
 	}
 }
