@@ -1,6 +1,3 @@
-// Copyright (C) Nik Silver 2010.
-// See licence.txt for terms and conditions not explicitly stated elsewhere.
-
 [
     {"source": "app/assistants/stage-assistant.js"},
     {"source": "app/lib/Secrets.js"},

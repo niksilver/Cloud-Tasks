@@ -178,6 +178,7 @@ EditTaskAssistant.prototype.activate = function(event) {
 	   example, key handlers that are observing the document */
 
 	this.updateTaskDueDisplayFromTask(this.config.task);
+	this.updateTaskRecurrenceDisplayFromTask();
 }
 
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
@@ -191,6 +192,11 @@ EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 	}
 	Mojo.Log.info("EditTaskAssistant.updateTaskDueDisplayFromTask: Due text is " + due_text);
 	this.controller.get('TaskDueDisplay').update(due_text);
+}
+
+EditTaskAssistant.prototype.updateTaskRecurrenceDisplayFromTask = function() {
+	var recurrence_text = this.config.task.getRecurrenceDisplayText();
+	this.controller.get('TaskRecurrenceDisplay').update(recurrence_text);
 }
 
 EditTaskAssistant.prototype.setVisibilityOfButtons = function() {

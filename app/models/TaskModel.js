@@ -184,5 +184,10 @@ TaskModel.prototype.restoreFromObject = function(obj) {
 }
 
 TaskModel.prototype.getRecurrenceDisplayText = function() {
-	return 'No recurrence';
+	if (this.isRecurring()) {
+		return 'Recurring';
+	}
+	else {
+		return 'No recurrence';
+	}
 }
