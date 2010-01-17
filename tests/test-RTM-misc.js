@@ -286,8 +286,7 @@ testCases.push( function(Y) {
 
 			var task = new TaskModel({
 				name: 'My locally-created task',
-				due: '2009-11-18T16:58:19Z',
-				localChanges: ['name', 'due']
+				localChanges: ['name']
 			});
 			
 			rtm.addTask(task);
@@ -296,7 +295,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("59222465", task.taskseriesID, "Didn't set taskseries ID");
 			Y.Assert.areEqual("85191014", task.taskID, "Didn't set task ID");
 			Y.Assert.areEqual(-1, task.localChanges.indexOf('name'), "Name still marked for change");
-			Y.Assert.areEqual(0, task.localChanges.indexOf('due'), "Due date not marked for change");
 		}
 
 	});

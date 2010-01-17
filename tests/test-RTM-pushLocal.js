@@ -552,7 +552,65 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('deleted', task_hash['85269921'].localChanges[1], "Task 85269921 should still need to push deleted");
 			Y.Assert.areEqual('rrule', task_hash['85270009'].localChanges[0], "Task 85270009 should still need to push rrule");
 			Y.Assert.areEqual('deleted', task_hash['85270009'].localChanges[1], "Task 85270009 should still need to push deleted");
+		},
+		
+		testAddingATaskAndChangingPropertiesPushesAllInOneSync: function() {
+			// Set up our RTM client and task list
+			
+			var rtm = new RTM();
+			
+			// Create a server:
+			//   - rtm.tasks.add does not return immediately;
+			//   - setDueDate asserts that add has been called first
+			
+			var haveCalledAdd;
+			var haveCalledSetDueDate;
+			rtm.rawAjaxRequest = function(url, options) {
+				if (url.indexOf('rtm.tasks.setDueDate') >= 0) {
+					Y.Assert.areEqual(true, haveCalledAdd, "Due date set before add returned");
+					haveCalledSetDueDate = true;
+					options.onSuccess(SampleTestData.simple_good_response);
+				}
+				else if (url.indexOf('rtm.tasks.add') >= 0) {
+					setTimeout( function() {
+							haveCalledAdd = true;
+							var response = SampleTestData.simple_good_response;
+							response.responseJSON.rsp.list = {
+								id: '112233',
+								taskseries: {
+									id: '445566',
+									task: { id: '778899' }
+								}
+							};
+							options.onSuccess(response);
+						},
+					100);
+				}
+				else {
+					Y.fail("rtm.rawAjaxRequest: Unknown call, URL " + url);
+				}
+			}
+			
+			// Set up new task and set its due date
+			
+			var task = new TaskModel({ name: 'My new task' });
+			task.setForPush('due', '2008-03-26T00:00:00Z');
+			
+			// Push the changes
+			
+			haveCalledAdd = false;
+			haveCalledSetDueDate = false;
+			rtm.pushLocalChangesForTask(task);
+			
+			// Check the changes were pushed out
+			
+			this.wait( function() {
+					Y.Assert.areEqual(true, haveCalledAdd, "Didn't add the task");
+					Y.Assert.areEqual(true, haveCalledSetDueDate, "Didn't set the due date");
+				},
+				200
+			);
 		}
-
+		
 	});
 } );

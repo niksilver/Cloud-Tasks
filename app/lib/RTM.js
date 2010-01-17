@@ -484,6 +484,7 @@ RTM.prototype.addTask = function(task) {
 		name: task.name,
 		timeline: this.timeline
 	};
+	var inst = this;
 	this.callMethod('rtm.tasks.add', parameters,
 		function(response) {
 			Mojo.Log.info("RTM.addTask.onSuccess: Got response");
@@ -493,6 +494,8 @@ RTM.prototype.addTask = function(task) {
 			task.taskseriesID = json.rsp.list.taskseries.id;
 			task.taskID = json.rsp.list.taskseries.task.id;
 			task.markNotForPush('name');
+			Mojo.Log.info("RTM.addTask.onSuccess: Pushing other local properties");
+			inst.pushLocalPropertyChangesForTask(task);
 		},
 		function(err_msg) {
 			Mojo.Log.warn("RTM.addTask.onFailure: " + err_msg);
