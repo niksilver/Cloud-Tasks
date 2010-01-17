@@ -348,11 +348,10 @@ testCases.push( function(Y) {
 			var saved_obj = task.toObject();
 			
 			task.setForPush('deleted', true);
-			task.setForPush('rrule', {'every': '1', '$t': 'Some other $t'});
+			task.setRecurrenceUserTextForPush('Every 2nd Tuesday');
 			
 			Y.Assert.areEqual(true, task.deleted, "Didn't set up deleted flag properly");
-			Y.Assert.areEqual('1', task.rrule.every, "Didn't set up rrule.every properly");
-			Y.Assert.areEqual('Some other $t', task.rrule['$t'], "Didn't set up rrule.$t properly");
+			Y.Assert.areEqual('Every 2nd Tuesday', task.rrule.userText, "Didn't set up rrule.userText properly");
 			
 			task.restoreFromObject(saved_obj);
 			
@@ -360,6 +359,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task.deleted, "Didn't restore deleted flag");
 			Y.Assert.areEqual('0', task.rrule.every, "Didn't restore rrule.every");
 			Y.Assert.areEqual('Some $t here', task.rrule['$t'], "Didn't restore rrule.$t");
+			Y.Assert.isUndefined(task.rrule.userText, "Didn't restore rrule.userText properly");
 			
 			Y.Assert.areEqual(2, task.localChanges.length, "Local changes array is wrong length");
 			Y.Assert.areEqual('name', task.localChanges[0], "First local change not restored");

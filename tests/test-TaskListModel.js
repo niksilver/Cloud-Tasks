@@ -646,6 +646,10 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_hash['85269921'].isRecurring(), "Task 85269921 shouldn't be recurring");
 			Y.Assert.areEqual(true, task_hash['85270009'].deleted, "Task 85270009 not deleted");
 			Y.Assert.areEqual(false, task_hash['85270009'].isRecurring(), "Task 85270009 shouldn't be recurring");
+			
+			// Check the rrule's userText is updated
+			Y.Assert.areEqual('', task_hash['85269921'].rrule.userText, "Task 85269921 rrule.userText set appropriately");
+			Y.Assert.areEqual('', task_hash['85270009'].rrule.userText, "Task 85270009 rrule.userText set appropriately");
 		}
 
 	});

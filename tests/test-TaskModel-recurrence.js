@@ -62,11 +62,19 @@ testCases.push( function(Y) {
 			
 			task = new TaskModel({ rrule: {userText: 'Every day', confirmation: 'no'} });
 			task.update();
-			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly confirmed userText set");
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when unconfirmed userText set");
+			
+			task = new TaskModel({ rrule: {every: undefined, '$t': undefined, userText: 'Every day', confirmation: 'no'} });
+			task.update();
+			Y.Assert.areEqual(true, task.hasRRuleFlag, "hasRRule property not set correctly when unconfirmed userText set and undefined every/$t");
+			
+			task = new TaskModel({ rrule: {every: '0', '$t': 'something', userText: '', confirmation: 'no'} });
+			task.update();
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when empty unconfirmed userText set but some every/$t");
 			
 			task = new TaskModel({ rrule: {userText: '', confirmation: 'no'} });
 			task.update();
-			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly confirmed userText empty");
+			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when unconfirmed userText empty");
 		},
 		
 		testGetRecurrenceDisplayTextForNoRecurrence: function() {

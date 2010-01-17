@@ -107,8 +107,8 @@ TaskModel.prototype.isRecurring = function() {
 		return false;
 	}
 	
-	if (this.rrule.userText) {
-		return true;
+	if (typeof this.rrule.userText != 'undefined') {
+		return (this.rrule.userText != '');
 	}
 	
 	if ((typeof this.rrule.every == 'undefined' || this.rrule.every === '')

@@ -384,7 +384,7 @@ TaskListModel.prototype.markAsDeletedAllTasksInSeries = function(spec) {
 	for (var i = 0; i < this._task_list.length; i++) {
 		var task = this._task_list[i];
 		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
-			task.setForPush('rrule', '');
+			task.setRecurrenceUserTextForPush('');
 			task.setForPush('deleted', true);
 		}
 	}
