@@ -1,7 +1,4 @@
-- Licence
-  - Add GPL licence.
 - Completing tasks
-  - Handle task completion of recurring tasks
   - Allow swipe to complete
 - Recurring tasks
   - Add these
@@ -15,6 +12,8 @@
 Done
 ----
 
+- Licence
+  - Add GPL licence.
 - Deleting tasks
   - Allow purging of deleted tasks after pushing out changes
   - Allow optional deletion of all tasks in a series
