@@ -14,7 +14,8 @@
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
 - Bugs
-  - Adding a task locally and then deleting should not sync task
+  - Adding a task locally, then changing a property, then syncing should update all
+    task properties, not have to wait til the next sync.
   
 Done
 ----
