@@ -60,6 +60,30 @@ testCases.push( function(Y) {
 				WAIT_TIMEOUT
 			);
 		},
+		
+		testPushLocalChangeAllowsDueDateToBeSet: function() {
+			var rtm = new RTM();
+			var parameters_used;
+			rtm.callMethod = function(url, parameters, onSuccess, onFailure) {
+				parameters_used = parameters;
+			};
+			var task = new TaskModel({ due: '2010-01-14T00:00:00Z' });
+			Y.assert(Object.keys(task).indexOf('due') >= 0, "Due property not found in task");
+			rtm.pushLocalChange(task, 'due', null, null);
+			Y.assert(Object.keys(parameters_used).indexOf('due') >= 0, "Due property not found in parameters");
+		},
+		
+		testPushLocalChangeAllowsDueDateToBeUnset: function() {
+			var rtm = new RTM();
+			var parameters_used;
+			rtm.callMethod = function(url, parameters, onSuccess, onFailure) {
+				parameters_used = parameters;
+			};
+			var task = new TaskModel({ due: undefined });
+			Y.assert(Object.keys(task).indexOf('due') >= 0, "Due property not found in task");
+			rtm.pushLocalChange(task, 'due', null, null);
+			Y.assert(Object.keys(parameters_used).indexOf('due') == -1, "Due property incorrectly found in parameters");
+		},
 
 		testPushLocalChangeCallsRightURLForDeleted: function() {
 			var rtm = new RTM();

@@ -128,7 +128,7 @@ DueDateSelectorAssistant.prototype.removeHighlightFromPreviouslySelectedCell = f
 
 DueDateSelectorAssistant.prototype.handleNoDueDateEvent = function(event) {
 	this.removeHighlightFromPreviouslySelectedCell();
-	this.task.setForPush('due', '');
+	this.task.setForPush('due', undefined);
 	this.config.updateTaskDueDisplayFromTask(this.task);
 	this.config.closeDueDateSelectorDialog();
 }

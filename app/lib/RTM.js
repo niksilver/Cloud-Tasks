@@ -385,9 +385,11 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			list_id: task.listID,
 			taskseries_id: task.taskseriesID,
 			task_id: task.taskID,
-			timeline: this.timeline,
-			due: task.due
+			timeline: this.timeline
 		};
+		if (task.due) {
+			parameters.due = task.due;
+		}
 	}
 	else if (property == 'deleted') {
 		method = 'rtm.tasks.delete';
