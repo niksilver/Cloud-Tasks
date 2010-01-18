@@ -76,8 +76,10 @@
 	text-align: center;
 }
 
-/* ---------- Edit task recurrence edit field, buttons invisible by default ------------ */
+/* ----- Edit task cover div when the recurrence rule is blank is invisible by default ----- */
+/* ---------- Edit task buttons invisible by default ------------ */
 
+#TaskRecurrenceCover,
 #DeleteTask, #CancelTask, #CompleteTask {
 	display: none;
 }

@@ -42,6 +42,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.setUpDueWidget();
 	
 	this.setUpRecurrenceWidget();
+	this.setVisibilityOfRecurrenceWidget();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -80,6 +81,28 @@ EditTaskAssistant.prototype.setUpRecurrenceWidget = function() {
 	};
 	this.controller.setupWidget('TaskRecurrenceField', recurrence_attributes, this.recurrenceModel);
 	this.controller.listen('TaskRecurrenceField', Mojo.Event.propertyChange, this.handleRecurrenceFieldEvent.bind(this));
+	this.controller.listen('TaskRecurrenceCover', Mojo.Event.tap, this.handleRecurrenceCoverEvent.bind(this));
+}
+
+EditTaskAssistant.prototype.setVisibilityOfRecurrenceWidget = function() {
+	Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Entering");
+	if (this.recurrenceModel.text == '') {
+		Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Recurrence text is blank");
+		this.setVisibilityOfRecurrenceFieldAndCover(false, true);
+	}
+	else {
+		Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Recurrence text has content");
+		this.setVisibilityOfRecurrenceFieldAndCover(true, false);
+	}
+}
+
+EditTaskAssistant.prototype.setVisibilityOfRecurrenceFieldAndCover = function(field_visible, cover_visible) {
+	this.controller.get('TaskRecurrenceField').setStyle({
+		display: (field_visible ? 'inline' : 'none')
+	});
+	this.controller.get('TaskRecurrenceCover').setStyle({
+		display: (cover_visible ? 'inline' : 'none')
+	});
 }
 
 EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
@@ -91,6 +114,11 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 EditTaskAssistant.prototype.handleRecurrenceFieldEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleRecurrenceFieldEvent: Entering");
 	this.config.task.setRecurrenceUserTextForPush(this.recurrenceModel.text);
+}
+
+EditTaskAssistant.prototype.handleRecurrenceCoverEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleRecurrenceCoverEvent: Entering");
+	this.setVisibilityOfRecurrenceFieldAndCover(true, false);
 }
 
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
