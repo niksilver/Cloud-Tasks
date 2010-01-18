@@ -122,7 +122,7 @@ TaskModel.prototype.isRecurring = function() {
 
 TaskModel.sortByDueThenName = function(a, b) {
 	if (a.due == b.due) { return TaskModel.sortByName(a, b); }
-	if (a.due < b.due) { return -1; }
+	if ((a.due || '') < (b.due || '')) { return -1; }
 	return 1;
 };
 

@@ -168,6 +168,14 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(0, TaskModel.sortByDueThenName(nov30_3, nov30_3_again), 'Nov 30 C should be same as Nov 30 C');
 		},
 		
+		testSortByDueThenNameHandlesEmptyAndUndefined: function(){
+			var undef_a = new TaskModel({ due: undefined, name: 'A' });
+			var date_a = new TaskModel({ due: '2009-12-01T00:00:00Z', name: 'A' });
+			
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(undef_a, date_a), 'Undefined should be before defined');
+			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(date_a, undef_a), 'Defined should be after undefined');
+		},
+		
 		testSetForPushShouldFlagLocalChanges: function() {
 			var task = new TaskModel({
 				listID: '123456',
