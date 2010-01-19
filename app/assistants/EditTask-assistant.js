@@ -41,8 +41,8 @@ EditTaskAssistant.prototype.setup = function() {
 	
 	this.setUpDueWidget();
 	
-	this.setUpRecurrenceWidget();
-	this.setVisibilityOfRecurrenceWidget();
+	//this.setUpRecurrenceWidget();
+	//this.setVisibilityOfRecurrenceWidget();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
