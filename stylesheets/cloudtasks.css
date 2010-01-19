@@ -139,7 +139,7 @@
 }
 
 #calendar #calendar-grid .date-is-weekend {
-	background-color: #cce;
+	background-color: #ccccd0;
 }
 
 #calendar #calendar-grid .date-is-today {
