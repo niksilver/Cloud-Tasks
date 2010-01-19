@@ -98,10 +98,10 @@ EditTaskAssistant.prototype.setVisibilityOfRecurrenceWidget = function() {
 
 EditTaskAssistant.prototype.setVisibilityOfRecurrenceFieldAndCover = function(field_visible, cover_visible) {
 	this.controller.get('TaskRecurrenceField').setStyle({
-		display: (field_visible ? 'inline' : 'none')
+		// display: (field_visible ? 'inline' : 'none')
 	});
 	this.controller.get('TaskRecurrenceCover').setStyle({
-		display: (cover_visible ? 'inline' : 'none')
+		// display: (cover_visible ? 'inline' : 'none')
 	});
 }
 
@@ -119,6 +119,12 @@ EditTaskAssistant.prototype.handleRecurrenceFieldEvent = function(event) {
 EditTaskAssistant.prototype.handleRecurrenceCoverEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleRecurrenceCoverEvent: Entering");
 	this.setVisibilityOfRecurrenceFieldAndCover(true, false);
+	var recurrence_field = this.controller.get('TaskRecurrenceField');
+	// Doesn't work: Mojo.Event.send(recurrence_field, Mojo.Event.tap, event);
+	// Doesn't work: recurrence_field.mojo.focus();
+	// Doesn't work: recurrence_field.send(Mojo.Event.tap, event);
+	// Doesn't work: recurrence_field.fire(Mojo.Event.tap);
+	recurrence_field.mojo.focus();
 }
 
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
@@ -226,6 +232,7 @@ EditTaskAssistant.prototype.activate = function(event) {
 
 	this.updateTaskDueDisplayFromTask(this.config.task);
 	// this.updateTaskRecurrenceDisplay();
+	//this.controller.get('TaskName').mojo.focus(); // TEST ONLY
 }
 
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {

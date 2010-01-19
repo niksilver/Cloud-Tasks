@@ -79,7 +79,7 @@
 /* ----- Edit task cover div when the recurrence rule is blank is invisible by default ----- */
 /* ---------- Edit task buttons invisible by default ------------ */
 
-#TaskRecurrenceCover,
+/* #TaskRecurrenceCover, */
 #DeleteTask, #CancelTask, #CompleteTask {
 	display: none;
 }
@@ -93,7 +93,7 @@
 /* ---------------- Due date dialog --------------- */
 
 #calendar-header {
-	font-size: 24px;
+	font-size: 28px;
 	margin-bottom: 10px;
 }
 
@@ -120,7 +120,7 @@
 
 #calendar #calendar-grid {
 	width: 100%;
-	font-size: 20px;
+	font-size: 26px;
 	border-spacing: 0px;
 	padding-bottom: 20px;
 }
@@ -139,7 +139,7 @@
 }
 
 #calendar #calendar-grid .date-is-weekend {
-	background-color: #ccc;
+	background-color: #cce;
 }
 
 #calendar #calendar-grid .date-is-today {
