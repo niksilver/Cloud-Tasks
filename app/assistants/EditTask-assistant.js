@@ -42,7 +42,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.setUpDueWidget();
 	
 	this.setUpRecurrenceWidget();
-	this.setVisibilityOfRecurrenceWidget();
+	this.showRecurrenceNoteIfNeeded();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -75,33 +75,22 @@ EditTaskAssistant.prototype.setUpDueWidget = function() {
 EditTaskAssistant.prototype.setUpRecurrenceWidget = function() {
 	var recurrence_attributes = {
 		modelProperty: 'text',
-		hintText: 'Enter recurrence or leave blank',
 		multiline: false,
 		autoFocus: false
 	};
 	this.controller.setupWidget('TaskRecurrenceField', recurrence_attributes, this.recurrenceModel);
 	this.controller.listen('TaskRecurrenceField', Mojo.Event.propertyChange, this.handleRecurrenceFieldEvent.bind(this));
-	this.controller.listen('TaskRecurrenceCover', Mojo.Event.tap, this.handleRecurrenceCoverEvent.bind(this));
+	Mojo.Event.listenForFocusChanges(this.controller.get('TaskRecurrenceField'), this.handleRecurrenceFieldFocusChange.bind(this));
 }
 
-EditTaskAssistant.prototype.setVisibilityOfRecurrenceWidget = function() {
-	Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Entering");
-	if (this.recurrenceModel.text == '') {
-		Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Recurrence text is blank");
-		this.setVisibilityOfRecurrenceFieldAndCover(false, true);
-	}
-	else {
-		Mojo.Log.info("EditTaskAssistant.setVisibilityOfRecurrenceWidget: Recurrence text has content");
-		this.setVisibilityOfRecurrenceFieldAndCover(true, false);
-	}
+EditTaskAssistant.prototype.showRecurrenceNoteIfNeeded = function() {
+	Mojo.Log.info("EditTaskAssistant.showRecurrenceNoteIfNeeded: Entering");
+	this.setVisibilityOfRecurrenceNote(this.recurrenceModel.text == '');
 }
 
-EditTaskAssistant.prototype.setVisibilityOfRecurrenceFieldAndCover = function(field_visible, cover_visible) {
-	this.controller.get('TaskRecurrenceField').setStyle({
-		// display: (field_visible ? 'inline' : 'none')
-	});
-	this.controller.get('TaskRecurrenceCover').setStyle({
-		// display: (cover_visible ? 'inline' : 'none')
+EditTaskAssistant.prototype.setVisibilityOfRecurrenceNote = function(visible) {
+	this.controller.get('TaskRecurrenceNote').setStyle({
+		display: (visible ? 'inline' : 'none')
 	});
 }
 
@@ -109,22 +98,6 @@ EditTaskAssistant.prototype.handleTaskNameEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Entering");
 	Mojo.Log.info("EditTaskAssistant.handleTaskNameEvent: Task name is '" + this.config.task.name + "'");
 	this.config.task.setForPush('name', this.config.task.name);
-}
-
-EditTaskAssistant.prototype.handleRecurrenceFieldEvent = function(event) {
-	Mojo.Log.info("EditTaskAssistant.handleRecurrenceFieldEvent: Entering");
-	this.config.task.setRecurrenceUserTextForPush(this.recurrenceModel.text);
-}
-
-EditTaskAssistant.prototype.handleRecurrenceCoverEvent = function(event) {
-	Mojo.Log.info("EditTaskAssistant.handleRecurrenceCoverEvent: Entering");
-	this.setVisibilityOfRecurrenceFieldAndCover(true, false);
-	var recurrence_field = this.controller.get('TaskRecurrenceField');
-	// Doesn't work: Mojo.Event.send(recurrence_field, Mojo.Event.tap, event);
-	// Doesn't work: recurrence_field.mojo.focus();
-	// Doesn't work: recurrence_field.send(Mojo.Event.tap, event);
-	// Doesn't work: recurrence_field.fire(Mojo.Event.tap);
-	recurrence_field.mojo.focus();
 }
 
 EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
@@ -143,6 +116,22 @@ EditTaskAssistant.prototype.handleDueDateSelectorEvent = function(event) {
 
 EditTaskAssistant.prototype.closeDueDateSelectorDialog = function() {
 	this.dueDateSelectorDialog.mojo.close();
+}
+
+EditTaskAssistant.prototype.handleRecurrenceFieldEvent = function(event) {
+	Mojo.Log.info("EditTaskAssistant.handleRecurrenceFieldEvent: Entering");
+	this.config.task.setRecurrenceUserTextForPush(this.recurrenceModel.text);
+	this.showRecurrenceNoteIfNeeded();
+}
+
+EditTaskAssistant.prototype.handleRecurrenceFieldFocusChange = function(node) {
+	Mojo.Log.info("EditTaskAssistant.prototype.handleRecurrenceFieldFocusChange: Entering");
+	if (node) {
+		this.setVisibilityOfRecurrenceNote(false);
+	}
+	else {
+		this.showRecurrenceNoteIfNeeded();
+	}
 }
 
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
@@ -249,14 +238,6 @@ EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 	element.update(due_text);
 	this.addOrRemoveClassName(element, !task.due, 'has-no-due-date');
 }
-
-/*
-EditTaskAssistant.prototype.updateTaskRecurrenceDisplay = function() {
-	var element = this.controller.get('TaskRecurrenceDisplay');
-	var recurrence_text = this.config.task.getRecurrenceDisplayText();
-	element.update(recurrence_text);
-	this.addOrRemoveClassName(element, !this.config.task.isRecurring(), 'is-not-recurring');
-}*/
 
 EditTaskAssistant.prototype.addOrRemoveClassName = function(element, condition, className) {
 	if (condition) {

@@ -76,17 +76,24 @@
 	text-align: center;
 }
 
-/* ----- Edit task cover div when the recurrence rule is blank is invisible by default ----- */
+/* ----- Edit task recurrence note ----- */
+
+#TaskRecurrenceNote {
+	font-size: 14px;
+	color: #666;
+	margin-top: -10px;
+	float: right;
+}
+
 /* ---------- Edit task buttons invisible by default ------------ */
 
-/* #TaskRecurrenceCover, */
 #DeleteTask, #CancelTask, #CompleteTask {
 	display: none;
 }
 
-/* ---------- Edit task text display ------------ */
+/* ---------- Edit task due date display ------------ */
 
-.has-no-due-date, .is-not-recurring {
+.has-no-due-date {
 	color: #666;
 }
 
@@ -139,7 +146,7 @@
 }
 
 #calendar #calendar-grid .date-is-weekend {
-	background-color: #cce;
+	background-color: #ccccd0;
 }
 
 #calendar #calendar-grid .date-is-today {
