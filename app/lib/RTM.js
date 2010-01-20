@@ -418,6 +418,12 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			timeline: this.timeline,
 			repeat: task.rrule.userText
 		};
+		var old_success_callback = augmented_success_callback;
+		augmented_success_callback = function(response) {
+			Mojo.Log.info("RTM.pushLocalChange: Got response for pushing rrule");
+			task.handleRRuleResponse(response);
+			old_success_callback(response);
+		}
 	}
 
 	if (method) {

@@ -636,6 +636,36 @@ testCases.push( function(Y) {
 				},
 				200
 			);
+		},
+		
+		testPushLocalChangeForRRuleCallsRRuleResponseHandler: function() {
+			var rtm = new RTM();
+			var task = new TaskModel({
+				rrule: { userText: 'Every 2nd Wednesday' }
+			});
+			var good_response =  {
+				"rsp":{
+					"stat":"ok",
+					"transaction":{"id":"1500756094","undoable":"1"},
+					"list":{"id":"2637966",
+						"taskseries":{
+							"id":"61220716","created":"2010-01-20T22:02:36Z","modified":"2010-01-20T22:03:06Z","name":"My test task","source":"api","url":"","location_id":"",
+							"rrule":{"every":"1","$t":"FREQ=WEEKLY;INTERVAL=2;BYDAY=WE"},
+							"tags": [],"participants":[],"notes":[],
+							"task":{"id":"88077888","due":"2010-01-20T00:00:00Z","has_due_time":"0","added":"2010-01-20T22:02:36Z","completed":"","deleted":"","priority":"N","postponed":"0","estimate":""
+							}}}}};
+			var response_used;
+			task.handleRRuleResponse = function(rsp) {
+				response_used = rsp;
+			};
+			rtm.callMethod = function(method, parameters, onSuccess, onFailure) {
+				onSuccess(good_response);
+			}
+			var called_main_callback;
+			rtm.pushLocalChange(task, 'rrule', function(response){ called_main_callback = true }, null);
+			alert(TestUtils.getMojoLog());
+			Y.Assert.areEqual(true, called_main_callback, "Didn't call main success callback");
+			Y.Assert.areEqual(good_response, response_used, "Didn't send good response to rrule handler");
 		}
 		
 	});

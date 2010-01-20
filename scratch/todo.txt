@@ -8,6 +8,9 @@
   - Handle postponing of recurring tasks
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
+- Bugs
+  - Editing a date but keeping it the same should note create a sync
+  - Editing a recurrence but keeping it the same should note create a sync
   
 Done
 ----

@@ -224,3 +224,12 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 	this.rrule.confirmation = 'no';
 	this.setForPush('rrule', this.rrule);
 }
+
+/**
+ * Take a response from pushing an rrule and set this tasks rrule
+ * properties accordingly.
+ * @param {Object} response  The JSON object from the server, with "rsp" as the top element.
+ */
+TaskModel.prototype.handleRRuleResponse = function(response) {
+	// To do
+}
