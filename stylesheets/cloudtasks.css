@@ -24,13 +24,18 @@
 	padding: 6px 6px 7px 12px;
 }
 
-/* ----------------- Recurrence symbol ------------------ */
+/* ----------------- Recurrence symbols ------------------ */
 
 #TaskList .task-name img {
 	display: none;
 }
 
-#TaskList .task-name img.has-rrule-true {
+#TaskList .task-name.has-rrule-true.has-rrule-problem-false img.recurring-symbol {
+	display: inline;
+	vertical-align: baseline;
+}
+
+#TaskList .task-name.has-rrule-problem-true img.warning-symbol {
 	display: inline;
 	vertical-align: baseline;
 }

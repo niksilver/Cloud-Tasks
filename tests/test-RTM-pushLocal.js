@@ -659,13 +659,16 @@ testCases.push( function(Y) {
 			task.handleRRuleResponse = function(rsp) {
 				response_used = rsp;
 			};
+			var called_update = false;
+			task.update = function() { called_update = true; };
 			rtm.callMethod = function(method, parameters, onSuccess, onFailure) {
 				onSuccess(good_response);
 			}
-			var called_main_callback;
+			var called_main_callback = false;
 			rtm.pushLocalChange(task, 'rrule', function(response){ called_main_callback = true }, null);
 			Y.Assert.areEqual(true, called_main_callback, "Didn't call main success callback");
 			Y.Assert.areEqual(rrule_response, response_used, "Didn't send rrule object to rrule handler");
+			Y.Assert.areEqual(true, called_update, "Didn't call task update function");
 		}
 		
 	});

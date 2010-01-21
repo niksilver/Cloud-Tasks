@@ -124,11 +124,11 @@ testCases.push( function(Y) {
 		},
 		
 		testSetRecurrenceUserTextForPush: function() {
-			var task = new TaskModel();
+			var task = new TaskModel({rrule: {problem: true}}); // Pretend there was a problem before
 			task.setRecurrenceUserTextForPush('');
 			Y.Assert.areEqual('', task.rrule.userText, "rrule.userText not set correctly");
 			Y.Assert.areEqual('rrule', task.localChanges[0], "rrule not marked to be pushed");
-			Y.Assert.areEqual('no', task.rrule.confirmation, "rrule userText should be marked not confirmed");
+			Y.Assert.areEqual(false, task.rrule.problem, "rrule userText should be marked with no problem");
 		},
 		
 		testHandleRRuleResponseBasicCase: function() {

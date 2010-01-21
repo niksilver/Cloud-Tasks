@@ -8,7 +8,9 @@
 	<div class="task-due">
 		#{dueFormatted}
 	</div>
-	<div class="task-name">
-		#{name} <img class="has-rrule-#{hasRRuleFlag}" src="images/recurring-16.png"/>
+	<div class="task-name has-rrule-#{hasRRuleFlag} has-rrule-problem-#{hasRRuleProblemFlag}">
+		#{name}
+		<img class="recurring-symbol" src="images/recurring-16.png"/>
+		<img class="warning-symbol" src="images/warning-16.png"/>
 	</div>
 </div>

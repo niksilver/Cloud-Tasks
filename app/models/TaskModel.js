@@ -218,7 +218,7 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 		this.rrule = {};
 	}
 	this.rrule.userText = user_text;
-	this.rrule.confirmation = 'no';
+	this.rrule.problem = false;
 	this.setForPush('rrule', this.rrule);
 }
 
@@ -230,6 +230,7 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
 	if (!rrule_response && Utils.get(this, 'rrule', 'userText')) {
 		// The user has set up an rrule but the server says no
+		Mojo.Log.info("TaskModel.handleRRuleResponse: Server does not recognise user text");
 		this.rrule.problem = true;
 		return;
 	}
@@ -237,11 +238,13 @@ TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
 	// Server's response, if any, is in line with user text
 	
 	if (!rrule_response) {
+		Mojo.Log.info("TaskModel.handleRRuleResponse: Got no recurrence object, which is fine");
 		return;
 	}
 	if (!this.rrule) {
 		this.rrule = {};
 	}
+	Mojo.Log.info("TaskModel.handleRRuleResponse: Server has returned recurrence object");
 	this.rrule['every'] = rrule_response['every'];
 	this.rrule['$t'] = rrule_response['$t'];
 	this.rrule['problem'] = false;
