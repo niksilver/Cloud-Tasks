@@ -73,6 +73,7 @@ TaskModel.prototype.update = function() {
 	this.isDueFlag = this.isDue();
 	this.isOverdueFlag = this.isOverdue();
 	this.hasRRuleFlag = this.isRecurring();
+	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
 }
 
 TaskModel.prototype.today = function() {
