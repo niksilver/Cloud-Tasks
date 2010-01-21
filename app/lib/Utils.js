@@ -36,5 +36,25 @@ var Utils = {
 		else {
 			return Object.clone(obj);
 		}
+	},
+	
+	/**
+	 * Get a value buried deep within an object.
+	 * First parameter is the object.
+	 * Subsequent parameters are string property names.
+	 * E.g. Utils.get(obj, 'rsp', 'list', 'series') will return obj.rsp.list.series;
+	 * Will return undefined if any of the properties of any depth do not exist.
+	 * If no property names are given returns obj.
+	 */
+	get: function(obj) {
+		var i = 1;
+		while (i < arguments.length) {
+			if (typeof obj !== 'object') {
+				return undefined;
+			}
+			obj = obj[arguments[i]];
+			i++;
+		}
+		return obj;
 	}
 }

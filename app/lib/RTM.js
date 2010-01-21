@@ -421,7 +421,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 		var old_success_callback = augmented_success_callback;
 		augmented_success_callback = function(response) {
 			Mojo.Log.info("RTM.pushLocalChange: Got response for pushing rrule");
-			task.handleRRuleResponse(response);
+			task.handleRRuleResponse(Utils.get(response, 'rsp', 'list', 'taskseries', 'rrule'));
 			old_success_callback(response);
 		}
 	}

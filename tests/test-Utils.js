@@ -33,6 +33,15 @@ testCases.push( function(Y) {
 			Y.Assert.isObject(obj_clone, "Object's clone is not an object");
 			Y.Assert.areEqual('aaa', obj_clone.a, "Item with key 'a' not cloned correctly");
 			Y.Assert.areEqual('bbb', obj_clone.b, "Item with key 'b' not cloned correctly");
+		},
+		
+		testGet: function() {
+			var obj = {a: {b: {c1: {d: 'val'}, c2: ''}}};
+			
+			Y.Assert.areEqual('val', Utils.get(obj, 'a', 'b', 'c1', 'd'), "Failed on a.b.c1.d");
+			Y.Assert.areEqual('', Utils.get(obj, 'a', 'b', 'c2'), "Failed on a.b.c2");
+			Y.Assert.isUndefined(Utils.get(obj, 'a', 'b', 'c1', 'd', 'e'), "Failed on a.b.c1.d.e");
+			Y.Assert.areEqual(obj, Utils.get(obj), "Failed on identity");
 		}
 
 	});

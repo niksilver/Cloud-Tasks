@@ -18,12 +18,8 @@
  *   - $t: recurrence description code, defined by the remote server
  *   - userText: String description of the recurrence rule as entered by the user
  *       and due to be sent to the remote server. So the empty string means no recurrence.
- *   - confirmation: String as to whether the text string has been confirmed as good by
- *       the remote server. Values can be:
- *       - 'no', not yet confirmed, needs to be pushed to the remote server.
- *           Should coincide with the rrule being marked for push.
- *       - 'good', has been confirmed as good by the remote server
- *       - 'bad', has been sent to the remote server and rejected
+ *   - problem: Boolean true if the user text was set but the remote server interpreted
+ *       it as a blank, indicating couldn't parse it. Otherwise is false or undefined.
  */
 
 function TaskModel(properties) {
@@ -228,8 +224,24 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 /**
  * Take a response from pushing an rrule and set this tasks rrule
  * properties accordingly.
- * @param {Object} response  The JSON object from the server, with "rsp" as the top element.
+ * @param {Object} response  The rrule object from the server's JSON response.
  */
-TaskModel.prototype.handleRRuleResponse = function(response) {
-	// To do
+TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
+	if (!rrule_response && Utils.get(this, 'rrule', 'userText')) {
+		// The user has set up an rrule but the server says no
+		this.rrule.problem = true;
+		return;
+	}
+	
+	// Server's response, if any, is in line with user text
+	
+	if (!rrule_response) {
+		return;
+	}
+	if (!this.rrule) {
+		this.rrule = {};
+	}
+	this.rrule['every'] = rrule_response['every'];
+	this.rrule['$t'] = rrule_response['$t'];
+	this.rrule['problem'] = false;
 }
