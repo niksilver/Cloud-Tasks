@@ -644,7 +644,7 @@ testCases.push( function(Y) {
 				rrule: { userText: 'Every 2nd Wednesday' }
 			});
 			var rrule_response = {"every":"1","$t":"FREQ=WEEKLY;INTERVAL=2;BYDAY=WE"};
-			var good_response =  {
+			var good_rsp =  {
 				"rsp":{
 					"stat":"ok",
 					"transaction":{"id":"1500756094","undoable":"1"},
@@ -655,6 +655,8 @@ testCases.push( function(Y) {
 							"tags": [],"participants":[],"notes":[],
 							"task":{"id":"88077888","due":"2010-01-20T00:00:00Z","has_due_time":"0","added":"2010-01-20T22:02:36Z","completed":"","deleted":"","priority":"N","postponed":"0","estimate":""
 							}}}}};
+			var good_response = SampleTestData.simple_good_response;
+			good_response.responseJSON = good_rsp;
 			var response_used;
 			task.handleRRuleResponse = function(rsp) {
 				response_used = rsp;
@@ -664,11 +666,14 @@ testCases.push( function(Y) {
 			rtm.callMethod = function(method, parameters, onSuccess, onFailure) {
 				onSuccess(good_response);
 			}
+			var called_recurrence_changed = false;
+			rtm.recurrenceChanged = function() { called_recurrence_changed = true; };
 			var called_main_callback = false;
 			rtm.pushLocalChange(task, 'rrule', function(response){ called_main_callback = true }, null);
 			Y.Assert.areEqual(true, called_main_callback, "Didn't call main success callback");
 			Y.Assert.areEqual(rrule_response, response_used, "Didn't send rrule object to rrule handler");
 			Y.Assert.areEqual(true, called_update, "Didn't call task update function");
+			Y.Assert.areEqual(true, called_recurrence_changed, "Didn't call the recurrence changed function");
 		}
 		
 	});

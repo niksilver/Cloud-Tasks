@@ -24,6 +24,7 @@ function TaskListAssistant(config) {
 		]
 	};
 	this.setUpAppMenuItemListeners();
+	this.rtm.recurrenceChanged = this.onTaskListModelChange.bind(this);
 	
 	this.commandMenuModel = {
 		visible: true,

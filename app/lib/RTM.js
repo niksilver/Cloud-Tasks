@@ -363,6 +363,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	
 	var method;
 	var parameters;
+	var inst = this;
 	var augmented_success_callback = function(response) {
 		RTM.logResponse(response);
 		task.markNotForPush(property);
@@ -418,11 +419,14 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			timeline: this.timeline,
 			repeat: task.rrule.userText
 		};
+		Mojo.Log.info("RTM.pushLocalChange: repeat is '" + task.rrule.userText + "'");
 		var old_success_callback = augmented_success_callback;
 		augmented_success_callback = function(response) {
 			Mojo.Log.info("RTM.pushLocalChange: Got response for pushing rrule");
-			task.handleRRuleResponse(Utils.get(response, 'rsp', 'list', 'taskseries', 'rrule'));
+			task.handleRRuleResponse(Utils.get(response, 'responseJSON', 'rsp', 'list', 'taskseries', 'rrule'));
 			task.update();
+			Mojo.Log.info("RTM.pushLocalChange: task.hasRRuleProblemFlag = " + task.hasRRuleProblemFlag);
+			inst.recurrenceChanged();
 			old_success_callback(response);
 		}
 	}
@@ -434,6 +438,11 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 		Mojo.Log.warn("RTM.pushLocalChange: No method defined for property '" + property + "'");
 	}
 }
+
+/**
+ * Override this to react to when a task's recurrence has changed. 
+ */
+RTM.prototype.recurrenceChanged = function() {}
 
 /**
  * Push all the local changes that need pushing from the task list.
