@@ -160,12 +160,28 @@ TaskModel.prototype.hasLocalChangeOf = function(property) {
 /**
  * Take any local changes made in another task.
  * They will also then be flagged as local changes in this.
+ * Additionally, the rrule userText and problem fields will only ever be
+ * updated locally, so they will be copied across if they exist
+ * (otherwise they would get overwritten, and we don't want that).
  * @param {TaskModel} other_task  The task which may have some local changes.
  */
 TaskModel.prototype.takeLocalChanges = function(other_task) {
 	for (var i = 0; i < other_task.localChanges.length; i++) {
 		var property = other_task.localChanges[i];
 		this.setForPush(property, other_task[property]);
+	}
+	
+	// Copy over the rrule user text and problem fields.
+	
+	var other_user_text = Utils.get(other_task, 'rrule', 'userText');
+	var other_problem = Utils.get(other_task, 'rrule', 'problem');
+	if (other_user_text) {
+		this.rrule = this.rrule || {};
+		this.rrule.userText = other_user_text;
+	}
+	if (other_problem) {
+		this.rrule = this.rrule || {};
+		this.rrule.problem = other_problem;
 	}
 }
 

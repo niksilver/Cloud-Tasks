@@ -372,6 +372,24 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(2, task.localChanges.length, "Local changes array is wrong length");
 			Y.Assert.areEqual('name', task.localChanges[0], "First local change not restored");
 			Y.Assert.areEqual('deleted', task.localChanges[1], "Second local change not restored");
+		},
+		
+		testTakeLocalChanges: function() {
+			var task1 = new TaskModel({
+				name: 'Write report',
+				due: '2009-12-01T00:00:00Z',
+				localChanges: ['due']
+			});
+			var task2_with_changes = new TaskModel({
+				deleted: true,
+				rrule: { every: '0', '$t': 'FREQ=WEEKLY;INTERVAL=2' },
+				localChanges: ['deleted']
+			});
+			
+			task1.takeLocalChanges(task2_with_changes);
+			Y.assert(task1.localChanges.indexOf('due') >= 0, "Didn't keep local change of due");
+			Y.Assert.areEqual(true, task1.deleted, "Didn't take deleted as a change");
+			Y.assert(task1.localChanges.indexOf('deleted') >= 0, "Didn't take fact of local change of deleted");
 		}
 
 	});

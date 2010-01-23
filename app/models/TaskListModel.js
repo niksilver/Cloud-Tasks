@@ -329,7 +329,6 @@ TaskListModel.prototype.purgeTaskList = function() {
 		if (task.shouldNotBeVisible() && !task.hasLocalChanges()) {
 			// Need to purge this task
 			var task_str = task.toString();
-			Mojo.Log.info("TaskListModel.purgeTaskList: Purging " + task_str);
 			this._task_list.splice(i, 1);
 			made_changes = true;
 		}

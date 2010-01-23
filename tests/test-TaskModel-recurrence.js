@@ -178,6 +178,57 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual('Every 2nd Wednesday', task.rrule.userText, "Didn't preserve userText");
 			Y.Assert.areEqual(true, task.rrule.problem, "Problem not identified");
+		},
+		
+		testTakeLocalChangesPicksUpLocalRRuleData: function() {
+			var task1 = new TaskModel({
+				name: 'Write report',
+				rrule: { every: '0', '$t': 'FREQ=WEEKLY;INTERVAL=2' }
+			});
+			var task2_with_changes = new TaskModel({
+				rrule: { userText: 'Every wrongday', problem: true }
+			});
+			
+			task1.takeLocalChanges(task2_with_changes);
+			Y.Assert.areEqual(-1, task1.localChanges.indexOf('rrule'), "Task 1: Changes in rrule wrongly marked");
+			Y.Assert.areEqual('0', task1.rrule.every, "Task 1: Didn't retain rrule.every");
+			Y.Assert.areEqual('FREQ=WEEKLY;INTERVAL=2', task1.rrule['$t'], "Task 1: Didn't retain rrule['$t']");
+			Y.Assert.areEqual('Every wrongday', task1.rrule.userText, "Task 1: Didn't take rrule.userText");
+			Y.Assert.areEqual(true, task1.rrule.problem, "Task 1: Didn't take rrule.problem");
+			
+			var task3 = new TaskModel({
+				name: 'Write report',
+				rrule: { every: '0', '$t': 'FREQ=WEEKLY;INTERVAL=2' }
+			});
+			var task4 = new TaskModel({
+				rrule: {}
+			});
+			task3.takeLocalChanges(task4);
+			var property_present = {};
+			for (prop in task3.rrule) {
+				property_present[prop] = true;
+			}
+			Y.Assert.areEqual(true, property_present['every'], "Task 3: rrule.every not present");
+			Y.Assert.areEqual(true, property_present['$t'], "Task 3: rrule['$t'] not present");
+			Y.Assert.isUndefined(property_present['userText'], "Task 3: rrule.userText is present");
+			Y.Assert.isUndefined(property_present['problem'], "Task 3: rrule.problem is present");
+			
+			var task5 = new TaskModel({
+				name: 'Write report'
+				// No rrule
+			});
+			var task6 = new TaskModel({
+				rrule: { userText: 'Every day' }
+			});
+			task5.takeLocalChanges(task6);
+			property_present = {};
+			for (prop in task5.rrule) {
+				property_present[prop] = true;
+			}
+			Y.Assert.isUndefined(property_present['every'], "Task 5: rrule.every is present");
+			Y.Assert.isUndefined(property_present['$t'], "Task 5: rrule['$t'] is present");
+			Y.Assert.areEqual(true, property_present['userText'], "Task 5: rrule.userText not present");
+			Y.Assert.isUndefined(property_present['problem'], "Task 5: rrule.problem is present");
 		}
 
 	});
