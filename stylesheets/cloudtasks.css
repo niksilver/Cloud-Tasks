@@ -19,7 +19,7 @@
 }
 
 #TaskList .task-name {
-	font-size: 15px;
+	font-size: 16px;
 	vertical-align: middle;
 	padding: 6px 6px 7px 12px;
 }
@@ -113,7 +113,7 @@
 /* ---------------- Due date dialog --------------- */
 
 #calendar-header {
-	font-size: 28px;
+	font-size: 24px;
 	margin-bottom: 10px;
 }
 
@@ -140,7 +140,7 @@
 
 #calendar #calendar-grid {
 	width: 100%;
-	font-size: 26px;
+	font-size: 20px;
 	border-spacing: 0px;
 	padding-bottom: 20px;
 }
@@ -151,7 +151,7 @@
 }
 
 #calendar #days td {
-	padding-bottom: 10px;
+	padding-bottom: 6px;
 }
 
 #calendar #calendar-grid .date-not-in-month {
