@@ -83,11 +83,19 @@
 
 /* ----- Edit task recurrence note (instructions and problem warning) ----- */
 
+#TaskRecurrenceRow {
+	background: none;
+}
+
 #TaskRecurrenceNote {
 	color: #666;
 	font-size: 14px;
 	margin-top: 0px;
 	float: right;
+}
+
+#TaskRecurrencePaddingRow {
+	min-height: 14px;
 }
 
 /* ---------- Edit task buttons invisible by default ------------ */
