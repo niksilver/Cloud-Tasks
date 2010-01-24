@@ -158,9 +158,12 @@
 	color: #666;
 }
 
-#calendar #calendar-grid .date-is-weekend {
-	background-color: #ccccd0;
-}
+#calendar #date-row-1 .date-is-weekend { background-color: #d4d4d4; }
+#calendar #date-row-2 .date-is-weekend { background-color: #d0d0d0; }
+#calendar #date-row-3 .date-is-weekend { background-color: #cccccc; }
+#calendar #date-row-4 .date-is-weekend { background-color: #c8c8c8; }
+#calendar #date-row-5 .date-is-weekend { background-color: #c3c3c3; }
+#calendar #date-row-6 .date-is-weekend { background-color: #bebebe; }
 
 #calendar #calendar-grid .date-is-today {
 	color: #800;
