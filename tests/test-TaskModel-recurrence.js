@@ -83,26 +83,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task.hasRRuleFlag, "hasRRule property not set correctly when okay userText empty");
 		},
 		
-		testGetRecurrenceDisplayTextForNoRecurrence: function() {
-			var task;
-			
-			task = new TaskModel(); // No recurrence
-			Y.Assert.areEqual('No recurrence', task.getRecurrenceDisplayText(), "undefined rrule gives wrong display text");
-
-			task = new TaskModel({ rrule: {userText: ''} });
-			Y.Assert.areEqual('No recurrence', task.getRecurrenceDisplayText(), "Empty userText in rrule gives wrong display text");
-		},
-		
-		testGetRecurrenceDisplayTextForSomeRecurrence: function() {
-			task = new TaskModel({
-				"rrule": {
-                	"every":"1",
-                	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
-                 }
-			});
-			Y.Assert.areEqual('Recurring', task.getRecurrenceDisplayText(), "Some non-empty rrule gives wrong display text");
-		},
-		
 		testGetRecurrenceEditTextForNoRecurrence: function() {
 			var task;
 			
@@ -121,6 +101,18 @@ testCases.push( function(Y) {
                  }
 			});
 			Y.Assert.areEqual('To be defined!', task.getRecurrenceEditText(), "Some non-empty rrule gives wrong edit text");
+		},
+		
+		testGetRecurrenceEditTextWhenAProblem: function() {
+			task = new TaskModel({
+				"rrule": {
+                	"every":"1",
+                	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO",
+					userText: 'Just randomly',
+					problem: true
+                 }
+			});
+			Y.Assert.areEqual('Just randomly', task.getRecurrenceEditText(), "Problematic rrule should show original user text");
 		},
 		
 		testSetRecurrenceUserTextForPush: function() {

@@ -201,22 +201,13 @@ TaskModel.prototype.restoreFromObject = function(obj) {
 }
 
 /**
- * Get the text to display for describing a recurrence rule.
- */
-TaskModel.prototype.getRecurrenceDisplayText = function() {
-	if (this.isRecurring()) {
-		return 'Recurring';
-	}
-	else {
-		return 'No recurrence';
-	}
-}
-
-/**
  * Get the text for the user to edit a recurrence rule.
  */
 TaskModel.prototype.getRecurrenceEditText = function() {
-	if (this.isRecurring()) {
+	if (Utils.get(this.rrule, 'problem')) {
+		return this.rrule.userText;
+	}
+	else if (this.isRecurring()) {
 		return 'To be defined!';
 	}
 	else {
