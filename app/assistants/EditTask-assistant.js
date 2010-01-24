@@ -42,7 +42,7 @@ EditTaskAssistant.prototype.setup = function() {
 	this.setUpDueWidget();
 	
 	this.setUpRecurrenceWidget();
-	this.showRecurrenceNoteIfNeeded();
+	this.showRecurrenceNoteAsNeeded();
 	
 	var delete_task_model = {
 		buttonClass : 'negative',
@@ -83,14 +83,26 @@ EditTaskAssistant.prototype.setUpRecurrenceWidget = function() {
 	Mojo.Event.listenForFocusChanges(this.controller.get('TaskRecurrenceField'), this.handleRecurrenceFieldFocusChange.bind(this));
 }
 
-EditTaskAssistant.prototype.showRecurrenceNoteIfNeeded = function() {
-	Mojo.Log.info("EditTaskAssistant.showRecurrenceNoteIfNeeded: Entering");
-	this.setVisibilityOfRecurrenceNote(this.recurrenceModel.text == '');
+EditTaskAssistant.prototype.showRecurrenceNoteAsNeeded = function() {
+	Mojo.Log.info("EditTaskAssistant.showRecurrenceNoteAsNeeded: Entering");
+	if (this.recurrenceModel.text == '') {
+		this.setVisibleById('TaskRecurrenceNote', true);
+		this.setVisibleById('TaskRecurrenceNote-instructions', true);
+		this.setVisibleById('TaskRecurrenceNote-warning', false);
+	}
+	else if (Utils.get(this.config.task, 'rrule', 'problem')) {
+		this.setVisibleById('TaskRecurrenceNote', true);
+		this.setVisibleById('TaskRecurrenceNote-instructions', false);
+		this.setVisibleById('TaskRecurrenceNote-warning', true);
+	}
+	else {
+		this.setVisibleById('TaskRecurrenceNote', false);
+	}
 }
 
-EditTaskAssistant.prototype.setVisibilityOfRecurrenceNote = function(visible) {
-	this.controller.get('TaskRecurrenceNote').setStyle({
-		display: (visible ? 'inline' : 'none')
+EditTaskAssistant.prototype.setVisibleById = function(element_id, is_visible) {
+	this.controller.get(element_id).setStyle({
+		display: (is_visible ? 'inline' : 'none')
 	});
 }
 
@@ -121,16 +133,16 @@ EditTaskAssistant.prototype.closeDueDateSelectorDialog = function() {
 EditTaskAssistant.prototype.handleRecurrenceFieldEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleRecurrenceFieldEvent: Entering");
 	this.config.task.setRecurrenceUserTextForPush(this.recurrenceModel.text);
-	this.showRecurrenceNoteIfNeeded();
+	this.showRecurrenceNoteAsNeeded();
 }
 
 EditTaskAssistant.prototype.handleRecurrenceFieldFocusChange = function(node) {
 	Mojo.Log.info("EditTaskAssistant.prototype.handleRecurrenceFieldFocusChange: Entering");
 	if (node) {
-		this.setVisibilityOfRecurrenceNote(false);
+		this.setVisibleById('TaskRecurrenceNote', false);
 	}
 	else {
-		this.showRecurrenceNoteIfNeeded();
+		this.showRecurrenceNoteAsNeeded();
 	}
 }
 
