@@ -23,6 +23,7 @@
  */
 
 function TaskModel(properties) {
+	this.localID = Utils.getNextID();
 	if (properties) {
 		this.listID = properties.listID;
 		this.taskseriesID = properties.taskseriesID;

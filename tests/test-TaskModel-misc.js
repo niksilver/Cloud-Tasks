@@ -30,6 +30,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('123456', task.listID, "List ID doesn't get set");
 			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID doesn't get set");
 			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
+			Y.assert(task.localID >= 0, "Local ID should be a number");
 			Y.Assert.areEqual('My test task', task.name, "Task name doesn't get set");
 			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Task due date doesn't get set");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time doesn't get set");
