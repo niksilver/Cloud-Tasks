@@ -42,6 +42,18 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('', Utils.get(obj, 'a', 'b', 'c2'), "Failed on a.b.c2");
 			Y.Assert.isUndefined(Utils.get(obj, 'a', 'b', 'c1', 'd', 'e'), "Failed on a.b.c1.d.e");
 			Y.Assert.areEqual(obj, Utils.get(obj), "Failed on identity");
+		},
+		
+		testGetNextID: function() {
+			var id1 = Utils.getNextID();
+			var id2 = Utils.getNextID();
+			var id3 = Utils.getNextID();
+			Y.Assert.areEqual(id1+1, id2, "Consecutive IDs not generated 1, 2");
+			Y.Assert.areEqual(id2+1, id3, "Consecutive IDs not generated 2, 3");
+			
+			Utils._eraseNextIDCookie();
+			Y.Assert.areEqual(0, Utils.getNextID(), "First ID should be 0");
+			Y.Assert.areEqual(1, Utils.getNextID(), "Second ID should be 1");
 		}
 
 	});

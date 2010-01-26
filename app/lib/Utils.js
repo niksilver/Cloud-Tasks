@@ -56,5 +56,27 @@ var Utils = {
 			i++;
 		}
 		return obj;
+	},
+	
+	/**
+	 * Return a new ID with each call.
+	 */
+	getNextID: function() {
+		var id_cookie = new Mojo.Model.Cookie('nextID');
+		var next_id = id_cookie.get();
+		if (!next_id) {
+			next_id = 0;
+		}
+		id_cookie.put(next_id+1);
+		return next_id;
+	},
+	
+	/**
+	 * Erase the store of the next ID. Private function, to be used
+	 * for tests only.
+	 */
+	_eraseNextIDCookie: function() {
+		var id_cookie = new Mojo.Model.Cookie('nextID');
+		id_cookie.remove();
 	}
 }

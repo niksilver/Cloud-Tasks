@@ -49,6 +49,11 @@ TaskModel.prototype.toString = function() {
 		+ "completed: " + this.completed + "}";
 }
 
+TaskModel.prototype.toSummaryString = function() {
+	return "TaskModel{" + this.listID + "/" + this.taskseriesID + "/"
+		+ this.taskID + "/" + this.name + "}";
+}
+
 TaskModel.createFromObject = function(obj) {
 	var task = new TaskModel(obj);
 	return task;

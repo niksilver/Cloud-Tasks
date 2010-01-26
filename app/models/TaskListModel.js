@@ -173,6 +173,8 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
  * @param {Array} task_list  Array of tasks to be saved.
  */
 TaskListModel.prototype.saveTaskList = function() {
+	Mojo.Log.info("TaskListModel.saveTaskList: Entering");
+	
 	var i;
 	var num_tasks = this._task_list.length;
 	
@@ -182,6 +184,7 @@ TaskListModel.prototype.saveTaskList = function() {
 		var task = this._task_list[i];
 		var task_obj = task.toObject();
 		task_cookie.put(task_obj);
+		Mojo.Log.info("Saved task" + i + ": " + task.toSummaryString());
 	}
 	
 	// Put an end-of-list marker, and clean up any extra cookies
@@ -199,6 +202,8 @@ TaskListModel.prototype.saveTaskList = function() {
 }
 
 TaskListModel.prototype.loadTaskList = function() {
+	Mojo.Log.info("TaskListModel.loadTaskList: Entering");
+	
 	this._task_list = [];
 	var i = -1;
 	var task_cookie_value;
@@ -209,6 +214,7 @@ TaskListModel.prototype.loadTaskList = function() {
 		if (task_cookie_value) {
 			var task = TaskModel.createFromObject(task_cookie_value);
 			this._task_list.push(task);
+			Mojo.Log.info("Loaded task" + i + ": " + task.toSummaryString());
 		}
 	} while (task_cookie_value);
 }
@@ -292,14 +298,14 @@ TaskListModel.prototype.addTask = function(task) {
  * @param {TaskModel} task  The task to be merged.
  */
 TaskListModel.prototype.mergeTask = function(task) {
-	// Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task);
+	Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task.toSummaryString());
 	var task_index = this.getTaskIndex(task);
 	if (task_index == -1) {
-		// Mojo.Log.info("TaskListModel.mergeTask: Task is new");
+		Mojo.Log.info("TaskListModel.mergeTask: Task is new");
 		this.addTask(task);
 	}
 	else {
-		// Mojo.Log.info("TaskListModel.mergeTask: Merging with " + this._task_list[task_index]);
+		Mojo.Log.info("TaskListModel.mergeTask: Merging with " + this._task_list[task_index].toSummaryString());
 		task.takeLocalChanges(this._task_list[task_index]);
 		this._task_list[task_index] = task;
 	}
@@ -326,10 +332,11 @@ TaskListModel.prototype.purgeTaskList = function() {
 	var made_changes = false;
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
+		Mojo.Log.info("TaskListModel.purgeTaskList: Considering purging task" + i + ": " + task.toSummaryString());
 		if (task.shouldNotBeVisible() && !task.hasLocalChanges()) {
 			// Need to purge this task
-			var task_str = task.toString();
 			this._task_list.splice(i, 1);
+			Mojo.Log.info("TaskListModel.purgeTaskList: Purged task" + i + ": " + task.toSummaryString());
 			made_changes = true;
 		}
 	}

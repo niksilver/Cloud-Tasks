@@ -11,6 +11,8 @@
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
+  - Sometimes tasks get duplicated, or the wrong task gets deleted.
+    (After task added and success received, the task list should be saved, but isn't.)
   
 Done
 ----
