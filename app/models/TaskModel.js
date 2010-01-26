@@ -23,8 +23,8 @@
  */
 
 function TaskModel(properties) {
-	this.localID = Utils.getNextID();
 	if (properties) {
+		this.localID = properties.localID;
 		this.listID = properties.listID;
 		this.taskseriesID = properties.taskseriesID;
 		this.taskID = properties.taskID;
@@ -35,12 +35,16 @@ function TaskModel(properties) {
 		this.rrule = properties.rrule;
 		this.completed = properties.completed || false;
 	}
+	if (typeof this.localID === 'undefined') {
+		this.localID = Utils.getNextID();
+	}
 	this.localChanges = (properties && properties.localChanges) || [];
 	this.update();
 }
 
 TaskModel.prototype.toString = function() {
-	return "TaskModel{listID: " + this.listID + ", "
+	return "TaskModel{localID: " + this.localID + ", "
+		+ "listID: " + this.listID + ", "
 		+ "taskseriesID: " + this.taskseriesID + ", "
 		+ "taskID: " + this.taskID + ", "
 		+ "name: '" + this.name + "', "
@@ -51,7 +55,7 @@ TaskModel.prototype.toString = function() {
 }
 
 TaskModel.prototype.toSummaryString = function() {
-	return "TaskModel{" + this.listID + "/" + this.taskseriesID + "/"
+	return "TaskModel{" + this.localID + "/" + this.listID + "/" + this.taskseriesID + "/"
 		+ this.taskID + "/" + this.name + "}";
 }
 
@@ -62,6 +66,7 @@ TaskModel.createFromObject = function(obj) {
 
 TaskModel.prototype.toObject = function() {
 	return {
+		localID: this.localID,
 		listID: this.listID,
 		taskseriesID: this.taskseriesID,
 		taskID: this.taskID,

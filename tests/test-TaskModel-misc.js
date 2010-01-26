@@ -267,8 +267,16 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('name', task.localChanges[0], "Task's local change not recorded");
 		},
 		
+		testCreateFromObjectPreservesLocalID: function() {
+			var task = new TaskModel();
+			var local_id = task.localID;
+			var task_obj = task.toObject();
+			var task_again = TaskModel.createFromObject(task_obj);
+			Y.Assert.areEqual(local_id, task_again.localID, "Local ID not preserved in to/from object creation");
+		},
+		
 		testToObject: function() {
-			var task, task_obj;
+			var task, task_obj, local_id;
 			
 			task = new TaskModel({
 				listID: '123456',
@@ -282,8 +290,11 @@ testCases.push( function(Y) {
 				completed: true
 			});
 			task_obj = task.toObject();
+			local_id = task.localID;
 			
 			Y.Assert.areEqual('My test task', task_obj.name, "Name not recorded in object");
+			Y.assert(local_id >= 0, "Local ID should be a number");
+			Y.Assert.areEqual(local_id, task_obj.localID, "Local ID not recorded in object");
 			Y.Assert.areEqual(true, task_obj.deleted, "Deleted property not recorded in object");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task_obj.modified, "Modified property not recorded in object");
 			Y.Assert.isNotUndefined(task_obj.rrule, "RRule not recorded in object");
