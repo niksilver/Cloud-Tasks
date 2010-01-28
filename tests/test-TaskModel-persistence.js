@@ -17,6 +17,30 @@ testCases.push( function(Y) {
 			Y.Assert.areNotEqual(task1.localID, task2.localID, "Tasks 1 and 2 should have different local IDs");
 			Y.Assert.areNotEqual(task2.localID, task3.localID, "Tasks 2 and 3 should have different local IDs");
 			Y.Assert.areNotEqual(task1.localID, task3.localID, "Tasks 1 and 3 should have different local IDs");
+		},
+		
+		testSaveAndLoad: function() {
+			var task1 = new TaskModel({ name: 'My first task' });
+			var task1_localID = task1.localID;
+			task1.save();
+			
+			var task2 = new TaskModel({ name: 'My second task' });
+			var task2_localID = task2.localID;
+			task2.save();
+			
+			var recovered_task1 = TaskModel.load("task" + task1_localID);
+			Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
+			Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
+			Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel");
+
+			var recovered_task2 = TaskModel.load("task" + task2_localID);
+			Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
+			Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
+			Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
+		},
+		
+		testLoadWithBadIdentifier: function() {
+			Y.Assert.isUndefined(TaskModel.load('blah'), "Rubbish identifier should have returned undefined");
 		}
 
 	});

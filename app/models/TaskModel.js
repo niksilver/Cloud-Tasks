@@ -267,3 +267,27 @@ TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
 	this.rrule['$t'] = rrule_response['$t'];
 	this.rrule['problem'] = false;
 }
+
+/**
+ * Persist this cookie.
+ */
+TaskModel.prototype.save = function() {
+	var cookie = new Mojo.Model.Cookie('task' + this.localID);
+	cookie.put(this.toObject());
+}
+
+/**
+ * Load a previously-persisted TaskModel and return it.
+ * @param {String} identifier  The identifier by which the task was saved.
+ */
+TaskModel.load = function(identifier) {
+	var cookie = new Mojo.Model.Cookie(identifier);
+	var obj = cookie.get();
+	if (obj) {
+		return TaskModel.createFromObject(obj);
+	}
+	else {
+		return undefined;
+	}
+	
+}
