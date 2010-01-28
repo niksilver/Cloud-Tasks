@@ -291,3 +291,11 @@ TaskModel.load = function(identifier) {
 	}
 	
 }
+
+/**
+ * Remove this task from the persistence store.
+ */
+TaskModel.prototype.remove = function() {
+	var cookie = new Mojo.Model.Cookie('task' + this.localID);
+	cookie.remove();
+}

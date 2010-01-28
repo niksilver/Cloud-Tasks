@@ -41,6 +41,17 @@ testCases.push( function(Y) {
 		
 		testLoadWithBadIdentifier: function() {
 			Y.Assert.isUndefined(TaskModel.load('blah'), "Rubbish identifier should have returned undefined");
+		},
+		
+		testRemove: function() {
+			var task = new TaskModel({ name: 'My task' });
+			var identifier = "task" + task.localID;
+			task.save();
+			Y.Assert.areEqual('My task', TaskModel.load(identifier).name, "Step 1: Not saved and loaded");
+			task.remove();
+			Y.Assert.isUndefined(TaskModel.load(identifier), "Step 2: Not deleted");
+			task.save();
+			Y.Assert.areEqual('My task', TaskModel.load(identifier).name, "Step 3: Not saved and loaded");
 		}
 
 	});
