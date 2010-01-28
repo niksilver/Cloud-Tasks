@@ -269,7 +269,7 @@ TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
 }
 
 /**
- * Persist this cookie.
+ * Persist this task.
  */
 TaskModel.prototype.save = function() {
 	var all_tasks = TaskModel.loadAllTasksHash();
@@ -327,4 +327,14 @@ TaskModel.loadAllTasksHash = function() {
 TaskModel.saveAllTasksHash = function(hash) {
 	var all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
 	all_tasks_cookie.put(hash);
+}
+
+TaskModel.loadAll = function() {
+	var tasks = [];
+	var hash = TaskModel.loadAllTasksHash();
+	for (var local_id in hash) {
+		var task = TaskModel.load(local_id);
+		tasks.push(task);
+	}
+	return tasks;
 }

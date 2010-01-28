@@ -9,6 +9,10 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 		
+		setUp: function() {
+			Mojo.Model.Cookie.deleteCookieStore();
+		},
+		
 		testLocalID: function() {
 			var task1 = new TaskModel();
 			var task2 = new TaskModel();
@@ -52,6 +56,27 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(TaskModel.load(localID), "Step 2: Not deleted");
 			task.save();
 			Y.Assert.areEqual('My task', TaskModel.load(localID).name, "Step 3: Not saved and loaded");
+		},
+		
+		testLoadAll: function() {
+			var task1 = new TaskModel({ name: 'My first task' });
+			var task1_localID = task1.localID;
+			task1.save();
+			
+			var task2 = new TaskModel({ name: 'My second task' });
+			var task2_localID = task2.localID;
+			task2.save();
+			
+			var task_list = TaskModel.loadAll();
+			var local_id_to_task = {};
+			for (var i = 0; i < task_list.length; i++) {
+				var local_id = task_list[i].localID;
+				local_id_to_task[local_id] = task_list[i];
+			}
+			
+			Y.Assert.areEqual(2, task_list.length, "Wrong number of tasks loaded back");
+			Y.Assert.areEqual('My first task', local_id_to_task[task1_localID].name, "Didn't recover name of task 1");
+			Y.Assert.areEqual('My second task', local_id_to_task[task2_localID].name, "Didn't recover name of task 2");
 		}
 
 	});
