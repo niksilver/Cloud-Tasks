@@ -272,30 +272,59 @@ TaskModel.prototype.handleRRuleResponse = function(rrule_response) {
  * Persist this cookie.
  */
 TaskModel.prototype.save = function() {
+	var all_tasks = TaskModel.loadAllTasksHash();
+	if (!all_tasks[this.localID]) {
+		all_tasks[this.localID] = true;
+		TaskModel.saveAllTasksHash(all_tasks);
+	}
+
 	var cookie = new Mojo.Model.Cookie('task' + this.localID);
 	cookie.put(this.toObject());
 }
 
 /**
  * Load a previously-persisted TaskModel and return it.
- * @param {String} identifier  The identifier by which the task was saved.
+ * @param {String} local_id  The local ID of the task when it was persisted.
  */
-TaskModel.load = function(identifier) {
-	var cookie = new Mojo.Model.Cookie(identifier);
-	var obj = cookie.get();
-	if (obj) {
-		return TaskModel.createFromObject(obj);
-	}
-	else {
+TaskModel.load = function(local_id) {
+	var all_tasks = TaskModel.loadAllTasksHash();
+	if (!all_tasks[local_id]) {
 		return undefined;
 	}
-	
+
+	var cookie = new Mojo.Model.Cookie('task' + local_id);
+	var obj = cookie.get();
+	return TaskModel.createFromObject(obj);
 }
 
 /**
  * Remove this task from the persistence store.
  */
 TaskModel.prototype.remove = function() {
+	var all_tasks = TaskModel.loadAllTasksHash();
+	if (all_tasks[this.localID]) {
+		delete all_tasks[this.localID];
+		TaskModel.saveAllTasksHash(all_tasks);
+	}
+
 	var cookie = new Mojo.Model.Cookie('task' + this.localID);
 	cookie.remove();
+}
+
+/**
+ * Load a hash that maps (a) each local IDs of a task that is persisted to (b) Boolean true.
+ */
+TaskModel.loadAllTasksHash = function() {
+	var all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
+	var all_tasks = all_tasks_cookie.get();
+	return all_tasks || {};
+}
+
+/**
+ * Save a hash that maps (a) each local IDs of a task that is persisted to (b) Boolean true.
+ * @param {Object} hash  The hash to save.
+ */
+TaskModel.saveAllTasksHash = function(hash) {
+	var all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
+	all_tasks_cookie.put(hash);
 }
