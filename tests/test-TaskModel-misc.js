@@ -39,6 +39,16 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task.completed, "Task completed flag not set");
 		},
 		
+		testLocalID: function() {
+			var task1 = new TaskModel();
+			var task2 = new TaskModel();
+			var task3 = new TaskModel();
+			
+			Y.Assert.areNotEqual(task1.localID, task2.localID, "Tasks 1 and 2 should have different local IDs");
+			Y.Assert.areNotEqual(task2.localID, task3.localID, "Tasks 2 and 3 should have different local IDs");
+			Y.Assert.areNotEqual(task1.localID, task3.localID, "Tasks 1 and 3 should have different local IDs");
+		},
+		
 		testConstructorSetsDeletedDefault: function() {
 			var task = new TaskModel({
 				listID: '123456',

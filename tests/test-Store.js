@@ -13,61 +13,51 @@ testCases.push( function(Y) {
 			Mojo.Model.Cookie.deleteCookieStore();
 		},
 		
-		testLocalID: function() {
-			var task1 = new TaskModel();
-			var task2 = new TaskModel();
-			var task3 = new TaskModel();
-			
-			Y.Assert.areNotEqual(task1.localID, task2.localID, "Tasks 1 and 2 should have different local IDs");
-			Y.Assert.areNotEqual(task2.localID, task3.localID, "Tasks 2 and 3 should have different local IDs");
-			Y.Assert.areNotEqual(task1.localID, task3.localID, "Tasks 1 and 3 should have different local IDs");
-		},
-		
-		testSaveAndLoad: function() {
+		testSaveTaskAndLoadTask: function() {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task1_localID = task1.localID;
-			task1.save();
+			Store.saveTask(task1);
 			
 			var task2 = new TaskModel({ name: 'My second task' });
 			var task2_localID = task2.localID;
-			task2.save();
+			Store.saveTask(task2);
 			
-			var recovered_task1 = TaskModel.load(task1_localID);
+			var recovered_task1 = Store.loadTask(task1_localID);
 			Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
 			Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
 			Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel");
 
-			var recovered_task2 = TaskModel.load(task2_localID);
+			var recovered_task2 = Store.loadTask(task2_localID);
 			Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
 			Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
 			Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
 		},
 		
-		testLoadWithBadLocalID: function() {
-			Y.Assert.isUndefined(TaskModel.load('blah'), "Rubbish local ID should have returned undefined");
+		testLoadTaskWithBadLocalID: function() {
+			Y.Assert.isUndefined(Store.loadTask('blah'), "Rubbish local ID should have returned undefined");
 		},
 		
-		testRemove: function() {
+		testRemoveTask: function() {
 			var task = new TaskModel({ name: 'My task' });
 			var localID = task.localID;
-			task.save();
-			Y.Assert.areEqual('My task', TaskModel.load(localID).name, "Step 1: Not saved and loaded");
-			task.remove();
-			Y.Assert.isUndefined(TaskModel.load(localID), "Step 2: Not deleted");
-			task.save();
-			Y.Assert.areEqual('My task', TaskModel.load(localID).name, "Step 3: Not saved and loaded");
+			Store.saveTask(task);
+			Y.Assert.areEqual('My task', Store.loadTask(localID).name, "Step 1: Not saved and loaded");
+			Store.removeTask(task);
+			Y.Assert.isUndefined(Store.loadTask(localID), "Step 2: Not deleted");
+			Store.saveTask(task);
+			Y.Assert.areEqual('My task', Store.loadTask(localID).name, "Step 3: Not saved and loaded");
 		},
 		
-		testLoadAll: function() {
+		testLoadAllTasks: function() {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task1_localID = task1.localID;
-			task1.save();
+			Store.saveTask(task1);
 			
 			var task2 = new TaskModel({ name: 'My second task' });
 			var task2_localID = task2.localID;
-			task2.save();
+			Store.saveTask(task2);
 			
-			var task_list = TaskModel.loadAll();
+			var task_list = Store.loadAllTasks();
 			var local_id_to_task = {};
 			for (var i = 0; i < task_list.length; i++) {
 				var local_id = task_list[i].localID;
