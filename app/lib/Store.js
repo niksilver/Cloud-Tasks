@@ -51,13 +51,21 @@ var Store = {
 		cookie.remove();
 	},
 	
+	getAllTasksCookie: function() {
+		if (!Store.all_tasks_cookie) {
+			Store.all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
+		}
+		return Store.all_tasks_cookie;
+	},
+	
 	/**
 	 * Load a hash that maps (a) each local IDs of a task that is persisted to (b) Boolean true.
 	 */
 	loadAllTasksHash: function() {
-		var all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
-		var all_tasks = all_tasks_cookie.get();
-		return all_tasks || {};
+		if (!Store.all_tasks) {
+			Store.all_tasks = Store.getAllTasksCookie().get();
+		}
+		return Store.all_tasks || {};
 	},
 	
 	/**
@@ -65,8 +73,7 @@ var Store = {
 	 * @param {Object} hash  The hash to save.
 	 */
 	saveAllTasksHash: function(hash) {
-		var all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
-		all_tasks_cookie.put(hash);
+		Store.getAllTasksCookie().put(hash);
 	},
 	
 	loadAllTasks: function() {
