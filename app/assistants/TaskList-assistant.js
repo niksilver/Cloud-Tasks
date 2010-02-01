@@ -189,7 +189,7 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 			this.taskListModel.sort();
 		}
 		this.onTaskListModelChange();
-		this.taskListModel.saveTaskList();
+		Store.saveTask(task);
 	}
 	else if (returnValue.lastScene == 'Auth') {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
@@ -215,7 +215,7 @@ TaskListAssistant.prototype.addNewTask = function(task) {
 	Mojo.Log.info("TaskListAssistant.addNewTask: Entering");
 	this.taskListModel.addTask(task);
 	this.taskListModel.sort();
-	this.taskListModel.saveTaskList();
+	Store.saveTask(task);
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {

@@ -360,58 +360,6 @@ testCases.push( function(Y) {
 			var retrier = new RetrierExtended(rtm);
 			rtm.onNetworkRequestsChange('some old values', 'some new values');
 			Y.Assert.areEqual(true, called_onNetworkRequestsChange, "onNetworkRequestsChange not called");
-		},
-		
-		testRetriersOnNetworkRequestsChangePurgesAndSavesTaskListAfterPushing: function() {
-			var rtm = new RTM();
-			
-			var called_purgeTaskList;
-			var called_saveTaskList;
-			rtm.retrier.taskListModel = {
-				purgeTaskList: function() {
-					called_purgeTaskList = true;
-					return true; // Pretend we purged some tasks
-				},
-				saveTaskList: function() {
-					called_saveTaskList = true;
-				}
-			};
-			
-			called_purgeTaskList = false;
-			called_saveTaskList = false;
-			rtm.onNetworkRequestsChange(
-				{ forPushingChanges: 1 },
-				{ forPushingChanges: 0 }
-			);
-			Y.Assert.areEqual(true, called_purgeTaskList, "Should have purged when all pushes done");
-			Y.Assert.areEqual(true, called_saveTaskList, "Should have saved when all pushes done");
-			
-			called_purgeTaskList = false;
-			called_saveTaskList = false;
-			rtm.onNetworkRequestsChange(
-				{ forPushingChanges: 1 },
-				{ forPushingChanges: 1 }
-			);
-			Y.Assert.areEqual(false, called_purgeTaskList, "Should not have purged while pushed ongoing");
-			Y.Assert.areEqual(false, called_saveTaskList, "Should have saved while pushed ongoing");
-			
-			called_purgeTaskList = false;
-			called_saveTaskList = false;
-			rtm.onNetworkRequestsChange(
-				{ forPushingChanges: 0 },
-				{ forPushingChanges: 0 }
-			);
-			Y.Assert.areEqual(false, called_purgeTaskList, "Should not have purged when no change in pushing");
-			Y.Assert.areEqual(false, called_saveTaskList, "Should have saved when no change in pushing");
-			
-			called_purgeTaskList = false;
-			called_saveTaskList = false;
-			rtm.onNetworkRequestsChange(
-				{ forPushingChanges: 0 },
-				{ forPushingChanges: 1 }
-			);
-			Y.Assert.areEqual(false, called_purgeTaskList, "Should not have purged when just starting to push");
-			Y.Assert.areEqual(false, called_saveTaskList, "Should have saved when when just starting to push");
 		}
 
 	});

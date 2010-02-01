@@ -3,10 +3,18 @@
 
 /**
  * Construct an empty task list or (if argument supplied) with a list of tasks set up.
+ * If the optional task list is supplied then it will persist these tasks and overwrite
+ * any previously stored tasks. If the optional task list is not supplied then this
+ * won't happen.
  * @param {Object} optional_task_list  Optional array of TaskModel objects which is to be task list
  */
 function TaskListModel(optional_task_list) {
-	this._task_list = optional_task_list || [];
+	if (optional_task_list) {
+		this.setTaskList(optional_task_list || []);
+	}
+	else {
+		this._task_list = [];
+	}
 }
 
 /**
@@ -172,39 +180,6 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	return utc_date.toString('ddd d MMM yyyy');
 }
 
-/**
- * Save the task list into the database.
- * @param {Array} task_list  Array of tasks to be saved.
- */
-TaskListModel.prototype.saveTaskList = function() {
-	Mojo.Log.info("TaskListModel.saveTaskList: Entering");
-	
-	var i;
-	var num_tasks = this._task_list.length;
-	
-	// Save the list
-	for (i = 0; i < num_tasks; i++) {
-		var task_cookie = new Mojo.Model.Cookie('task' + i);
-		var task = this._task_list[i];
-		var task_obj = task.toObject();
-		task_cookie.put(task_obj);
-		Mojo.Log.info("Saved task" + i + ": " + task.toSummaryString());
-	}
-	
-	// Put an end-of-list marker, and clean up any extra cookies
-	var min_cleanup_index = i;
-	var max_cleanup_index = i;
-	if (this._previous_saved_length - 1 > max_cleanup_index) {
-		max_cleanup_index = this._previous_saved_length - 1;
-	}
-	for (var i = min_cleanup_index; i <= max_cleanup_index; i++) {
-		var task_cookie = new Mojo.Model.Cookie('task' + i);
-		task_cookie.remove();
-	}
-	
-	this._previous_saved_length = num_tasks;
-}
-
 TaskListModel.prototype.loadTaskList = function() {
 	Mojo.Log.info("TaskListModel.loadTaskList: Entering");
 	
@@ -213,7 +188,6 @@ TaskListModel.prototype.loadTaskList = function() {
 
 TaskListModel.prototype.eraseTaskList = function() {
 	this.setTaskList([]);
-	this.saveTaskList();
 }
 
 /**
@@ -317,7 +291,6 @@ TaskListModel.prototype.mergeTaskList = function(task_list) {
 
 /**
  * Remove all those tasks that don't need to be shown.
- * Returns boolean to whether any tasks were actually removed.
  */
 TaskListModel.prototype.purgeTaskList = function() {
 	Mojo.Log.info("TaskListModel.purgeTaskList: Entering");
@@ -328,11 +301,10 @@ TaskListModel.prototype.purgeTaskList = function() {
 		if (task.shouldNotBeVisible() && !task.hasLocalChanges()) {
 			// Need to purge this task
 			this._task_list.splice(i, 1);
+			Store.removeTask(task);
 			Mojo.Log.info("TaskListModel.purgeTaskList: Purged task" + i + ": " + task.toSummaryString());
-			made_changes = true;
 		}
 	}
-	return made_changes;
 }
 
 /**

@@ -47,6 +47,21 @@ testCases.push( function(Y) {
 			var task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			var model = new TaskListModel(task_list);
 			Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
+			
+			// Check at least one task is saved.
+			var task0_name = task_list[0].name;
+			Y.Assert.isNotUndefined(task0_name, "Task 0 needs a name if we're to test sensibly");
+			Y.Assert.areEqual(task0_name, Store.loadTask(task_list[0].localID).name, "Doesn't store tasks when set in constructor");
+		},
+		
+		testConstructorWithNoArgumentDoesntRemovePreviousTasks: function() {
+			var task = new TaskModel({ name: 'hello' });
+			var model = new TaskListModel([task]);
+			Y.Assert.areEqual('hello', Store.loadTask(task.localID).name, "Should have saved task");
+			
+			model2 = new TaskListModel();
+			Y.Assert.isNotUndefined(Store.loadTask(task.localID), "Should have kept task");
+			Y.Assert.areEqual('hello', Store.loadTask(task.localID).name, "Should have stored task name");
 		},
 		
 		testObjectToTaskList: function() {
@@ -312,7 +327,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
 			Y.Assert.areEqual('some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
 
-			tasklist.saveTaskList();
 			var tasklist2 = new TaskListModel();
 			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
 			Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
@@ -322,61 +336,6 @@ testCases.push( function(Y) {
 			Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
 			Y.Assert.areEqual('sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
 			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
-		},
-		
-		assertTaskCookieExists: function(i, message) {
-			var task_cookie = new Mojo.Model.Cookie('task' + i);
-			var task_cookie_value = task_cookie.get();
-			Y.Assert.isNotUndefined(task_cookie_value, message + ": Task[" + i + "] should exist but doesn't");
-		},
-		
-		assertTaskCookieDoesNotExist: function(i, message) {
-			var task_cookie = new Mojo.Model.Cookie('task' + i);
-			var task_cookie_value = task_cookie.get();
-			Y.Assert.isUndefined(task_cookie_value, message + ": Task[" + i + "] should not exist");
-		},
-		
-		testTaskListStorageDoesntWasteResources: function() {
-			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-
-			var list_of_5 = [];
-			var list_of_9 = [];
-			var list_of_4 = [];
-			
-			for (var i = 0; i < 5; i++) {
-				list_of_5.push(tasks.pop());
-			}
-			
-			var model = new TaskListModel(list_of_5);
-			model.saveTaskList();
-			
-			this.assertTaskCookieExists(0, "Initial setup");
-			this.assertTaskCookieExists(1, "Initial setup");
-			this.assertTaskCookieExists(4, "Initial setup");
-			this.assertTaskCookieDoesNotExist(5, "Initial setup");
-			this.assertTaskCookieDoesNotExist(6, "Initial setup");
-			
-			model.getTaskList().pop(); // Task are now [0..3]
-			model.getTaskList().pop(); // Task are now [0..2]
-			model.getTaskList().pop(); // Task are now [0..1]
-			model.saveTaskList();
-
-			this.assertTaskCookieExists(0, "After popping");
-			this.assertTaskCookieExists(1, "After popping");
-			this.assertTaskCookieDoesNotExist(2, "After popping");
-			this.assertTaskCookieDoesNotExist(3, "After popping");
-			this.assertTaskCookieDoesNotExist(4, "After popping");
-			this.assertTaskCookieDoesNotExist(5, "After popping");
-			
-			model.getTaskList().push(tasks.pop()); // Task[2]
-			model.saveTaskList();
-
-			this.assertTaskCookieExists(0, "After pushing");
-			this.assertTaskCookieExists(1, "After pushing");
-			this.assertTaskCookieExists(2, "After pushing");
-			this.assertTaskCookieDoesNotExist(3, "After pushing");
-			this.assertTaskCookieDoesNotExist(4, "After pushing");
-			this.assertTaskCookieDoesNotExist(5, "After pushing");
 		},
 		
 		testGetLatestModified: function() {
@@ -552,8 +511,7 @@ testCases.push( function(Y) {
 			// Set one task which has local changes which need to be pushed, but is not to be deleted
 			task_2.setForPush('name', "Do it again");
 			
-			var made_changes = model.purgeTaskList();
-			Y.Assert.areEqual(true, made_changes, "Didn't flag if purging made changes");
+			model.purgeTaskList();
 			Y.Assert.areEqual(num_tasks-3, model.getTaskList().length, "Wrong tasks purged");
 			Y.Assert.isUndefined(model.getTask(task_3), "Task 3 not purged");
 			Y.Assert.isUndefined(model.getTask(task_5), "Task 5 not purged");
@@ -561,12 +519,14 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(model.getTask(task_4), "Task 4 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_8), "Task 8 was mistakenly purged");
 			Y.Assert.isNotUndefined(model.getTask(task_2), "Task 2 was mistakenly purged");
-		},
-
-		testPurgeTaskListReturnsFalseIfNoChanges: function() {
-			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-			var made_changes = model.purgeTaskList();
-			Y.Assert.areEqual(false, made_changes, "Mistakenly said purging made changes");
+			
+			// Ensure the right tasks are (and are not) in the Store
+			Y.Assert.isUndefined(Store.loadTask(task_3.localID), "Didn't remove task 3 from store");
+			Y.Assert.isUndefined(Store.loadTask(task_5.localID), "Didn't remove task 5 from store");
+			Y.Assert.isUndefined(Store.loadTask(task_7.localID), "Didn't remove task 7 from store");
+			Y.Assert.isNotUndefined(Store.loadTask(task_4.localID), "Mistakenly removed task 4 from store");
+			Y.Assert.isNotUndefined(Store.loadTask(task_8.localID), "Mistakenly removed task 8 from store");
+			Y.Assert.isNotUndefined(Store.loadTask(task_2.localID), "Mistakenly removed task 2 from store");
 		},
 		
 		testGetListOfVisibleTasks: function() {

@@ -132,7 +132,6 @@ Retrier.prototype.firePullTasksSequence = function() {
 				inst.taskListModel.mergeTaskList(task_list);
 				inst.taskListModel.purgeTaskList();
 				inst.taskListModel.sort();
-				inst.taskListModel.saveTaskList();
 				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
 				inst.pullEventSpacer.haveFired();
 				inst.onTaskListModelChange();
@@ -162,9 +161,6 @@ Retrier.prototype.onNetworkRequestsChange = function(old_values, new_values) {
 	if (this.taskListModel
 			&& new_values.forPushingChanges == 0
 			&& old_values.forPushingChanges > 0) {
-		var made_changes = this.taskListModel.purgeTaskList();
-		if (made_changes) {
-			this.taskListModel.saveTaskList();
-		}
+		this.taskListModel.purgeTaskList();
 	}
 }
