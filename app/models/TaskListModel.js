@@ -208,19 +208,7 @@ TaskListModel.prototype.saveTaskList = function() {
 TaskListModel.prototype.loadTaskList = function() {
 	Mojo.Log.info("TaskListModel.loadTaskList: Entering");
 	
-	this._task_list = [];
-	var i = -1;
-	var task_cookie_value;
-	do {
-		i++;
-		var task_cookie = new Mojo.Model.Cookie('task' + i);
-		task_cookie_value = task_cookie.get();
-		if (task_cookie_value) {
-			var task = TaskModel.createFromObject(task_cookie_value);
-			this._task_list.push(task);
-			Mojo.Log.info("Loaded task" + i + ": " + task.toSummaryString());
-		}
-	} while (task_cookie_value);
+	this._task_list = Store.loadAllTasks();
 }
 
 TaskListModel.prototype.eraseTaskList = function() {
