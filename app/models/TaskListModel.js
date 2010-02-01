@@ -19,6 +19,10 @@ TaskListModel.prototype.setTaskList = function(task_list) {
 			throw new Error("TaskListModel.setTaskList needs an array of TaskModel objects");
 		}
 	});
+	Store.removeAllTasks();
+	task_list.each(function(task) {
+		Store.saveTask(task);
+	});
 	this._task_list = task_list;
 }
 
