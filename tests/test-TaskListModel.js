@@ -324,24 +324,6 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
 		},
 		
-		testTaskListStorageHasEndOfListMarker: function() {
-			var tasklist = new TaskListModel();
-
-			tasklist.setTaskList([
-				new TaskModel({	name: 'task1' }),
-				new TaskModel({	name: 'task2' }),
-				new TaskModel({	name: 'task3' })
-			]);
-			tasklist.saveTaskList();
-			tasklist.setTaskList([
-				new TaskModel({	name: 'taskA' }),
-				new TaskModel({	name: 'taskB' })
-			]);
-			tasklist.saveTaskList();
-			tasklist.loadTaskList();
-			Y.Assert.areEqual(2, tasklist.getTaskList().length, 'Task list does not hold right number of tasks');
-		},
-		
 		assertTaskCookieExists: function(i, message) {
 			var task_cookie = new Mojo.Model.Cookie('task' + i);
 			var task_cookie_value = task_cookie.get();
