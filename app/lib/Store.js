@@ -41,13 +41,20 @@ var Store = {
 	 * Remove a task from the persistence store.
 	 */
 	removeTask: function(task) {
+		Store.removeTaskByLocalID(task.localID);
+	},
+	
+	/**
+	 * Remove a task from the persistence store if we know its local ID.
+	 */
+	removeTaskByLocalID: function(local_id) {
 		var all_tasks = Store.loadAllTasksHash();
-		if (all_tasks[task.localID]) {
-			delete all_tasks[task.localID];
+		if (all_tasks[local_id]) {
+			delete all_tasks[local_id];
 			Store.saveAllTasksHash(all_tasks);
 		}
 	
-		var cookie = new Mojo.Model.Cookie('task' + task.localID);
+		var cookie = new Mojo.Model.Cookie('task' + local_id);
 		cookie.remove();
 	},
 	
@@ -84,6 +91,13 @@ var Store = {
 			tasks.push(task);
 		}
 		return tasks;
+	},
+	
+	removeAllTasks: function() {
+		var hash = Store.loadAllTasksHash();
+		for (var local_id in hash) {
+			Store.removeTaskByLocalID(local_id);
+		}
 	}
 
 };

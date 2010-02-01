@@ -67,6 +67,26 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(2, task_list.length, "Wrong number of tasks loaded back");
 			Y.Assert.areEqual('My first task', local_id_to_task[task1_localID].name, "Didn't recover name of task 1");
 			Y.Assert.areEqual('My second task', local_id_to_task[task2_localID].name, "Didn't recover name of task 2");
+		},
+		
+		testRemoveAllTasks: function() {
+			var task1 = new TaskModel({ name: 'My first task' });
+			var task2 = new TaskModel({ name: 'My second task' });
+			var task3 = new TaskModel({ name: 'My third task' });
+			
+			Store.saveTask(task1);
+			Store.saveTask(task2);
+			Store.saveTask(task3);
+			
+			Y.Assert.areEqual('My first task', Store.loadTask(task1.localID).name, "Couldn't load first task");
+			Y.Assert.areEqual('My second task', Store.loadTask(task2.localID).name, "Couldn't load second task");
+			Y.Assert.areEqual('My third task', Store.loadTask(task3.localID).name, "Couldn't load third task");
+			
+			Store.removeAllTasks();
+
+			Y.Assert.isUndefined(Store.loadTask(task1.localID), "Didn't remove first task");
+			Y.Assert.isUndefined(Store.loadTask(task2.localID), "Didn't remove second task");
+			Y.Assert.isUndefined(Store.loadTask(task3.localID), "Didn't remove third task");
 		}
 
 	});
