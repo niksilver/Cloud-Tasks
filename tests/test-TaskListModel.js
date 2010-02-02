@@ -36,6 +36,12 @@ testCases.push( function(Y) {
 		
 		setUp: function() {
 			Mojo.Model.Cookie.deleteCookieStore();
+			Store.clearCache();
+			TestUtils.captureMojoLog();
+		},
+		
+		tearDown: function() {
+			TestUtils.restoreMojoLog();
 		},
 
 		testConstructor: function() {
@@ -607,6 +613,24 @@ testCases.push( function(Y) {
 			// Check the rrule's userText is updated
 			Y.Assert.areEqual('', task_hash['85269921'].rrule.userText, "Task 85269921 rrule.userText set appropriately");
 			Y.Assert.areEqual('', task_hash['85270009'].rrule.userText, "Task 85270009 rrule.userText set appropriately");
+		},
+		
+		testAddTask: function() {
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: 'My new task'
+			});
+			var model = new TaskListModel();
+			
+			Y.Assert.isUndefined(Store.loadTask(task.localID), "New task has already been stored");
+			Y.Assert.isUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is already in list");
+			
+			model.addTask(task);
+
+			Y.Assert.isNotUndefined(Store.loadTask(task.localID), "New task has not been stored");
+			Y.Assert.isNotUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is not in list");
 		}
 
 	});

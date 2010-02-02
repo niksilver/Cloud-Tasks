@@ -11,6 +11,7 @@ testCases.push( function(Y) {
 		
 		setUp: function() {
 			Mojo.Model.Cookie.deleteCookieStore();
+			Store.clearCache();
 		},
 		
 		testSaveTaskAndLoadTask: function() {

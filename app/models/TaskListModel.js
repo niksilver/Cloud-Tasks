@@ -18,7 +18,7 @@ function TaskListModel(optional_task_list) {
 }
 
 /**
- * Set the task list.
+ * Set the task list. This will be persisted, wiping out any previously-stored tasks.
  * @param {Array} task_list  Should be an array of TaskModel objects.
  */
 TaskListModel.prototype.setTaskList = function(task_list) {
@@ -253,6 +253,7 @@ TaskListModel.prototype.addTask = function(task) {
 	if (!(task instanceof TaskModel)) {
 		throw Error("TaskListModel.addTask: Tried to add task not of type TaskModel");
 	}
+	Store.saveTask(task);
 	this._task_list.push(task);
 }
 

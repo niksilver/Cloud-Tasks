@@ -17,6 +17,7 @@
     (After task added and success received, the task list should be saved, but isn't.)
 - Refactoring
   - Merging on a TaskListModel should save tasks along the way.
+  - TaskListModel.addTask should save task
   
 Done
 ----

@@ -58,6 +58,14 @@ var Store = {
 		cookie.remove();
 	},
 	
+	/**
+	 * Clear locally-cached properties.
+	 */
+	clearCache: function() {
+		Store.all_tasks_cookie = undefined;
+		Store.all_tasks = undefined;
+	},
+	
 	getAllTasksCookie: function() {
 		if (!Store.all_tasks_cookie) {
 			Store.all_tasks_cookie = new Mojo.Model.Cookie('allTasks');
