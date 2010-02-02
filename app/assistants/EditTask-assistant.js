@@ -186,7 +186,7 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of all in series");
 		this.config.taskListModel.markAsDeletedAllTasksInSeries({
 			listID: task.listID,
-			taskseriesID: task.taskSeriesID
+			taskseriesID: task.taskseriesID
 		});
 		this.popScene(false);
 	}

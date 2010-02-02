@@ -360,11 +360,13 @@ TaskListModel.prototype.getAllTasksInSeries = function(spec) {
  *     A hash with properties listID and taskseriesID.
  */
 TaskListModel.prototype.markAsDeletedAllTasksInSeries = function(spec) {
+	Mojo.Log.info("TaskListModel.markAsDeletedAllTasksInSeries: Entering with listID=" + spec.listID + ", taskseriesID=" + spec.taskseriesID);
 	for (var i = 0; i < this._task_list.length; i++) {
 		var task = this._task_list[i];
 		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
 			task.setRecurrenceUserTextForPush('');
 			task.setForPush('deleted', true);
+			Mojo.Log.info("TaskListModel.markAsDeletedAllTasksInSeries: Marked " + task.toSummaryString());
 		}
 	}
 }
