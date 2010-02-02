@@ -272,9 +272,12 @@ TaskListModel.prototype.mergeTask = function(task) {
 		this.addTask(task);
 	}
 	else {
-		Mojo.Log.info("TaskListModel.mergeTask: Merging with " + this._task_list[task_index].toSummaryString());
-		task.takeLocalChanges(this._task_list[task_index]);
+		var existing_task = this._task_list[task_index];
+		Mojo.Log.info("TaskListModel.mergeTask: Merging with " + existing_task.toSummaryString());
+		task.takeLocalChanges(existing_task);
+		task.localID = existing_task.localID;
 		this._task_list[task_index] = task;
+		Store.saveTask(task);
 	}
 }
 
