@@ -327,11 +327,11 @@ testCases.push( function(Y) {
 			var tasklist = new TaskListModel();
 
 			tasklist.setTaskList([
-				new TaskModel({	name: 'sometask' }),
-				new TaskModel({	name: 'some other task' }),
+				new TaskModel({	name: 'A sometask' }),
+				new TaskModel({	name: 'B some other task' }),
 			]);
-			Y.Assert.areEqual('sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
-			Y.Assert.areEqual('some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
+			Y.Assert.areEqual('A sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
+			Y.Assert.areEqual('B some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
 
 			var tasklist2 = new TaskListModel();
 			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
@@ -340,8 +340,33 @@ testCases.push( function(Y) {
 			tasklist = undefined;
 			tasklist2.loadTaskList();
 			Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
-			Y.Assert.areEqual('sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
-			Y.Assert.areEqual('some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
+			Y.Assert.areEqual('A sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
+			Y.Assert.areEqual('B some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
+		},
+		
+		testLoadTaskListAlsoSorts: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+			tasks.each(function(task) {
+				Store.saveTask(task);
+			});
+			
+			var model = new TaskListModel();
+			model.loadTaskList();
+			
+			Y.Assert.areEqual(tasks.length, model.getTaskList().length, "Saved task list and loaded task list are different lengths");
+			Y.assert(tasks.length > 0, "Should have saved some tasks");
+			
+			tasks.sort(TaskModel.sortByDueThenName);
+			for (var i = 0; i < tasks.length; i++) {
+				var orig_task = tasks[i];
+				var stored_task = model.getTaskList()[i];
+				Y.Assert.areEqual(orig_task.name, stored_task.name, "Task "
+					+ i + " names differ. Original is " + orig_task.toSummaryString()
+					+ ", stored is " + stored_task.toSummaryString());
+				Y.Assert.areEqual(orig_task.due, stored_task.due, "Task "
+					+ i + " due dates differ. Original is " + orig_task.toSummaryString()
+					+ ", stored is " + stored_task.toSummaryString());
+			}
 		},
 		
 		testGetLatestModified: function() {

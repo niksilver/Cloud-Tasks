@@ -3,6 +3,7 @@
     {"source": "app/lib/Secrets.js"},
     {"source": "app/lib/Utils.js"},
     {"source": "app/lib/MD5.js"},
+    {"source": "app/lib/Store.js"},
     {"source": "app/lib/EventSpacer.js"},
     {"source": "app/lib/Retrier.js"},
     {"source": "app/lib/RTM.js"},

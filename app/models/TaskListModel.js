@@ -180,10 +180,15 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	return utc_date.toString('ddd d MMM yyyy');
 }
 
+/**
+ * Load the persisted task list.
+ * The tasks will also get sorted. 
+ */
 TaskListModel.prototype.loadTaskList = function() {
 	Mojo.Log.info("TaskListModel.loadTaskList: Entering");
 	
 	this._task_list = Store.loadAllTasks();
+	this.sort();
 }
 
 TaskListModel.prototype.eraseTaskList = function() {
