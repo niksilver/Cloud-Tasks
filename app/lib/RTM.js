@@ -515,6 +515,7 @@ RTM.prototype.addTask = function(task) {
 			task.taskseriesID = json.rsp.list.taskseries.id;
 			task.taskID = json.rsp.list.taskseries.task.id;
 			task.markNotForPush('name');
+			Store.saveTask(task);
 			Mojo.Log.info("RTM.addTask.onSuccess: Pushing other local properties");
 			inst.pushLocalPropertyChangesForTask(task);
 		},

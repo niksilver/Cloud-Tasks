@@ -429,6 +429,39 @@ testCases.push( function(Y) {
 			Y.Assert.areSame(task_created_locally, tasks_created[0], "Didn't try to push out locally created task");
 		},
 		
+		testAddTaskSavesTaskOnSuccess: function() {
+			var rtm = new RTM();
+			var task_created_locally = new TaskModel({
+				name: 'My local task',
+				localChanges: ['name']
+			});
+			var response = {
+				responseJSON: {
+					rsp: {
+						list: {
+							id: '112233',
+							taskseries: {
+								id: '445566',
+								task: { id: '778899' }
+							}
+						}
+					}
+				}
+			};
+			rtm.callMethod = function(method, params, onSuccess, onFailure) {
+				onSuccess(response);
+			};
+			
+			rtm.addTask(task_created_locally);
+			var found_task = Store.loadTask(task_created_locally.localID);
+			Y.Assert.isNotUndefined(found_task, "Didn't store task");
+			Y.Assert.areEqual('My local task', found_task.name, "Didn't get name");
+			Y.Assert.areEqual('112233', found_task.listID, "Didn't get listID");
+			Y.Assert.areEqual('445566', found_task.taskseriesID, "Didn't get taskseriesID");
+			Y.Assert.areEqual('778899', found_task.taskID, "Didn't get taskID");
+			Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Didn't cancel local changes");
+		},
+		
 		testPushLocalCompletionCausesTaskListPurge: function() {
 			var rtm = new RTM();
 			
