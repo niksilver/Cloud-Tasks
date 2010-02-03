@@ -473,6 +473,7 @@ RTM.prototype.pushLocalChangesForTask = function(task) {
 
 /**
  * Push out any property changes marked in the task.
+ * Successful pushes will cause the updated task to be persisted.
  * @param {TaskModel} task  The task with (possible) properties which have changes.
  */
 RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
@@ -485,6 +486,7 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 		function(response) {
 			Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
 				+ task.name + "', new value '" + task[property] + "'");
+			Store.saveTask(task);
 			inst.pushLocalPropertyChangesForTask(task);
 		},
 		function(err_msg) {

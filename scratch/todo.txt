@@ -13,8 +13,7 @@
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
-  - Sometimes tasks get duplicated, or the wrong task gets deleted.
-    (After task added and success received, the task list should be saved, but isn't.)
+  - Every change to a task in RTM should save the task
   
 Done
 ----
@@ -46,4 +45,6 @@ Done
   - In task list, the momentary highlight on tasks of 3+ lines long does not cover the whole task. 
   - Adding a task locally, then changing a property, then syncing should update all
     task properties, not have to wait til the next sync.
+  - Sometimes tasks get duplicated, or the wrong task gets deleted.
+    (After task added and success received, the task list should be saved, but isn't.)
   

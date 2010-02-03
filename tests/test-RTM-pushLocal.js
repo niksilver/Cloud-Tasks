@@ -707,6 +707,38 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(rrule_response, response_used, "Didn't send rrule object to rrule handler");
 			Y.Assert.areEqual(true, called_update, "Didn't call task update function");
 			Y.Assert.areEqual(true, called_recurrence_changed, "Didn't call the recurrence changed function");
+		},
+		
+		testPushLocalPropertyChangesForTaskSavesTaskChanges: function() {
+			var rtm = new RTM();
+			rtm.callMethod = function(method, params, onSuccess, onFailure) {
+				onSuccess(SampleTestData.simple_good_response);
+			};
+			
+			var task = new TaskModel({
+				listID: '112233',
+				taskseriesID: '445566',
+				taskID: '778899',
+				name: "Do testing",
+				completed: true,
+				due: '2010-01-13T00:00:00Z',
+				localChanges: ['due', 'completed']
+			});
+			Y.Assert.areEqual(true, task.hasLocalChanges(), "Local changes not picked up");
+			
+			rtm.pushLocalChangesForTask(task);
+			
+			Y.Assert.areEqual(false, task.hasLocalChanges(), "Local changes not cleared");
+			
+			var found_task = Store.loadTask(task.localID);
+			Y.Assert.isNotUndefined(found_task, "Task wasn't stored");
+			Y.Assert.areEqual('112233', found_task.listID, "List ID not stored");
+			Y.Assert.areEqual('445566', found_task.taskseriesID, "Taskseries ID not stored");
+			Y.Assert.areEqual('778899', found_task.taskID, "Task ID not stored");
+			Y.Assert.areEqual('Do testing', found_task.name, "Name not stored");
+			Y.Assert.areEqual(true, found_task.completed, "Completed not stored");
+			Y.Assert.areEqual('2010-01-13T00:00:00Z', found_task.due, "Due date not stored");
+			Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Local changes not cleared in stored task");
 		}
 		
 	});
