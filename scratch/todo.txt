@@ -13,7 +13,7 @@
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
-  - Every change to a task in RTM should save the task
+  - On the physical device after restarting the application only locally-created tasks appear.
   
 Done
 ----
@@ -47,4 +47,5 @@ Done
     task properties, not have to wait til the next sync.
   - Sometimes tasks get duplicated, or the wrong task gets deleted.
     (After task added and success received, the task list should be saved, but isn't.)
+  - Every change to a task in RTM should save the task
   

@@ -11,5 +11,6 @@ StageAssistant.prototype.setup = function() {
 	};
 	config.rtm.retrier.taskListModel = config.taskListModel;
 	//config.taskListModel.eraseTaskList();
+	Mojo.Log.info = Mojo.Log.error;
 	this.controller.pushScene("TaskList", config);
 }
