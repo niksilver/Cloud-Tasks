@@ -182,6 +182,8 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	}
 	
 	if (returnValue.lastScene == 'EditTask'
+		&& returnValue.task
+		&& returnValue.task.name
 		&& returnValue.task.localChanges.length > 0) {
 		var task = returnValue.task;
 		Mojo.Log.info("TaskListAssistant.activate: Task changed");
