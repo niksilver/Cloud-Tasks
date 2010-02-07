@@ -7,57 +7,86 @@
 
 testCases.push( function(Y) {
 
+	var WAIT_TIMEOUT = 1000;
+	
 	return new Y.Test.Case({
 		
 		setUp: function() {
 			Mojo.Model.Cookie.deleteCookieStore();
 			Store.clearCache();
+			TestUtils.captureMojoLog();
+		},
+		
+		tearDown: function() {
+			TestUtils.restoreMojoLog();
 		},
 		
 		testInitialise: function() {
 			Y.Assert.areEqual(false, Store.isInitialised, "Store shouldn't be initialised at start");
 			Store.initialise();
-			this.wait(
-				function() {
-					Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
-					this.part2OfTestInitialise();
-				}.bind(this),
-				100
-			);
-		},
-		
-		part2OfTestInitialise: function() {
-			Store.initialise();
-			this.wait(
-				function() {
-					Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
-				}.bind(this),
-				100
+			TestUtils.waitInSeries(
+				this,
+				[
+					function() {
+						Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
+						Store.initialise();
+					}.bind(this),
+					function() {
+						Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
+					}.bind(this),
+				],
+				WAIT_TIMEOUT
 			);
 		},
 		
 		testSaveTaskAndLoadTask: function() {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task1_localID = task1.localID;
-			Store.saveTask(task1);
 			
-			var task2 = new TaskModel({ name: 'My second task' });
-			var task2_localID = task2.localID;
-			Store.saveTask(task2);
-			
-			var recovered_task1 = Store.loadTask(task1_localID);
-			Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
-			Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
-			Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel");
+			var task2;
+			var task2_localID;
+			var recovered_task1;
+			var recovered_task2;
 
-			var recovered_task2 = Store.loadTask(task2_localID);
-			Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
-			Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
-			Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
+			Store.saveTask(task1);
+			TestUtils.waitInSeries(
+				this,
+				[
+					function() {
+						task2 = new TaskModel({ name: 'My second task' });
+						task2_localID = task2.localID;
+						Store.saveTask(task2);
+						Mojo.Log.info("About to load task...");
+						Store.loadTask(task1_localID, function(task) { recovered_task1 = task });
+						Mojo.Log.info("Okay, back from loading task");
+					}.bind(this),
+					function() {
+						//alert(TestUtils.getMojoLog());
+						Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
+						Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
+						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel");
+						Store.loadTask(task2_localID, function(task) { recovered_task2 = task });
+					}.bind(this),
+					function() {
+						Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
+						Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
+						Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
+					}.bind(this)
+				],
+				WAIT_TIMEOUT
+			);
+
 		},
 		
 		testLoadTaskWithBadLocalID: function() {
-			Y.Assert.isUndefined(Store.loadTask('blah'), "Rubbish local ID should have returned undefined");
+			var loaded_task = "Default value";
+			Store.loadTask('blah', function(task) { loaded_task = task; })
+			this.wait(
+				function() {
+					Y.Assert.isUndefined(loaded_task, "Rubbish local ID should have returned undefined");
+				},
+				WAIT_TIMEOUT
+			);
 		},
 		
 		testRemoveTask: function() {

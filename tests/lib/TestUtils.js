@@ -41,10 +41,12 @@ YUI().use('test', function(Y){
 		captureMojoLog: function() {
 			this._Mojo_Log_info = Mojo.Log.info;
 			this._Mojo_Log_warn = Mojo.Log.warn;
+			this._Mojo_Log_error = Mojo.Log.error;
 			this._Mojo_Log_messages = "";
 			var inst = this;
 			Mojo.Log.info = function(msg) { inst._Mojo_Log_messages += "info: " + msg + "\n"; };
 			Mojo.Log.warn = function(msg) { inst._Mojo_Log_messages += "warn: " + msg + "\n"; };
+			Mojo.Log.error = function(msg) { inst._Mojo_Log_messages += "error: " + msg + "\n"; };
 		},
 		
 		getMojoLog: function() {
@@ -54,6 +56,26 @@ YUI().use('test', function(Y){
 		restoreMojoLog: function() {
 			Mojo.Log.info = this._Mojo_Log_info;
 			Mojo.Log.warn = this._Mojo_Log_warn;
+			Mojo.Log.error = this._Mojo_Log_error;
+		},
+		
+		/**
+		 * Perform a series of this.wait() tests (as per the YUI test framework).
+		 * @param {Function} test  The test function.
+		 * @param {Array} fns  An array of functions to execute, one at a time.
+		 * @param {Number} millis  The number of milliseconds to wait between each item in fns.  
+		 */
+		waitInSeries: function(test, fns, millis) {
+			test.wait(
+				function() {
+					fns[0]();
+					fns.splice(0, 1);
+					if (fns.length > 0) {
+						TestUtils.waitInSeries(test, fns, millis);
+					}
+				},
+				millis
+			);
 		}
 	
 	}
