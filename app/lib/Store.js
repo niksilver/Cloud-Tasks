@@ -89,7 +89,6 @@ var Store = {
 			Mojo.Log.error("Store.loadTask: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
 		}
-		Mojo.Log.info("Store.loadTask: About to execute SQL with local ID " + local_id);
 		Store.execute(
 			"select json from tasks where id = ?",
 			[local_id],
@@ -98,12 +97,7 @@ var Store = {
 					Mojo.Log.info("Store.loadTask: Empty result for local ID " + local_id);
 					onSuccess(undefined);
 				}
-				Mojo.Log.info("Store.loadTask: Positive result for local ID " + local_id);
-				Mojo.Log.info("Store.loadTask: result is " + result);
-				Mojo.Log.info("Store.loadTask: result.rows.item(0) is " + result.rows.item(0));
 				var json = result.rows.item(0).json;
-				Mojo.Log.info("Store.loadTask: JSON is " + json);
-				Mojo.Log.info("Store.loadTask: Eval'd JSON is " + json.evalJSON());
 				var obj = json.evalJSON();
 				var task = TaskModel.createFromObject(obj);
 				onSuccess(task);

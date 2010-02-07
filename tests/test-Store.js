@@ -7,7 +7,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 1000;
+	var WAIT_TIMEOUT = 200; // 100ms is too short for database calls to return, but this seems okay
 	
 	return new Y.Test.Case({
 		
@@ -43,10 +43,10 @@ testCases.push( function(Y) {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task1_localID = task1.localID;
 			
-			var task2;
-			var task2_localID;
-			var recovered_task1;
-			var recovered_task2;
+			var task2 = "Default value";
+			var task2_localID = "Default value";
+			var recovered_task1 = "Default value";
+			var recovered_task2 = "Default value";
 
 			Store.saveTask(task1);
 			TestUtils.waitInSeries(
@@ -56,15 +56,12 @@ testCases.push( function(Y) {
 						task2 = new TaskModel({ name: 'My second task' });
 						task2_localID = task2.localID;
 						Store.saveTask(task2);
-						Mojo.Log.info("About to load task...");
 						Store.loadTask(task1_localID, function(task) { recovered_task1 = task });
-						Mojo.Log.info("Okay, back from loading task");
 					}.bind(this),
 					function() {
-						//alert(TestUtils.getMojoLog());
+						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel, variable is " + recovered_task1);
 						Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
 						Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
-						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel");
 						Store.loadTask(task2_localID, function(task) { recovered_task2 = task });
 					}.bind(this),
 					function() {
