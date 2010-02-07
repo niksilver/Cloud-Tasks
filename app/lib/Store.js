@@ -6,6 +6,26 @@
  */
 
 var Store = {
+	
+	database: openDatabase("CloudTasks", "1.0", "Cloud Tasks", 20*1024),
+	
+	isInitialised: false,
+	
+	initialise: function() {
+		if (!Store.database) {
+			ErrorHandler.notify("No database available");
+		}
+		Store.database.transaction(
+			function(transaction) {
+				transaction.executeSql(
+					"create table if not exists 'tasks' (id integer primary key, json text)",
+					[],
+					function(transaction, results) { Store.isInitialised = true; },
+					function(transaction, results) { ErrorHandler.notify("Couldn't initialise database") }
+				);
+			}
+		);
+	},
 
 	/**
 	 * Persist a task.

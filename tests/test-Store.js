@@ -14,6 +14,28 @@ testCases.push( function(Y) {
 			Store.clearCache();
 		},
 		
+		testInitialise: function() {
+			Y.Assert.areEqual(false, Store.isInitialised, "Store shouldn't be initialised at start");
+			Store.initialise();
+			this.wait(
+				function() {
+					Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
+					this.part2OfTestInitialise();
+				}.bind(this),
+				100
+			);
+		},
+		
+		part2OfTestInitialise: function() {
+			Store.initialise();
+			this.wait(
+				function() {
+					Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
+				}.bind(this),
+				100
+			);
+		},
+		
 		testSaveTaskAndLoadTask: function() {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task1_localID = task1.localID;
