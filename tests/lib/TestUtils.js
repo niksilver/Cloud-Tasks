@@ -38,6 +38,14 @@ YUI().use('test', function(Y){
 			return task_hash;
 		},
 		
+		getLocalIDToTaskHash: function(task_array) {
+			var task_hash = {};
+			task_array.each(function(task) {
+				task_hash[task.localID] = task;
+			});
+			return task_hash;
+		},
+		
 		captureMojoLog: function() {
 			this._Mojo_Log_info = Mojo.Log.info;
 			this._Mojo_Log_warn = Mojo.Log.warn;

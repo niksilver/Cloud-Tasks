@@ -105,7 +105,7 @@ var Store = {
 				var task = TaskModel.createFromObject(obj);
 				onSuccess(task);
 			},
-			"Could not save task"
+			"Could not load task"
 		);
 	},
 	
@@ -191,7 +191,37 @@ var Store = {
 		Store.getAllTasksCookie().put(hash);
 	},
 	
-	loadAllTasks: function() {
+	/**
+	 * Load all the tasks from the store and return them (via a callback) as an array of
+	 * TaskModel objects.
+	 * @param {Array} onSuccess  A callback function which will be called
+	 *     with an array of TaskModel objects.
+	 */
+	loadAllTasks: function(onSuccess) {
+		if (!Store.isInitialised) {
+			Mojo.Log.error("Store.loadAllTasks: Database not initialised");
+			ErrorHandler.notify("Database not initialised");
+			return;
+		}
+		Store.execute(
+			"select json from tasks",
+			[],
+			function(transaction, result) {
+				var tasks = [];
+				var count = result.rows.length;
+				for (var i = 0; i < count; i++) {
+					var json = result.rows.item(i).json;
+					var obj = json.evalJSON();
+					var task = TaskModel.createFromObject(obj);
+					tasks.push(task);
+				}
+				Mojo.Log.info("Store.loadAllTasks: Loaded " + i + " tasks");
+				onSuccess(tasks);
+			},
+			"Could not load tasks"
+		);
+	},
+	_loadAllTasks: function() {
 		var tasks = [];
 		var hash = Store.loadAllTasksHash();
 		for (var i_local_id in hash) {
@@ -203,6 +233,19 @@ var Store = {
 	},
 	
 	removeAllTasks: function() {
+		if (!Store.isInitialised) {
+			Mojo.Log.error("Store.removeAllTasks: Database not initialised");
+			ErrorHandler.notify("Database not initialised");
+			return;
+		}
+		Store.execute(
+			"delete from tasks",
+			[],
+			function() {},
+			"Could not delete tasks"
+		);
+	},
+	_removeAllTasks: function() {
 		var hash = Store.loadAllTasksHash();
 		for (var i_local_id in hash) {
 			var local_id = i_local_id.substr(1);
