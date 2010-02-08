@@ -159,20 +159,48 @@ testCases.push( function(Y) {
 			var task1 = new TaskModel({ name: 'My first task' });
 			var task2 = new TaskModel({ name: 'My second task' });
 			var task3 = new TaskModel({ name: 'My third task' });
-			
+
 			Store.saveTask(task1);
 			Store.saveTask(task2);
 			Store.saveTask(task3);
 			
-			Y.Assert.areEqual('My first task', Store.loadTask(task1.localID).name, "Couldn't load first task");
-			Y.Assert.areEqual('My second task', Store.loadTask(task2.localID).name, "Couldn't load second task");
-			Y.Assert.areEqual('My third task', Store.loadTask(task3.localID).name, "Couldn't load third task");
+			var loaded_task;
 			
-			Store.removeAllTasks();
-
-			Y.Assert.isUndefined(Store.loadTask(task1.localID), "Didn't remove first task");
-			Y.Assert.isUndefined(Store.loadTask(task2.localID), "Didn't remove second task");
-			Y.Assert.isUndefined(Store.loadTask(task3.localID), "Didn't remove third task");
+			TestUtils.waitInSeries(
+				this,
+				[
+					function() {
+						Store.loadTask(task1.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('My first task', loaded_task.name, "Couldn't load first task");
+						Store.loadTask(task2.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('My second task', loaded_task.name, "Couldn't load second task");
+						Store.loadTask(task3.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('My third task', loaded_task.name, "Couldn't load third task");
+						Store.removeAllTasks();
+					},
+					function() {
+						Store.loadTask(task1.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.isUndefined(loaded_task, "Didn't remove first task");
+						Store.loadTask(task2.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.isUndefined(loaded_task, "Didn't remove second task");
+						Store.loadTask(task3.localID, function(task) { loaded_task = task });
+					},
+					function() {
+						Y.Assert.isUndefined(loaded_task, "Didn't remove third task");
+					}
+				],
+				WAIT_TIMEOUT
+			);
 		}
 
 	});
