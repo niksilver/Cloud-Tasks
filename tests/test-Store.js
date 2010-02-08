@@ -12,8 +12,6 @@ testCases.push( function(Y) {
 	return new Y.Test.Case({
 		
 		setUp: function() {
-			Mojo.Model.Cookie.deleteCookieStore();
-			Store.clearCache();
 			TestUtils.captureMojoLog();
 		},
 		
