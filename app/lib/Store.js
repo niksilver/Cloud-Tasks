@@ -14,6 +14,7 @@ var Store = {
 	initialise: function() {
 		if (!Store.database) {
 			ErrorHandler.notify("No database available");
+			return;
 		}
 		Store.execute(
 			"create table if not exists 'tasks' (id integer primary key, json text)",
@@ -55,6 +56,7 @@ var Store = {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.saveTask: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
+			return;
 		}
 		Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
@@ -88,6 +90,7 @@ var Store = {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.loadTask: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
+			return;
 		}
 		Store.execute(
 			"select json from tasks where id = ?",
@@ -128,6 +131,19 @@ var Store = {
 	 * Remove a task from the persistence store if we know its local ID.
 	 */
 	removeTaskByLocalID: function(local_id) {
+		if (!Store.isInitialised) {
+			Mojo.Log.error("Store.removeTaskByLocalID: Database not initialised");
+			ErrorHandler.notify("Database not initialised");
+			return;
+		}
+		Store.execute(
+			"delete from tasks where id = ?",
+			[local_id],
+			function() {},
+			"Could not delete task"
+		);
+	},
+	_removeTaskByLocalID: function(local_id) {
 		var all_tasks = Store.loadAllTasksHash();
 		if (all_tasks["i" + local_id]) {
 			delete all_tasks["i" + local_id];

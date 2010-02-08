@@ -7,7 +7,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 200; // 100ms is too short for database calls to return, but this seems okay
+	var WAIT_TIMEOUT = 250; // 100ms is too short for database calls to return, but this seems okay
 	
 	return new Y.Test.Case({
 		
@@ -88,13 +88,35 @@ testCases.push( function(Y) {
 		
 		testRemoveTask: function() {
 			var task = new TaskModel({ name: 'My task' });
-			var localID = task.localID;
+			var local_id = task.localID;
+			var loaded_value = "Initial value";
 			Store.saveTask(task);
-			Y.Assert.areEqual('My task', Store.loadTask(localID).name, "Step 1: Not saved and loaded");
-			Store.removeTask(task);
-			Y.Assert.isUndefined(Store.loadTask(localID), "Step 2: Not deleted");
-			Store.saveTask(task);
-			Y.Assert.areEqual('My task', Store.loadTask(localID).name, "Step 3: Not saved and loaded");
+			TestUtils.waitInSeries(
+				this,
+				[
+					function() {
+						Store.loadTask(local_id, function(task) {loaded_value = task });
+					}.bind(this),
+					function() {
+						Y.Assert.areEqual('My task', loaded_value.name, "Step 1: Not saved and loaded");
+						Store.removeTask(task);
+					}.bind(this),
+					function() {
+						Store.loadTask(local_id, function(task) {loaded_value = task });
+					}.bind(this),
+					function() {
+						Y.Assert.isUndefined(loaded_value, "Step 2: Not deleted");
+						Store.saveTask(task);
+					}.bind(this),
+					function() {
+						Store.loadTask(local_id, function(task) {loaded_value = task });
+					}.bind(this),
+					function() {
+						Y.Assert.areEqual('My task', loaded_value.name, "Step 3: Not saved and loaded");
+					}.bind(this)
+				],
+				WAIT_TIMEOUT
+			);
 		},
 		
 		testLoadAllTasks: function() {
