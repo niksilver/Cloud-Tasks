@@ -61,6 +61,10 @@ YUI().use('test', function(Y){
 			return this._Mojo_Log_messages;
 		},
 		
+		dumpMojoLog: function() {
+			$('logDump').insert(TestUtils.getMojoLog());
+		},
+		
 		restoreMojoLog: function() {
 			Mojo.Log.info = this._Mojo_Log_info;
 			Mojo.Log.warn = this._Mojo_Log_warn;

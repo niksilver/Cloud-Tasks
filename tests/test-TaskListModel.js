@@ -35,7 +35,6 @@ testCases.push( function(Y) {
 		},
 		
 		setUp: function() {
-			Mojo.Model.Cookie.deleteCookieStore();
 			TestUtils.captureMojoLog();
 		},
 		
@@ -329,6 +328,7 @@ testCases.push( function(Y) {
 				new TaskModel({	name: 'A sometask' }),
 				new TaskModel({	name: 'B some other task' }),
 			]);
+			this.wait(function(){}, 300);
 			Y.Assert.areEqual('A sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
 			Y.Assert.areEqual('B some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
 
@@ -336,11 +336,16 @@ testCases.push( function(Y) {
 			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
 			Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
 			
+			test = this;
 			tasklist = undefined;
-			tasklist2.loadTaskList();
-			Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
-			Y.Assert.areEqual('A sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
-			Y.Assert.areEqual('B some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
+			tasklist2.loadTaskList(function(tasks) {
+				test.resume(function() {
+					Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
+					Y.Assert.areEqual('A sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
+					Y.Assert.areEqual('B some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
+				});
+			});
+			this.wait(1000);
 		},
 		
 		testLoadTaskListAlsoSorts: function() {

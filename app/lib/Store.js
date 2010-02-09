@@ -58,9 +58,10 @@ var Store = {
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
+		var obj = task.toObject();
 		Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
-			[task.localID, Object.toJSON(task)],
+			[task.localID, Object.toJSON(obj)],
 			function() {},
 			"Could not save task"
 		);
@@ -124,7 +125,7 @@ var Store = {
 	/**
 	 * Load all the tasks from the store and return them (via a callback) as an array of
 	 * TaskModel objects.
-	 * @param {Array} onSuccess  A callback function which will be called
+	 * @param {Function} onSuccess  A callback function which will be called
 	 *     with an array of TaskModel objects.
 	 */
 	loadAllTasks: function(onSuccess) {
@@ -163,6 +164,39 @@ var Store = {
 			[],
 			function() {},
 			"Could not delete tasks"
+		);
+	},
+	
+	/**
+	 * Replace all the tasks in the store.
+	 * @param {Array} task_list  Array of TaskModel objects
+	 */
+	replaceAllTasks: function(task_list) {
+		if (!Store.isInitialised) {
+			Mojo.Log.error("Store.replaceAllTasks: Database not initialised");
+			ErrorHandler.notify("Database not initialised");
+			return;
+		}
+		Store.database.transaction(
+			function(transaction) {
+				Mojo.Log.info("Store.replaceAllTasks: Inserting new tasks");
+				transaction.executeSql(
+					"delete from tasks",
+					[],
+					function() {},
+					"Could not delete tasks"
+				);
+				for (var i = 0; i < task_list.length; i++) {
+					var task = task_list[i];
+					var obj = task.toObject();
+					transaction.executeSql(
+						"insert or replace into tasks (id, json) values (?, ?)",
+						[task.localID, Object.toJSON(obj)],
+						function() {},
+						"Could not save task"
+					);
+				}
+			}
 		);
 	}
 

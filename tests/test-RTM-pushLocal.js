@@ -20,7 +20,7 @@ testCases.push( function(Y) {
 			TestUtils.restoreMojoLog();
 		},
 
-		testPushLocalChangeCallsRightURLForName: function() {
+		/*testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
 			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
@@ -280,7 +280,7 @@ testCases.push( function(Y) {
 				},
 				WAIT_TIMEOUT
 			);
-		},
+		}, */
 		
 		testPushLocalChangesHandlesVariousProperties: function() {
 			var rtm = new RTM();
@@ -289,74 +289,80 @@ testCases.push( function(Y) {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			model.setTaskList(tasks);
 			
-			var task_2_task_id = model.getTaskList()[2].taskID;
-			var task_3_task_id = model.getTaskList()[3].taskID;
-
-			model.getTaskList()[2].setForPush('name', 'My new task name');
-			model.getTaskList()[3].setForPush('due', '2010-01-12T12:34:00Z');
+			this.wait(
+				function() {
+					var task_2_task_id = model.getTaskList()[2].taskID;
+					var task_3_task_id = model.getTaskList()[3].taskID;
+		
+					model.getTaskList()[2].setForPush('name', 'My new task name');
+					model.getTaskList()[3].setForPush('due', '2010-01-12T12:34:00Z');
+					
+					// Monitor calls to RTM.pushLocalChange()
+					
+					var errs = "";
+					var task_2_change_pushed = false;
+					var task_3_change_pushed = false;
+					rtm.oldPushLocalChange = rtm.pushLocalChange;
+					rtm.pushLocalChange = function(task, property, successCallback, failureCallback) {
+						if (property == 'name' && task.name == 'My new task name') {
+							task_2_change_pushed = true;
+						}
+						else if (property == 'due' && task.due == '2010-01-12T12:34:00Z') {
+							task_3_change_pushed = true;
+						}
+						else {
+							errs = errs + " pushLocalChange(" + property + " of " + task.name +")";
+						}
+						rtm.oldPushLocalChange(task, property, successCallback, failureCallback);
+					}
+					
+					// Monitor calls to markNotForPush()
+					
+					var task_2_marked_not_for_push = false;
+					var task_3_marked_not_for_push = false;
+					model.getTaskList()[2].oldMarkNotForPush = model.getTaskList()[2].markNotForPush;
+					model.getTaskList()[2].markNotForPush = function(property) {
+						if (property == 'name') {
+							task_2_marked_not_for_push = true;
+						}
+						this.oldMarkNotForPush(property);
+					};
+					model.getTaskList()[3].oldMarkNotForPush = model.getTaskList()[3].markNotForPush;
+					model.getTaskList()[3].markNotForPush = function(property) {
+						if (property == 'due') {
+							task_3_marked_not_for_push = true;
+						}
+						this.oldMarkNotForPush(property);
+					};
+					
+					rtm.callMethod = function(method, params, successCallback, failureCallback) {
+						if (params.task_id == task_2_task_id) {
+							// Task 2
+							Y.Assert.areEqual('rtm.tasks.setName', method, "Not calling setName for task 2");
+						}
+						else if (params.task_id == task_3_task_id) {
+							// Task 3
+							Y.Assert.areEqual('rtm.tasks.setDueDate', method, "Not calling setDueDate for task 3");
+							Y.Assert.areEqual('2010-01-12T12:34:00Z', params.due, "Not setting due date for task 3");
+						}
+						else {
+							Y.Assert.fail("Calling method '" + method + "' on task '" + params.task_id + "',"
+								+ " while task 2 has id " + task_2_task_id +" and task 3 has id " + task_3_task_id);
+						}
+						successCallback(SampleTestData.simple_good_response);
+					};
+					
+					rtm.pushLocalChanges(model);
+					
+					Y.Assert.areEqual(true, task_2_change_pushed, "Task 2 change not pushed");
+					Y.Assert.areEqual(true, task_3_change_pushed, "Task 3 change not pushed");
+					Y.Assert.areEqual(true, task_2_marked_not_for_push, "Task 2 should be marked not for push now");
+					Y.Assert.areEqual(true, task_3_marked_not_for_push, "Task 3 should be marked not for push now");
+					Y.Assert.areEqual("", errs, "Wrong tasks pushed: " + errs);
+				},
+				300
+			);
 			
-			// Monitor calls to RTM.pushLocalChange()
-			
-			var errs = "";
-			var task_2_change_pushed = false;
-			var task_3_change_pushed = false;
-			rtm.oldPushLocalChange = rtm.pushLocalChange;
-			rtm.pushLocalChange = function(task, property, successCallback, failureCallback) {
-				if (property == 'name' && task.name == 'My new task name') {
-					task_2_change_pushed = true;
-				}
-				else if (property == 'due' && task.due == '2010-01-12T12:34:00Z') {
-					task_3_change_pushed = true;
-				}
-				else {
-					errs = errs + " pushLocalChange(" + property + " of " + task.name +")";
-				}
-				rtm.oldPushLocalChange(task, property, successCallback, failureCallback);
-			}
-			
-			// Monitor calls to markNotForPush()
-			
-			var task_2_marked_not_for_push = false;
-			var task_3_marked_not_for_push = false;
-			model.getTaskList()[2].oldMarkNotForPush = model.getTaskList()[2].markNotForPush;
-			model.getTaskList()[2].markNotForPush = function(property) {
-				if (property == 'name') {
-					task_2_marked_not_for_push = true;
-				}
-				this.oldMarkNotForPush(property);
-			};
-			model.getTaskList()[3].oldMarkNotForPush = model.getTaskList()[3].markNotForPush;
-			model.getTaskList()[3].markNotForPush = function(property) {
-				if (property == 'due') {
-					task_3_marked_not_for_push = true;
-				}
-				this.oldMarkNotForPush(property);
-			};
-			
-			rtm.callMethod = function(method, params, successCallback, failureCallback) {
-				if (params.task_id == task_2_task_id) {
-					// Task 2
-					Y.Assert.areEqual('rtm.tasks.setName', method, "Not calling setName for task 2");
-				}
-				else if (params.task_id == task_3_task_id) {
-					// Task 3
-					Y.Assert.areEqual('rtm.tasks.setDueDate', method, "Not calling setDueDate for task 3");
-					Y.Assert.areEqual('2010-01-12T12:34:00Z', params.due, "Not setting due date for task 3");
-				}
-				else {
-					Y.Assert.fail("Calling method '" + method + "' on task '" + params.task_id + "',"
-						+ " while task 2 has id " + task_2_task_id +" and task 3 has id " + task_3_task_id);
-				}
-				successCallback(SampleTestData.simple_good_response);
-			};
-			
-			rtm.pushLocalChanges(model);
-			
-			Y.Assert.areEqual(true, task_2_change_pushed, "Task 2 change not pushed");
-			Y.Assert.areEqual(true, task_3_change_pushed, "Task 3 change not pushed");
-			Y.Assert.areEqual(true, task_2_marked_not_for_push, "Task 2 should be marked not for push now");
-			Y.Assert.areEqual(true, task_3_marked_not_for_push, "Task 3 should be marked not for push now");
-			Y.Assert.areEqual("", errs, "Wrong tasks pushed: " + errs);
 		},
 		
 		testPushLocalDeletionCausesTaskListPurge: function() {
@@ -452,14 +458,27 @@ testCases.push( function(Y) {
 				onSuccess(response);
 			};
 			
-			rtm.addTask(task_created_locally);
-			var found_task = Store.loadTask(task_created_locally.localID);
-			Y.Assert.isNotUndefined(found_task, "Didn't store task");
-			Y.Assert.areEqual('My local task', found_task.name, "Didn't get name");
-			Y.Assert.areEqual('112233', found_task.listID, "Didn't get listID");
-			Y.Assert.areEqual('445566', found_task.taskseriesID, "Didn't get taskseriesID");
-			Y.Assert.areEqual('778899', found_task.taskID, "Didn't get taskID");
-			Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Didn't cancel local changes");
+			var found_task = "Initial value";
+			TestUtils.waitInSeries(
+				this,
+				[
+					function() {
+						rtm.addTask(task_created_locally);
+					},
+					function() {
+						Store.loadTask(task_created_locally.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.assert(found_task instanceof TaskModel, "Didn't store TaskModel");
+						Y.Assert.areEqual('My local task', found_task.name, "Didn't get name");
+						Y.Assert.areEqual('112233', found_task.listID, "Didn't get listID");
+						Y.Assert.areEqual('445566', found_task.taskseriesID, "Didn't get taskseriesID");
+						Y.Assert.areEqual('778899', found_task.taskID, "Didn't get taskID");
+						Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Didn't cancel local changes");
+					},
+				],
+				300
+			);
 		},
 		
 		testPushLocalCompletionCausesTaskListPurge: function() {

@@ -7,7 +7,7 @@
 
 testCases.push( function(Y) {
 
-	var WAIT_TIMEOUT = 250; // 200ms is too short for database calls to return, but this seems okay
+	var WAIT_TIMEOUT = 300; // 200ms is too short for database calls to return, but this seems okay
 	
 	return new Y.Test.Case({
 		

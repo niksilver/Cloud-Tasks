@@ -27,10 +27,7 @@ TaskListModel.prototype.setTaskList = function(task_list) {
 			throw new Error("TaskListModel.setTaskList needs an array of TaskModel objects");
 		}
 	});
-	Store.removeAllTasks();
-	task_list.each(function(task) {
-		Store.saveTask(task);
-	});
+	Store.replaceAllTasks(task_list);
 	this._task_list = task_list;
 }
 
@@ -182,13 +179,19 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 
 /**
  * Load the persisted task list.
- * The tasks will also get sorted. 
+ * The tasks will also get sorted.
+ * @param {Function} onSuccess  Callback for when the tasks are loaded.
+ *     Will be called with an array of TaskModel objects.
  */
-TaskListModel.prototype.loadTaskList = function() {
+TaskListModel.prototype.loadTaskList = function(onSuccess) {
 	Mojo.Log.info("TaskListModel.loadTaskList: Entering");
 	
-	this._task_list = Store.loadAllTasks();
-	this.sort();
+	Store.loadAllTasks(function(tasks) {
+		Mojo.Log.info("TaskListModel.loadTaskList: In success callback");
+		this._task_list = tasks;
+		this.sort();
+		onSuccess(this._task_list);
+	}.bind(this));
 }
 
 TaskListModel.prototype.eraseTaskList = function() {
