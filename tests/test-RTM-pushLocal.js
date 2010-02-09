@@ -123,7 +123,7 @@ testCases.push( function(Y) {
 				},
 				WAIT_TIMEOUT
 			);
-		},
+		},*/
 
 		testPushLocalChangeCallsRightURLForCompleted: function() {
 			var rtm = new RTM();
@@ -231,7 +231,7 @@ testCases.push( function(Y) {
 			);
 
 			Y.Assert.areEqual('name', property_used_in_mark_function, "markNotForPush not called with property 'name'");
-		},*/
+		},
 		
 		testPushLocalChangeHandlesFailure: function() {
 			var rtm = new RTM();
