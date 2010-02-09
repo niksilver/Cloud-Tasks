@@ -71,6 +71,10 @@ YUI().use('test', function(Y){
 			Mojo.Log.error = this._Mojo_Log_error;
 		},
 		
+		quickLog: function(str) {
+			$('logDump').insert(str + '\n');
+		},
+		
 		/**
 		 * Perform a series of this.wait() tests (as per the YUI test framework).
 		 * @param {Function} test  The test function.
@@ -88,6 +92,22 @@ YUI().use('test', function(Y){
 				},
 				millis
 			);
+		},
+		
+		runInSeries: function(test, millis, fns) {
+			if (fns.length == 0) {
+				return;
+			}
+			
+			var fn0 = fns[0];
+			test.continueRun = function() {
+				fns.splice(0, 1);
+				test.resume(function() {
+					TestUtils.runInSeries(test, millis, fns);
+				});
+			};
+			fn0();
+			test.wait(millis);
 		}
 	
 	}
