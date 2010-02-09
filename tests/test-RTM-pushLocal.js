@@ -20,7 +20,7 @@ testCases.push( function(Y) {
 			TestUtils.restoreMojoLog();
 		},
 
-		/*testPushLocalChangeCallsRightURLForName: function() {
+		testPushLocalChangeCallsRightURLForName: function() {
 			var rtm = new RTM();
 			rtm.fireNextEvent = function() {};
 			rtm.timeline = '87654';
@@ -123,7 +123,7 @@ testCases.push( function(Y) {
 				},
 				WAIT_TIMEOUT
 			);
-		},*/
+		},
 
 		testPushLocalChangeCallsRightURLForCompleted: function() {
 			var rtm = new RTM();
