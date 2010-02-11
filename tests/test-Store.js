@@ -78,12 +78,17 @@ testCases.push( function(Y) {
 		
 		testLoadTaskWithBadLocalID: function() {
 			var loaded_task = "Default value";
-			Store.loadTask('blah', function(task) { loaded_task = task; })
-			this.wait(
-				function() {
-					Y.Assert.isUndefined(loaded_task, "Rubbish local ID should have returned undefined");
-				},
-				WAIT_TIMEOUT
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
+				[
+					function() {
+						Store.loadTask('blah', function(task) { loaded_task = task; test.continueRun() })
+					},
+					function() {
+						Y.Assert.isUndefined(loaded_task, "Rubbish local ID should have returned undefined");
+						test.continueRun();
+					}
+				]
 			);
 		},
 		
