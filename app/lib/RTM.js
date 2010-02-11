@@ -499,9 +499,11 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
  * Add a new task remotely.
  * Will update the IDs and mark the 'name' as no longer needing to be pushed,
  * since that has to be set with the new task.
- * @param {Object} task  The task to be created remotely.
+ * @param {TaskModel} task  The task to be created remotely.
+ * @param {Function} onSuccess  Optional function called when the task is saved with
+ *     all the IDs from the server. Will be called with parameter of task. 
  */
-RTM.prototype.addTask = function(task) {
+RTM.prototype.addTask = function(task, onSuccess) {
 	Mojo.Log.info("RTM.addTask: Entering");
 	var parameters = {
 		name: task.name,
@@ -517,7 +519,7 @@ RTM.prototype.addTask = function(task) {
 			task.taskseriesID = json.rsp.list.taskseries.id;
 			task.taskID = json.rsp.list.taskseries.task.id;
 			task.markNotForPush('name');
-			Store.saveTask(task);
+			Store.saveTask(task, onSuccess);
 			Mojo.Log.info("RTM.addTask.onSuccess: Pushing other local properties");
 			inst.pushLocalPropertyChangesForTask(task);
 		},

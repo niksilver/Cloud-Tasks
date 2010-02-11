@@ -57,6 +57,7 @@ var Store = {
 	 * Persist a task.
 	 * @param {TaskModel} task  The task to store.
 	 * @param {Function} onSuccess  Optional callback when storage is complete.
+	 *     Will be called with parameter of the task saved
 	 */
 	saveTask: function(task, onSuccess) {
 		if (!Store.isInitialised) {
@@ -69,7 +70,7 @@ var Store = {
 		Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
 			[task.localID, Object.toJSON(obj)],
-			onSuccess,
+			function() { onSuccess(task) },
 			"Could not save task"
 		);
 	},

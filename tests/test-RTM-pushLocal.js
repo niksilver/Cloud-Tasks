@@ -459,14 +459,14 @@ testCases.push( function(Y) {
 			};
 			
 			var found_task = "Initial value";
-			TestUtils.waitInSeries(
-				this,
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						rtm.addTask(task_created_locally);
+						rtm.addTask(task_created_locally, function() { test.continueRun() });
 					},
 					function() {
-						Store.loadTask(task_created_locally.localID, function(task) { found_task = task });
+						Store.loadTask(task_created_locally.localID, function(task) { found_task = task; test.continueRun() });
 					},
 					function() {
 						Y.assert(found_task instanceof TaskModel, "Didn't store TaskModel");
@@ -475,9 +475,9 @@ testCases.push( function(Y) {
 						Y.Assert.areEqual('445566', found_task.taskseriesID, "Didn't get taskseriesID");
 						Y.Assert.areEqual('778899', found_task.taskID, "Didn't get taskID");
 						Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Didn't cancel local changes");
-					},
-				],
-				300
+						test.continueRun();
+					}
+				]
 			);
 		},
 		
