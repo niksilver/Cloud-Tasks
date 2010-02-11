@@ -165,16 +165,21 @@ var Store = {
 		);
 	},
 	
-	removeAllTasks: function() {
+	/**
+	 * Remove all the tasks from the store.
+	 * @param {Function} onSuccess  Optional function to call when done.
+	 */
+	removeAllTasks: function(onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.removeAllTasks: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
+		onSuccess = onSuccess || function(){};
 		Store.execute(
 			"delete from tasks",
 			[],
-			function() {},
+			onSuccess,
 			"Could not delete tasks"
 		);
 	},

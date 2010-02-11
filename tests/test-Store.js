@@ -135,31 +135,33 @@ testCases.push( function(Y) {
 			var task_list;
 			var local_id_to_task;
 			
-			TestUtils.waitInSeries(
-				this,
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.removeAllTasks();
+						Store.removeAllTasks(function() { test.continueRun() });
 					},
 					function() {
 						task1 = new TaskModel({ name: 'My first task' });
 						task1_local_id = task1.localID;
-						Store.saveTask(task1);
-						task2 = new TaskModel({ name: 'My second task' });
-						task2_local_id = task2.localID;
-						Store.saveTask(task2);
+						Store.saveTask(task1, function() { test.continueRun() });
 					},
 					function() {
-						Store.loadAllTasks(function(tasks) { task_list = tasks });
+						task2 = new TaskModel({ name: 'My second task' });
+						task2_local_id = task2.localID;
+						Store.saveTask(task2, function() { test.continueRun() });
+					},
+					function() {
+						Store.loadAllTasks(function(tasks) { task_list = tasks; test.continueRun() });
 					},
 					function() {
 						local_id_to_task = TestUtils.getLocalIDToTaskHash(task_list);
 						Y.Assert.areEqual(2, task_list.length, "Wrong number of tasks loaded back");
 						Y.Assert.areEqual('My first task', local_id_to_task[task1_local_id].name, "Didn't recover name of task 1");
 						Y.Assert.areEqual('My second task', local_id_to_task[task2_local_id].name, "Didn't recover name of task 2");
+						test.continueRun();
 					}
-				],
-				WAIT_TIMEOUT
+				]
 			);
 		},
 		
