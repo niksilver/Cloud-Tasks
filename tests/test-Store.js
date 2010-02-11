@@ -96,32 +96,34 @@ testCases.push( function(Y) {
 			var task = new TaskModel({ name: 'My task' });
 			var local_id = task.localID;
 			var loaded_value = "Initial value";
-			Store.saveTask(task);
-			TestUtils.waitInSeries(
-				this,
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task });
+						Store.saveTask(task, function() { test.continueRun() });
+					},
+					function() {
+						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 1: Not saved and loaded");
-						Store.removeTask(task);
+						Store.removeTask(task, function() { test.continueRun() });
 					},
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task });
+						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
 					},
 					function() {
 						Y.Assert.isUndefined(loaded_value, "Step 2: Not deleted");
-						Store.saveTask(task);
+						Store.saveTask(task, function() { test.continueRun() });
 					},
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task });
+						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 3: Not saved and loaded");
+						test.continueRun();
 					}
-				],
-				WAIT_TIMEOUT
+				]
 			);
 		},
 		

@@ -107,24 +107,29 @@ var Store = {
 	
 	/**
 	 * Remove a task from the persistence store.
+	 * @param {TaskModel} task  The task to remove.
+	 * @param {Function} onSuccess  Optional function to call when removed.
 	 */
-	removeTask: function(task) {
-		Store.removeTaskByLocalID(task.localID);
+	removeTask: function(task, onSuccess) {
+		Store.removeTaskByLocalID(task.localID, onSuccess);
 	},
 	
 	/**
 	 * Remove a task from the persistence store if we know its local ID.
+	 * @param {Number} local_id  The local ID of the task to remove.
+	 * @param {Function} onSuccess  Optional function to call when removed.
 	 */
-	removeTaskByLocalID: function(local_id) {
+	removeTaskByLocalID: function(local_id, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.removeTaskByLocalID: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
+		onSuccess = onSuccess || function(){};
 		Store.execute(
 			"delete from tasks where id = ?",
 			[local_id],
-			function() {},
+			onSuccess,
 			"Could not delete task"
 		);
 	},
