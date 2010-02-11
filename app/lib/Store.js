@@ -51,18 +51,20 @@ var Store = {
 	/**
 	 * Persist a task.
 	 * @param {TaskModel} task  The task to store.
+	 * @param {Function} onSuccess  Optional callback when storage is complete.
 	 */
-	saveTask: function(task) {
+	saveTask: function(task, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.saveTask: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
 		var obj = task.toObject();
+		var onSuccess = onSuccess || function(){};
 		Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
 			[task.localID, Object.toJSON(obj)],
-			function() {},
+			onSuccess,
 			"Could not save task"
 		);
 	},

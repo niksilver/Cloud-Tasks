@@ -46,31 +46,32 @@ testCases.push( function(Y) {
 			var recovered_task1 = "Default value";
 			var recovered_task2 = "Default value";
 
-			Store.saveTask(task1);
-			TestUtils.waitInSeries(
-				this,
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
 				[
+					function() {
+						Store.saveTask(task1, function() { test.continueRun() });
+					},
 					function() {
 						task2 = new TaskModel({ name: 'My second task' });
 						task2_localID = task2.localID;
 						Store.saveTask(task2);
-						Store.loadTask(task1_localID, function(task) { recovered_task1 = task });
+						Store.loadTask(task1_localID, function(task) { recovered_task1 = task; test.continueRun() });
 					},
 					function() {
 						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel, variable is " + recovered_task1);
 						Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
 						Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
-						Store.loadTask(task2_localID, function(task) { recovered_task2 = task });
+						Store.loadTask(task2_localID, function(task) { recovered_task2 = task; test.continueRun() });
 					},
 					function() {
 						Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
 						Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
 						Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
+						test.continueRun();
 					}
-				],
-				WAIT_TIMEOUT
+				]
 			);
-
 		},
 		
 		testLoadTaskWithBadLocalID: function() {
