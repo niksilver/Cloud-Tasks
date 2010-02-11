@@ -21,19 +21,21 @@ testCases.push( function(Y) {
 		
 		testInitialise: function() {
 			Y.Assert.areEqual(false, Store.isInitialised, "Store shouldn't be initialised at start");
-			Store.initialise();
-			TestUtils.waitInSeries(
-				this,
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
+						Store.initialise(function() { test.continueRun() });
+					},
+					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
-						Store.initialise();
+						Store.initialise(function() { test.continueRun() });
 					},
 					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
+						test.continueRun();
 					},
-				],
-				WAIT_TIMEOUT
+				]
 			);
 		},
 		

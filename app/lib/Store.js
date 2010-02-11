@@ -11,15 +11,20 @@ var Store = {
 	
 	isInitialised: false,
 	
-	initialise: function() {
+	/**
+	 * Set up the database (if it's not set up already.
+	 * @param {Function} onSuccess  Optional function to call when database initialised.
+	 */
+	initialise: function(onSuccess) {
 		if (!Store.database) {
 			ErrorHandler.notify("No database available");
 			return;
 		}
+		onSuccess = onSuccess || function(){};
 		Store.execute(
 			"create table if not exists 'tasks' (id integer primary key, json text)",
 			[],
-			function(transaction, results) { Store.isInitialised = true; },
+			function(transaction, results) { Store.isInitialised = true; onSuccess(); },
 			"Couldn't initialise database"
 		);
 	},
@@ -60,7 +65,7 @@ var Store = {
 			return;
 		}
 		var obj = task.toObject();
-		var onSuccess = onSuccess || function(){};
+		onSuccess = onSuccess || function(){};
 		Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
 			[task.localID, Object.toJSON(obj)],
