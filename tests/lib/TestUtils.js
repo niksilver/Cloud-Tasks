@@ -76,24 +76,14 @@ YUI().use('test', function(Y){
 		},
 		
 		/**
-		 * Perform a series of this.wait() tests (as per the YUI test framework).
+		 * Perform a series of test parts, each of which will only move onto the next
+		 * when test.continueRun() is called.
 		 * @param {Function} test  The test function.
+		 * @param {Number} millis  The number of milliseconds to wait before declaring a
+		 *     test part a failure.  
 		 * @param {Array} fns  An array of functions to execute, one at a time.
-		 * @param {Number} millis  The number of milliseconds to wait between each item in fns.  
+		 *     Each one must call test.continueRun() to signal the end, even the last one.
 		 */
-		waitInSeries: function(test, fns, millis) {
-			test.wait(
-				function() {
-					fns[0]();
-					fns.splice(0, 1);
-					if (fns.length > 0) {
-						TestUtils.waitInSeries(test, fns, millis);
-					}
-				},
-				millis
-			);
-		},
-		
 		runInSeries: function(test, millis, fns) {
 			if (fns.length == 0) {
 				return;
