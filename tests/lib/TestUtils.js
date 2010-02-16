@@ -85,19 +85,69 @@ YUI().use('test', function(Y){
 		 *     Each one must call test.continueRun() to signal the end, even the last one.
 		 */
 		runInSeries: function(test, millis, fns) {
+			TestUtils.quickLog("Entering with fns = " + fns);
 			if (fns.length == 0) {
+				TestUtils.quickLog("Returning immediately");
 				return;
 			}
 			
-			var fn0 = fns[0];
-			test.continueRun = function() {
-				fns.splice(0, 1);
+			var fn0 = fns.shift();
+			TestUtils.continueRun = function() {
+				TestUtils.quickLog("Resuming with fns.length=" + fns.length + ", next fn is " + fns[0]);
 				test.resume(function() {
 					TestUtils.runInSeries(test, millis, fns);
 				});
 			};
+			TestUtils.quickLog("Will execute fn0 = " + fn0);
+			TestUtils._wait_to_continue_run = false;
 			fn0();
-			test.wait(millis);
+			TestUtils.quickLog("Exited fn0 = " + fn0);
+			if (fns.length == 0) {
+				TestUtils.quickLog("No functions, won't wait");
+				return;
+			}
+			if (TestUtils._wait_to_continue_run) {
+				TestUtils.quickLog("Going to wait, fns.length=" + fns.length);
+				test.wait(millis);
+			} else {
+				TestUtils.quickLog("Continuing normal run");
+				TestUtils.runInSeries(test, millis, fns);
+			}
+				
+		},
+		
+		waitToContinueRun: function() {
+			TestUtils.quickLog("Waiting to continue run");
+			TestUtils._wait_to_continue_run = true;
+		},
+		
+		prettyPrint: function(obj) {
+			if (typeof obj === 'string') {
+				return "'" + obj + "'";
+			}
+			else if (typeof obj === 'number' || typeof obj === 'boolean' || typeof obj === 'function') {
+				return obj;
+			}
+			else if (obj instanceof Array) {
+				var out = '[';
+				for (var i = 0; i < obj.length; i++) {
+					if (i > 0) { out += ", " }
+					out = out + TestUtils.prettyPrint(obj[i]);
+				}
+				return out + ']';
+			}
+			else {
+				var out = '{';
+				var had_property = false;
+				for (var prop in obj) {
+					out = out + prop + ": " + TestUtils.prettyPrint(obj[prop]) + ", ";
+					had_property = true;
+				}
+				if (had_property) {
+					out = out.substr(0, out.length-2);
+				}
+				return out + '}';
+			}
 		}
 	
 	}

@@ -43,6 +43,7 @@ var Store = {
 						onSuccess(transaction, result);
 					}.bind(this),
 					function(transaction, error) {
+						Mojo.Log.error("Store.execute: Failed as follows...");
 						Mojo.Log.error("Store.execute: Failed " + sql_detail
 							+ " with db message '" + error.message + "', user message '"
 							+ onFailureString + "'");
@@ -93,6 +94,7 @@ var Store = {
 			"select json from tasks where id = ?",
 			[local_id],
 			function(transaction, result) {
+				Mojo.Log.info("Store.loadTask.onSuccess: Entering");
 				if (result.rows.length == 0) {
 					Mojo.Log.info("Store.loadTask: Empty result for local ID " + local_id);
 					onSuccess(undefined);
@@ -100,6 +102,7 @@ var Store = {
 				var json = result.rows.item(0).json;
 				var obj = json.evalJSON();
 				var task = TaskModel.createFromObject(obj);
+				Mojo.Log.info("Store.loadTask.onSuccess: Got task " + task.toSummaryString());
 				onSuccess(task);
 			},
 			"Could not load task"
@@ -188,14 +191,18 @@ var Store = {
 	/**
 	 * Replace all the tasks in the store.
 	 * @param {Array} task_list  Array of TaskModel objects
+	 * @param {Function} onSuccess  Optional function called when all tasks
+	 *     have been replaced.
 	 */
-	replaceAllTasks: function(task_list) {
+	replaceAllTasks: function(task_list, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.replaceAllTasks: Database not initialised");
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
+		onSuccess = onSuccess || function(){};
 		Store.database.transaction(
+			// The transaction function
 			function(transaction) {
 				Mojo.Log.info("Store.replaceAllTasks: Inserting new tasks");
 				transaction.executeSql(
@@ -214,6 +221,12 @@ var Store = {
 						"Could not save task"
 					);
 				}
+			},
+			// Error callback
+			undefined,
+			// Success callback
+			{
+				handleEvent: function() { onSuccess() }
 			}
 		);
 	}

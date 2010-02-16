@@ -13,6 +13,19 @@ testCases.push( function(Y) {
 		
 		setUp: function() {
 			TestUtils.captureMojoLog();
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
+				[
+					function() {
+						Store.initialise(function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
+					},
+					function() {
+						Store.removeAllTasks(function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
+					}
+				]
+			);
 		},
 		
 		tearDown: function() {
@@ -25,15 +38,17 @@ testCases.push( function(Y) {
 			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.initialise(function() { test.continueRun() });
+						Store.initialise(function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
-						Store.initialise(function() { test.continueRun() });
+						Store.initialise(function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
-						test.continueRun();
+						//TestUtils.continueRun();
 					},
 				]
 			);
@@ -52,41 +67,47 @@ testCases.push( function(Y) {
 			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.saveTask(task1, function() { test.continueRun() });
+						Store.saveTask(task1, function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						task2 = new TaskModel({ name: 'My second task' });
 						task2_localID = task2.localID;
 						Store.saveTask(task2);
-						Store.loadTask(task1_localID, function(task) { recovered_task1 = task; test.continueRun() });
+						Store.loadTask(task1_localID, function(task) { recovered_task1 = task; TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel, variable is " + recovered_task1);
 						Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
 						Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
-						Store.loadTask(task2_localID, function(task) { recovered_task2 = task; test.continueRun() });
+						Store.loadTask(task2_localID, function(task) { recovered_task2 = task; TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
 						Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
 						Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
-						test.continueRun();
+						//TestUtils.continueRun();
 					}
 				]
 			);
 		},
 		
 		testLoadTaskWithBadLocalID: function() {
+			alert("Hello");
 			var loaded_task = "Default value";
 			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.loadTask('blah', function(task) { loaded_task = task; test.continueRun() })
+						TestUtils.dumpMojoLog();
+						Store.loadTask('blah', function(task) { loaded_task = task; TestUtils.continueRun() })
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.isUndefined(loaded_task, "Rubbish local ID should have returned undefined");
-						test.continueRun();
+						//TestUtils.continueRun();
 					}
 				]
 			);
@@ -100,32 +121,38 @@ testCases.push( function(Y) {
 			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
-						Store.saveTask(task, function() { test.continueRun() });
+						Store.saveTask(task, function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
+						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 1: Not saved and loaded");
-						Store.removeTask(task, function() { test.continueRun() });
+						Store.removeTask(task, function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
+						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.isUndefined(loaded_value, "Step 2: Not deleted");
-						Store.saveTask(task, function() { test.continueRun() });
+						Store.saveTask(task, function() { TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
-						Store.loadTask(local_id, function(task) {loaded_value = task; test.continueRun() });
+						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
+						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 3: Not saved and loaded");
-						test.continueRun();
+						//TestUtils.continueRun();
 					}
 				]
 			);
-		},
+		} /*,
 		
 		testLoadAllTasks: function() {
 			var task1;
@@ -216,7 +243,7 @@ testCases.push( function(Y) {
 					}
 				]
 			);
-		}
+		} */
 
 	});
 

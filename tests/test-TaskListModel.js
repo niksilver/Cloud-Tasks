@@ -28,14 +28,22 @@ testCases.push( function(Y) {
 			return depot;
 		},
 		
-		_should: {
+		/*_should: {
 			error: {
 				testSetTaskListShouldErrorWithoutTaskModelObjects: true
 			}
-		},
+		},*/
 		
 		setUp: function() {
 			TestUtils.captureMojoLog();
+			var test = this;
+			TestUtils.runInSeries(this, 1000,
+				[
+					function() {
+						Store.initialise(function() { test.continueRun() })
+					}
+				]
+			);
 		},
 		
 		tearDown: function() {
@@ -302,8 +310,22 @@ testCases.push( function(Y) {
 		},
 		
 		testSetTaskListShouldErrorWithoutTaskModelObjects: function() {
+			TestUtils.quickLog("0");
+			alert("Why does this alert not show?");
 			var tasklist = new TaskListModel();
-			tasklist.setTaskList(['hello', 'world']);
+			try {
+				TestUtils.quickLog("1");
+				tasklist.setTaskList(['hello', 'world']);
+				TestUtils.quickLog("2");
+			}
+			catch (e) {
+				TestUtils.quickLog("3");
+				Y.Assert.areEqual("xTaskListModel.setTaskList needs an array of TaskModel objects", e.message);
+				TestUtils.quickLog("4");
+			}
+			TestUtils.quickLog("5");
+			Y.fail("Should have thrown error");
+			TestUtils.quickLog("6");
 		},
 		
 		testSetTaskListShouldSaveTasksAndRemoveOldOnes: function() {
@@ -664,21 +686,38 @@ testCases.push( function(Y) {
 		},
 		
 		testAddTask: function() {
+			Store.HACK = 1;
 			var task = new TaskModel({
 				listID: '112233',
 				taskseriesID: '445566',
 				taskID: '778899',
-				name: 'My new task'
+				name: 'My new task for testAddTask'
 			});
 			var model = new TaskListModel();
 			
-			Y.Assert.isUndefined(Store.loadTask(task.localID), "New task has already been stored");
-			Y.Assert.isUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is already in list");
-			
-			model.addTask(task);
-
-			Y.Assert.isNotUndefined(Store.loadTask(task.localID), "New task has not been stored");
-			Y.Assert.isNotUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is not in list");
+			var test = this;
+			var found_task;
+			TestUtils.runInSeries(this, 1000,
+				[
+					function() {
+						Store.loadTask(task.localID, function(task) { found_task = task; test.continueRun() });
+					},
+					function() {
+						alert("Hello");
+						Y.Assert.isUndefined(found_task, "New task has already been stored");
+						Y.Assert.isUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is already in list");
+						model.addTask(task, function() { test.continueRun() });
+					},
+					function() {
+						Store.loadTask(task.localID, function(task) { found_task = task; test.continueRun() });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task, "New task has not been stored");
+						Y.Assert.isNotUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is not in list");
+						test.continueRun();
+					}
+				]
+			);
 		}
 
 	});

@@ -20,14 +20,15 @@ function TaskListModel(optional_task_list) {
 /**
  * Set the task list. This will be persisted, wiping out any previously-stored tasks.
  * @param {Array} task_list  Should be an array of TaskModel objects.
+ * @param {Function} onSuccess  Optional function called when the tasks have been stored.
  */
-TaskListModel.prototype.setTaskList = function(task_list) {
+TaskListModel.prototype.setTaskList = function(task_list, onSuccess) {
 	task_list.each(function(task) {
 		if (!(task instanceof TaskModel)) {
 			throw new Error("TaskListModel.setTaskList needs an array of TaskModel objects");
 		}
 	});
-	Store.replaceAllTasks(task_list);
+	Store.replaceAllTasks(task_list, onSuccess);
 	this._task_list = task_list;
 }
 
@@ -257,11 +258,17 @@ TaskListModel.prototype.getTaskIndex = function(spec) {
 	return -1;
 }
 
-TaskListModel.prototype.addTask = function(task) {
+/**
+ * Add a task into the task list (and persist it)
+ * @param {TaskModel} task  The task to add
+ * @param {Function} onSuccess  Optional callback when the task has been stored.
+ *     A function called with the task as its argument.
+ */
+TaskListModel.prototype.addTask = function(task, onSuccess) {
 	if (!(task instanceof TaskModel)) {
 		throw Error("TaskListModel.addTask: Tried to add task not of type TaskModel");
 	}
-	Store.saveTask(task);
+	Store.saveTask(task, onSuccess);
 	this._task_list.push(task);
 }
 
