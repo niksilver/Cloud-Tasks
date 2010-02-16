@@ -43,7 +43,6 @@ var Store = {
 						onSuccess(transaction, result);
 					}.bind(this),
 					function(transaction, error) {
-						Mojo.Log.error("Store.execute: Failed as follows...");
 						Mojo.Log.error("Store.execute: Failed " + sql_detail
 							+ " with db message '" + error.message + "', user message '"
 							+ onFailureString + "'");

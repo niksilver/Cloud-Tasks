@@ -79,46 +79,32 @@ YUI().use('test', function(Y){
 		 * Perform a series of test parts, each of which will only move onto the next
 		 * when test.continueRun() is called.
 		 * @param {Function} test  The test function.
-		 * @param {Number} millis  The number of milliseconds to wait before declaring a
-		 *     test part a failure.  
+		 * @param {Number} millis  The number of milliseconds to wait before declaring
+		 *     the series of tests a failure.
 		 * @param {Array} fns  An array of functions to execute, one at a time.
-		 *     Each one must call test.continueRun() to signal the end, even the last one.
+		 *     Each one must call TestUtils.continueRun() to move onto the next in the series.
+		 *     Even the last one must declare call TestUtils.continueRun() to declare that it's done.
 		 */
 		runInSeries: function(test, millis, fns) {
-			TestUtils.quickLog("Entering with fns = " + fns);
-			if (fns.length == 0) {
-				TestUtils.quickLog("Returning immediately");
-				return;
-			}
-			
-			var fn0 = fns.shift();
-			TestUtils.continueRun = function() {
-				TestUtils.quickLog("Resuming with fns.length=" + fns.length + ", next fn is " + fns[0]);
-				test.resume(function() {
-					TestUtils.runInSeries(test, millis, fns);
-				});
-			};
-			TestUtils.quickLog("Will execute fn0 = " + fn0);
-			TestUtils._wait_to_continue_run = false;
-			fn0();
-			TestUtils.quickLog("Exited fn0 = " + fn0);
-			if (fns.length == 0) {
-				TestUtils.quickLog("No functions, won't wait");
-				return;
-			}
-			if (TestUtils._wait_to_continue_run) {
-				TestUtils.quickLog("Going to wait, fns.length=" + fns.length);
-				test.wait(millis);
-			} else {
-				TestUtils.quickLog("Continuing normal run");
-				TestUtils.runInSeries(test, millis, fns);
-			}
-				
+			var run_next_function = TestUtils.makeFunctionSeries(test, fns);
+			setTimeout(run_next_function, 10);
+			test.wait(millis + 10);
 		},
 		
-		waitToContinueRun: function() {
-			TestUtils.quickLog("Waiting to continue run");
-			TestUtils._wait_to_continue_run = true;
+		/**
+		 * Used by TestUtils.runInSeries() to make a function which chains its series
+		 * of functions.
+		 * @param {Object} test  The test function.
+		 * @param {Object} fns  The series of functions to call.
+		 */
+		makeFunctionSeries: function(test, fns) {
+			var last_fns = fns.clone();
+			var fn0 = last_fns.shift() || test.resume;
+			var run = function() {
+				TestUtils.continueRun = TestUtils.makeFunctionSeries(test, last_fns);
+				fn0();
+			};
+			return run;
 		},
 		
 		prettyPrint: function(obj) {

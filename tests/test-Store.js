@@ -8,24 +8,19 @@
 testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 300; // 200ms is too short for database calls to return, but this seems okay
+
+	var INITIALISE_STORE = function() {
+		Store.initialise(function() { TestUtils.continueRun() });
+	};
+	
+	var REMOVE_ALL_TASKS = function() {
+		Store.removeAllTasks(function() { TestUtils.continueRun() });
+	};
 	
 	return new Y.Test.Case({
 		
 		setUp: function() {
 			TestUtils.captureMojoLog();
-			var test = this;
-			TestUtils.runInSeries(this, 1000,
-				[
-					function() {
-						Store.initialise(function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
-					},
-					function() {
-						Store.removeAllTasks(function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
-					}
-				]
-			);
 		},
 		
 		tearDown: function() {
@@ -34,21 +29,18 @@ testCases.push( function(Y) {
 		
 		testInitialise: function() {
 			Y.Assert.areEqual(false, Store.isInitialised, "Store shouldn't be initialised at start");
-			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
 					function() {
 						Store.initialise(function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should be initialised after first call");
 						Store.initialise(function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual(true, Store.isInitialised, "Store should survive second initialisation");
-						//TestUtils.continueRun();
+						TestUtils.continueRun();
 					},
 				]
 			);
@@ -63,51 +55,47 @@ testCases.push( function(Y) {
 			var recovered_task1 = "Default value";
 			var recovered_task2 = "Default value";
 
-			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
 					function() {
 						Store.saveTask(task1, function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						task2 = new TaskModel({ name: 'My second task' });
 						task2_localID = task2.localID;
 						Store.saveTask(task2);
 						Store.loadTask(task1_localID, function(task) { recovered_task1 = task; TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.assert(recovered_task1 instanceof TaskModel, "Recovered task 1 is not a TaskModel, variable is " + recovered_task1);
 						Y.Assert.areEqual('My first task', recovered_task1.name, "Task 1 name not recovered");
 						Y.Assert.areEqual(task1_localID, task1.localID, "Task 1 local ID not recovered");
 						Store.loadTask(task2_localID, function(task) { recovered_task2 = task; TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My second task', recovered_task2.name, "Task 2 name not recovered");
 						Y.Assert.areEqual(task2_localID, task2.localID, "Task 2 local ID not recovered");
 						Y.assert(recovered_task2 instanceof TaskModel, "Recovered task 2 is not a TaskModel");
-						//TestUtils.continueRun();
+						TestUtils.continueRun();
 					}
 				]
 			);
 		},
 		
 		testLoadTaskWithBadLocalID: function() {
-			alert("Hello");
 			var loaded_task = "Default value";
-			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
 					function() {
-						TestUtils.dumpMojoLog();
-						Store.loadTask('blah', function(task) { loaded_task = task; TestUtils.continueRun() })
-						TestUtils.waitToContinueRun();
+						Store.loadTask('blah', function(task) { loaded_task = task; TestUtils.continueRun() });
 					},
 					function() {
 						Y.Assert.isUndefined(loaded_task, "Rubbish local ID should have returned undefined");
-						//TestUtils.continueRun();
+						TestUtils.continueRun();
 					}
 				]
 			);
@@ -117,38 +105,33 @@ testCases.push( function(Y) {
 			var task = new TaskModel({ name: 'My task' });
 			var local_id = task.localID;
 			var loaded_value = "Initial value";
-			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
 					function() {
 						Store.saveTask(task, function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 1: Not saved and loaded");
 						Store.removeTask(task, function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.isUndefined(loaded_value, "Step 2: Not deleted");
 						Store.saveTask(task, function() { TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Store.loadTask(local_id, function(task) {loaded_value = task; TestUtils.continueRun() });
-						TestUtils.waitToContinueRun();
 					},
 					function() {
 						Y.Assert.areEqual('My task', loaded_value.name, "Step 3: Not saved and loaded");
-						//TestUtils.continueRun();
+						TestUtils.continueRun();
 					}
 				]
 			);
