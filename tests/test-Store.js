@@ -180,7 +180,7 @@ testCases.push( function(Y) {
 			
 			var loaded_task;
 			
-			TestUtils.runInSeries(this, 1000,
+			TestUtils.runInSeries(this, 1500,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,

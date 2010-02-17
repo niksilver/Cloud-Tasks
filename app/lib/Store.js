@@ -34,24 +34,29 @@ var Store = {
 		Mojo.Log.info("Store.execute: Entering with " + sql_detail);
 		Store.database.transaction(
 			function(transaction) {
-				Mojo.Log.info("Store.execute: Executing " + sql_detail);
-				transaction.executeSql(
-					sql,
-					args,
-					function(transaction, result) {
-						Mojo.Log.info("Store.execute: Success for " + sql_detail);
-						onSuccess(transaction, result);
-					}.bind(this),
-					function(transaction, error) {
-						Mojo.Log.error("Store.execute: Failed " + sql_detail
-							+ " with db message '" + error.message + "', user message '"
-							+ onFailureString + "'");
-						ErrorHandler.notify(onFailureString);
-					}.bind(this)
-				);
+				Store.executeInTransaction(transaction, sql, args, onSuccess, onFailureString);
 			}.bind(this)
 		);
 	},
+	
+	executeInTransaction: function(transaction, sql, args, onSuccess, onFailureString) {
+		var sql_detail = "SQL " + sql + " and args [" + args + "]";
+		Mojo.Log.info("Store.execute: Executing " + sql_detail);
+		transaction.executeSql(
+			sql,
+			args,
+			function(transaction, result) {
+				Mojo.Log.info("Store.execute: Success for " + sql_detail);
+				onSuccess(transaction, result);
+			}.bind(this),
+			function(transaction, error) {
+				Mojo.Log.error("Store.execute: Failed " + sql_detail
+					+ " with db message '" + error.message + "', user message '"
+					+ onFailureString + "'");
+				ErrorHandler.notify(onFailureString);
+			}.bind(this)
+		);
+	}, 
 
 	/**
 	 * Persist a task.
@@ -204,7 +209,8 @@ var Store = {
 			// The transaction function
 			function(transaction) {
 				Mojo.Log.info("Store.replaceAllTasks: Inserting new tasks");
-				transaction.executeSql(
+				Store.executeInTransaction(
+					transaction,
 					"delete from tasks",
 					[],
 					function() {},
@@ -213,7 +219,8 @@ var Store = {
 				for (var i = 0; i < task_list.length; i++) {
 					var task = task_list[i];
 					var obj = task.toObject();
-					transaction.executeSql(
+					Store.executeInTransaction(
+						transaction,
 						"insert or replace into tasks (id, json) values (?, ?)",
 						[task.localID, Object.toJSON(obj)],
 						function() {},
@@ -222,12 +229,21 @@ var Store = {
 				}
 			},
 			// Error callback
-			undefined,
+			Store.SQLTransactionErrorCallback,
 			// Success callback
 			{
-				handleEvent: function() { onSuccess() }
+				handleEvent: function() { TestUtils.quickLog("here"); onSuccess() }
 			}
 		);
+	},
+	
+	// As defined at http://dev.w3.org/html5/webdatabase/#sqltransactionerrorcallback
+	SQLTransactionErrorCallback: {
+		handleEvent: function(error) {
+			var str = "Error " + error.code + ": " + error.message;
+			Mojo.Log.error("Store.SQLTransactionErrorCallback.handleEvent: " + str);
+			ErrorHandler.notify(str);
+		}
 	}
 
 };
