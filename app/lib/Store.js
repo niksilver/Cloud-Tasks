@@ -41,12 +41,12 @@ var Store = {
 	
 	executeInTransaction: function(transaction, sql, args, onSuccess, onFailureString) {
 		var sql_detail = "SQL " + sql + " and args [" + args + "]";
-		Mojo.Log.info("Store.execute: Executing " + sql_detail);
+		Mojo.Log.info("Store.executeInTransaction: Executing " + sql_detail);
 		transaction.executeSql(
 			sql,
 			args,
 			function(transaction, result) {
-				Mojo.Log.info("Store.execute: Success for " + sql_detail);
+				Mojo.Log.info("Store.executeInTransaction: Success for " + sql_detail);
 				onSuccess(transaction, result);
 			}.bind(this),
 			function(transaction, error) {

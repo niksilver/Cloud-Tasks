@@ -46,19 +46,30 @@ YUI().use('test', function(Y){
 			return task_hash;
 		},
 		
+		showMojoLog: function() {
+			TestUtils._show_mojo_log = true;
+		},
+		
 		captureMojoLog: function() {
-			this._Mojo_Log_info = Mojo.Log.info;
-			this._Mojo_Log_warn = Mojo.Log.warn;
-			this._Mojo_Log_error = Mojo.Log.error;
-			this._Mojo_Log_messages = "";
-			var inst = this;
-			Mojo.Log.info = function(msg) { inst._Mojo_Log_messages += "info: " + msg + "\n"; };
-			Mojo.Log.warn = function(msg) { inst._Mojo_Log_messages += "warn: " + msg + "\n"; };
-			Mojo.Log.error = function(msg) { inst._Mojo_Log_messages += "error: " + msg + "\n"; };
+			TestUtils._Mojo_Log_info = Mojo.Log.info;
+			TestUtils._Mojo_Log_warn = Mojo.Log.warn;
+			TestUtils._Mojo_Log_error = Mojo.Log.error;
+			TestUtils._Mojo_Log_messages = "";
+			Mojo.Log.info = function(msg) { TestUtils.writeMojoLog('info', msg) };
+			Mojo.Log.warn = function(msg) { TestUtils.writeMojoLog('warn', msg) };
+			Mojo.Log.error = function(msg) { TestUtils.writeMojoLog('error', msg) };
+		},
+		
+		writeMojoLog: function(prefix, msg) {
+			var output = prefix + ": " + msg;
+			TestUtils._Mojo_Log_messages += output + "\n";
+			if (TestUtils._show_mojo_log) {
+				TestUtils.quickLog(output);
+			}
 		},
 		
 		getMojoLog: function() {
-			return this._Mojo_Log_messages;
+			return TestUtils._Mojo_Log_messages;
 		},
 		
 		dumpMojoLog: function() {
@@ -66,9 +77,10 @@ YUI().use('test', function(Y){
 		},
 		
 		restoreMojoLog: function() {
-			Mojo.Log.info = this._Mojo_Log_info;
-			Mojo.Log.warn = this._Mojo_Log_warn;
-			Mojo.Log.error = this._Mojo_Log_error;
+			TestUtils._show_mojo_log = false;
+			Mojo.Log.info = TestUtils._Mojo_Log_info;
+			Mojo.Log.warn = TestUtils._Mojo_Log_warn;
+			Mojo.Log.error = TestUtils._Mojo_Log_error;
 		},
 		
 		quickLog: function(str) {

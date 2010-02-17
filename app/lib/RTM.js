@@ -461,13 +461,15 @@ RTM.prototype.pushLocalChanges = function(task_list_model) {
  * Push any local changes for the given task, which might mean creating the
  * task remotely.
  * @param {TaskModel} task  The task which might have local changes to be pushed out.
+ * @param {Function} onSuccess  Optional function to call each time the task has been saved.
+ *     Function is called with the task as the parameter.
  */
-RTM.prototype.pushLocalChangesForTask = function(task) {
+RTM.prototype.pushLocalChangesForTask = function(task, onSuccess) {
 	if (task.hasNoIDs()) {
-		this.addTask(task);
+		this.addTask(task, onSuccess);
 	}
 	else {
-		this.pushLocalPropertyChangesForTask(task);
+		this.pushLocalPropertyChangesForTask(task, onSuccess);
 	}
 }
 
@@ -475,8 +477,10 @@ RTM.prototype.pushLocalChangesForTask = function(task) {
  * Push out any property changes marked in the task.
  * Successful pushes will cause the updated task to be persisted.
  * @param {TaskModel} task  The task with (possible) properties which have changes.
+ * @param {Function} onSuccess  Optional function to call each time the task has been saved.
+ *     Function is called with the task as the parameter.
  */
-RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
+RTM.prototype.pushLocalPropertyChangesForTask = function(task, onSuccess) {
 	var property = task.localChanges[0];
 	if (!property) {
 		return;
@@ -486,8 +490,8 @@ RTM.prototype.pushLocalPropertyChangesForTask = function(task) {
 		function(response) {
 			Mojo.Log.info("RTM.pushLocalChanges: Successfully pushed property '" + property + "' for task named '"
 				+ task.name + "', new value '" + task[property] + "'");
-			Store.saveTask(task);
-			inst.pushLocalPropertyChangesForTask(task);
+			Store.saveTask(task, onSuccess);
+			inst.pushLocalPropertyChangesForTask(task, onSuccess);
 		},
 		function(err_msg) {
 			Mojo.Log.info("RTM.pushLocalChanges: Failed to push property '" + property + "' for task named '" + task.name + "'. Error message: " + err_msg);

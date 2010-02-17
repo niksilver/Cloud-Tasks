@@ -8,6 +8,14 @@
 testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 100;
+
+	var INITIALISE_STORE = function() {
+		Store.initialise(function() { TestUtils.continueRun() });
+	};
+	
+	var REMOVE_ALL_TASKS = function() {
+		Store.removeAllTasks(function() { TestUtils.continueRun() });
+	};
 	
 	return new Y.Test.Case({
 		
@@ -362,7 +370,7 @@ testCases.push( function(Y) {
 				300
 			);
 			
-		} /*,
+		},
 		
 		testPushLocalDeletionCausesTaskListPurge: function() {
 			var rtm = new RTM();
@@ -458,14 +466,15 @@ testCases.push( function(Y) {
 			};
 			
 			var found_task = "Initial value";
-			var test = this;
 			TestUtils.runInSeries(this, 1000,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
 					function() {
-						rtm.addTask(task_created_locally, function() { test.continueRun() });
+						rtm.addTask(task_created_locally, function() { TestUtils.continueRun() });
 					},
 					function() {
-						Store.loadTask(task_created_locally.localID, function(task) { found_task = task; test.continueRun() });
+						Store.loadTask(task_created_locally.localID, function(task) { found_task = task; TestUtils.continueRun() });
 					},
 					function() {
 						Y.assert(found_task instanceof TaskModel, "Didn't store TaskModel");
@@ -474,7 +483,7 @@ testCases.push( function(Y) {
 						Y.Assert.areEqual('445566', found_task.taskseriesID, "Didn't get taskseriesID");
 						Y.Assert.areEqual('778899', found_task.taskID, "Didn't get taskID");
 						Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Didn't cancel local changes");
-						test.continueRun();
+						TestUtils.continueRun();
 					}
 				]
 			);
@@ -733,31 +742,44 @@ testCases.push( function(Y) {
 				onSuccess(SampleTestData.simple_good_response);
 			};
 			
-			var task = new TaskModel({
-				listID: '112233',
-				taskseriesID: '445566',
-				taskID: '778899',
-				name: "Do testing",
-				completed: true,
-				due: '2010-01-13T00:00:00Z',
-				localChanges: ['due', 'completed']
-			});
-			Y.Assert.areEqual(true, task.hasLocalChanges(), "Local changes not picked up");
+			var task;
 			
-			rtm.pushLocalChangesForTask(task);
-			
-			Y.Assert.areEqual(false, task.hasLocalChanges(), "Local changes not cleared");
-			
-			var found_task = Store.loadTask(task.localID);
-			Y.Assert.isNotUndefined(found_task, "Task wasn't stored");
-			Y.Assert.areEqual('112233', found_task.listID, "List ID not stored");
-			Y.Assert.areEqual('445566', found_task.taskseriesID, "Taskseries ID not stored");
-			Y.Assert.areEqual('778899', found_task.taskID, "Task ID not stored");
-			Y.Assert.areEqual('Do testing', found_task.name, "Name not stored");
-			Y.Assert.areEqual(true, found_task.completed, "Completed not stored");
-			Y.Assert.areEqual('2010-01-13T00:00:00Z', found_task.due, "Due date not stored");
-			Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Local changes not cleared in stored task");
-		} */
+			var found_task;
+			TestUtils.runInSeries(this, 1000,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						task = new TaskModel({
+							listID: '112233',
+							taskseriesID: '445566',
+							taskID: '778899',
+							name: "Do testing",
+							completed: false,
+							due: '2010-01-13T00:00:00Z',
+							localChanges: ['due']
+						});
+						Y.Assert.areEqual(true, task.hasLocalChanges(), "Local changes not picked up");
+						rtm.pushLocalChangesForTask(task, function() { TestUtils.continueRun() });
+					},
+					function() {
+						Y.Assert.areEqual(false, task.hasLocalChanges(), "Local changes not cleared");
+						Store.loadTask(task.localID, function(task) { found_task = task; TestUtils.continueRun() });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task, "Task wasn't stored");
+						Y.Assert.areEqual('112233', found_task.listID, "List ID not stored");
+						Y.Assert.areEqual('445566', found_task.taskseriesID, "Taskseries ID not stored");
+						Y.Assert.areEqual('778899', found_task.taskID, "Task ID not stored");
+						Y.Assert.areEqual('Do testing', found_task.name, "Name not stored");
+						Y.Assert.areEqual(false, found_task.completed, "Completed not stored");
+						Y.Assert.areEqual('2010-01-13T00:00:00Z', found_task.due, "Due date not stored");
+						Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Local changes not cleared in stored task");
+						TestUtils.continueRun();
+					}
+				]
+			);
+		}
 		
 	});
 } );
