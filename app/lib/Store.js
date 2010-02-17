@@ -232,7 +232,7 @@ var Store = {
 			Store.SQLTransactionErrorCallback,
 			// Success callback
 			{
-				handleEvent: function() { TestUtils.quickLog("here"); onSuccess() }
+				handleEvent: function() { onSuccess() }
 			}
 		);
 	},
