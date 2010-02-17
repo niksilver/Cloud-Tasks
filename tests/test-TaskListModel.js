@@ -56,7 +56,6 @@ testCases.push( function(Y) {
 		},
 		
 		testConstructorWithArgument: function() {
-			TestUtils.showMojoLog();
 			var task_list;
 			var model;
 			var found_task;
