@@ -83,7 +83,7 @@ var Store = {
 	/**
 	 * Load a previously-persisted TaskModel and return it.
 	 * @param {String} local_id  The local ID of the task when it was persisted.
-	 * @param {Function} onSuccess  Function to call when the task is retrieved.
+	 * @param {Function} onSuccess  Optional function to call when the task is retrieved.
 	 *     Function will be called either with parameter of the TaskModel
 	 *     or undefined if the corresponding task was not present.
 	 */
@@ -94,6 +94,7 @@ var Store = {
 			ErrorHandler.notify("Database not initialised");
 			return;
 		}
+		onSuccess = onSuccess || function(){};
 		Store.execute(
 			"select json from tasks where id = ?",
 			[local_id],

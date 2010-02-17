@@ -9,6 +9,14 @@ testCases.push( function(Y) {
 
 	var WAIT_TIMEOUT = 100;
 
+	var INITIALISE_STORE = function() {
+		Store.initialise(function() { TestUtils.continueRun() });
+	};
+	
+	var REMOVE_ALL_TASKS = function() {
+		Store.removeAllTasks(function() { TestUtils.continueRun() });
+	};
+
 	return new Y.Test.Case({
 
 		constructDepotSynchronously: function(name, assert_failure_msg) {
@@ -36,14 +44,6 @@ testCases.push( function(Y) {
 		
 		setUp: function() {
 			TestUtils.captureMojoLog();
-			var test = this;
-			TestUtils.runInSeries(this, 1000,
-				[
-					function() {
-						Store.initialise(function() { test.continueRun() })
-					}
-				]
-			);
 		},
 		
 		tearDown: function() {
@@ -56,15 +56,36 @@ testCases.push( function(Y) {
 		},
 		
 		testConstructorWithArgument: function() {
-			var task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-			var model = new TaskListModel(task_list);
-			Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
+			TestUtils.showMojoLog();
+			var task_list;
+			var model;
+			var found_task;
+			var task0_name;
 			
-			// Check at least one task is saved.
-			var task0_name = task_list[0].name;
-			Y.Assert.isNotUndefined(task0_name, "Task 0 needs a name if we're to test sensibly");
-			Y.Assert.areEqual(task0_name, Store.loadTask(task_list[0].localID).name, "Doesn't store tasks when set in constructor");
-		},
+			TestUtils.runInSeries(this, 1000,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+						model = new TaskListModel(task_list, TestUtils.continueRun);
+					},
+					function() {
+						Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
+						
+						// Check at least one task is saved.
+						task0_name = task_list[0].name;
+						Y.Assert.isNotUndefined(task0_name, "Task 0 needs a name if we're to test sensibly");
+						Store.loadTask(task_list[0].localID, function(task) { found_task = task; TestUtils.continueRun() })
+					},
+					function() {
+						Y.Assert.areEqual(task0_name, found_task.name, "Doesn't store tasks when set in constructor");
+						TestUtils.continueRun();
+					}
+				]
+			);
+			
+		} /*,
 		
 		testConstructorWithNoArgumentDoesntRemovePreviousTasks: function() {
 			var task = new TaskModel({ name: 'hello' });
@@ -718,7 +739,7 @@ testCases.push( function(Y) {
 					}
 				]
 			);
-		}
+		} */
 
 	});
 

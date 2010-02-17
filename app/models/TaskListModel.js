@@ -7,10 +7,12 @@
  * any previously stored tasks. If the optional task list is not supplied then this
  * won't happen.
  * @param {Object} optional_task_list  Optional array of TaskModel objects which is to be task list
+ * @param {Function} onSuccess  Optional function called when the tasks have been stored, if
+ *     the optional_task_list has been given.
  */
-function TaskListModel(optional_task_list) {
+function TaskListModel(optional_task_list, onSuccess) {
 	if (optional_task_list) {
-		this.setTaskList(optional_task_list || []);
+		this.setTaskList(optional_task_list || [], onSuccess);
 	}
 	else {
 		this._task_list = [];
