@@ -10,10 +10,12 @@ testCases.push( function(Y) {
 	var WAIT_TIMEOUT = 100;
 
 	var INITIALISE_STORE = function() {
+		Mojo.Log.info("Running part 1");
 		Store.initialise(function() { TestUtils.continueRun() });
 	};
 	
 	var REMOVE_ALL_TASKS = function() {
+		Mojo.Log.info("Running part 2");
 		Store.removeAllTasks(function() { TestUtils.continueRun() });
 	};
 
@@ -56,6 +58,7 @@ testCases.push( function(Y) {
 		},
 		
 		testConstructorWithArgument: function() {
+			TestUtils.showMojoLog();
 			var task_list;
 			var model;
 			var found_task;
@@ -66,10 +69,12 @@ testCases.push( function(Y) {
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
 					function() {
+						Mojo.Log.info("Running part 3");
 						task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 						model = new TaskListModel(task_list, TestUtils.continueRun);
 					},
 					function() {
+						Mojo.Log.info("Running part 4");
 						Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
 						
 						// Check at least one task is saved.
@@ -78,7 +83,9 @@ testCases.push( function(Y) {
 						Store.loadTask(task_list[0].localID, function(task) { found_task = task; TestUtils.continueRun() })
 					},
 					function() {
+						Mojo.Log.info("Running part 5");
 						Y.Assert.areEqual(task0_name, found_task.name, "Doesn't store tasks when set in constructor");
+						Y.fail("Oh no!");
 						TestUtils.continueRun();
 					}
 				]

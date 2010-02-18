@@ -98,7 +98,39 @@ YUI().use('test', function(Y){
 		 *     Even the last one must declare call TestUtils.continueRun() to declare that it's done.
 		 */
 		runInSeries: function(test, millis, fns) {
+			var parts = new Array(fns.length + 1);
+			parts[0] = fns[0];
+			
+			var launch = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, parts, 0);
+			Mojo.Log.info("Running launch = " + launch);
+			TestUtils.continueRun = function(){};
+			launch();
+		},
+
+		runLatestAndWaitBeforeRunningNextFn: function(test, millis, fns, parts, i) {
+			var next;
+			if (i+1 == fns.length) {
+				next = function(){};
+			}
+			else {
+				next = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, parts, i+1);
+			}
+			
+			var fn = function() {
+				Mojo.Log.info("Running fns[" + i + "]");
+				Mojo.Log.info("fns[" + i + "] = " + fns[i]);
+				fns[i]();
+				test.wait(
+					next,
+					millis
+				);
+			};
+			return fn;
+		},
+		
+		_runInSeries: function(test, millis, fns) {
 			var run_next_function = TestUtils.makeFunctionSeries(test, fns);
+			//run_next_function();
 			setTimeout(run_next_function, 10);
 			test.wait(millis + 10);
 		},
@@ -111,9 +143,11 @@ YUI().use('test', function(Y){
 		 */
 		makeFunctionSeries: function(test, fns) {
 			var last_fns = fns.clone();
-			var fn0 = last_fns.shift() || test.resume;
+			var fn0 = last_fns.shift() || function(){ Mojo.Log.info("Running part 6"); test.resume() };
+			Mojo.Log.info("Set fn0 = " + fn0);
 			var run = function() {
 				TestUtils.continueRun = TestUtils.makeFunctionSeries(test, last_fns);
+				Mojo.Log.info("Running fn0 of " + last_fns.length + " = " + fn0);
 				fn0();
 			};
 			return run;
