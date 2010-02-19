@@ -88,37 +88,36 @@ YUI().use('test', function(Y){
 		},
 		
 		/**
-		 * Perform a series of test parts, each of which will only move onto the next
-		 * when test.continueRun() is called.
+		 * Perform a series of test parts, each subsequent part continuing after
+		 *     millis milliseconds.
 		 * @param {Function} test  The test function.
-		 * @param {Number} millis  The number of milliseconds to wait before declaring
-		 *     the series of tests a failure.
+		 * @param {Number} millis  The number of milliseconds to wait before starting the next part.
 		 * @param {Array} fns  An array of functions to execute, one at a time.
-		 *     Each one must call TestUtils.continueRun() to move onto the next in the series.
-		 *     Even the last one must declare call TestUtils.continueRun() to declare that it's done.
 		 */
 		runInSeries: function(test, millis, fns) {
-			var parts = new Array(fns.length + 1);
-			parts[0] = fns[0];
-			
-			var launch = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, parts, 0);
-			Mojo.Log.info("Running launch = " + launch);
-			TestUtils.continueRun = function(){};
+			var launch = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, 0);
 			launch();
 		},
 
-		runLatestAndWaitBeforeRunningNextFn: function(test, millis, fns, parts, i) {
+		/**
+		 * Make a function which runs the latest test part, and then
+		 * pauses before running the next test part.
+		 * @param {Object} test  The test function in which this is running.
+		 * @param {Number} millis  The pause before running the next test part.
+		 * @param {Array} fns  The test parts, which is an array of functions.
+		 * @param {Array} parts  ???
+		 * @param {Object} i  The index of array fns of which fns[i] is the latest test part.
+		 */
+		runLatestAndWaitBeforeRunningNextFn: function(test, millis, fns, i) {
 			var next;
 			if (i+1 == fns.length) {
 				next = function(){};
 			}
 			else {
-				next = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, parts, i+1);
+				next = TestUtils.runLatestAndWaitBeforeRunningNextFn(test, millis, fns, i+1);
 			}
 			
 			var fn = function() {
-				Mojo.Log.info("Running fns[" + i + "]");
-				Mojo.Log.info("fns[" + i + "] = " + fns[i]);
 				fns[i]();
 				test.wait(
 					next,
@@ -126,31 +125,6 @@ YUI().use('test', function(Y){
 				);
 			};
 			return fn;
-		},
-		
-		_runInSeries: function(test, millis, fns) {
-			var run_next_function = TestUtils.makeFunctionSeries(test, fns);
-			//run_next_function();
-			setTimeout(run_next_function, 10);
-			test.wait(millis + 10);
-		},
-		
-		/**
-		 * Used by TestUtils.runInSeries() to make a function which chains its series
-		 * of functions.
-		 * @param {Object} test  The test function.
-		 * @param {Object} fns  The series of functions to call.
-		 */
-		makeFunctionSeries: function(test, fns) {
-			var last_fns = fns.clone();
-			var fn0 = last_fns.shift() || function(){ Mojo.Log.info("Running part 6"); test.resume() };
-			Mojo.Log.info("Set fn0 = " + fn0);
-			var run = function() {
-				TestUtils.continueRun = TestUtils.makeFunctionSeries(test, last_fns);
-				Mojo.Log.info("Running fn0 of " + last_fns.length + " = " + fn0);
-				fn0();
-			};
-			return run;
 		},
 		
 		prettyPrint: function(obj) {

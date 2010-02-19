@@ -10,13 +10,11 @@ testCases.push( function(Y) {
 	var WAIT_TIMEOUT = 100;
 
 	var INITIALISE_STORE = function() {
-		Mojo.Log.info("Running part 1");
-		Store.initialise(function() { TestUtils.continueRun() });
+		Store.initialise();
 	};
 	
 	var REMOVE_ALL_TASKS = function() {
-		Mojo.Log.info("Running part 2");
-		Store.removeAllTasks(function() { TestUtils.continueRun() });
+		Store.removeAllTasks();
 	};
 
 	return new Y.Test.Case({
@@ -38,12 +36,6 @@ testCases.push( function(Y) {
 			return depot;
 		},
 		
-		/*_should: {
-			error: {
-				testSetTaskListShouldErrorWithoutTaskModelObjects: true
-			}
-		},*/
-		
 		setUp: function() {
 			TestUtils.captureMojoLog();
 		},
@@ -58,35 +50,29 @@ testCases.push( function(Y) {
 		},
 		
 		testConstructorWithArgument: function() {
-			TestUtils.showMojoLog();
 			var task_list;
 			var model;
 			var found_task;
 			var task0_name;
 			
-			TestUtils.runInSeries(this, 1000,
+			TestUtils.runInSeries(this, 200,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
 					function() {
-						Mojo.Log.info("Running part 3");
 						task_list = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
-						model = new TaskListModel(task_list, TestUtils.continueRun);
+						model = new TaskListModel(task_list);
 					},
 					function() {
-						Mojo.Log.info("Running part 4");
 						Y.Assert.areEqual(task_list, model.getTaskList(), "Task list didn't get set by constructor");
 						
 						// Check at least one task is saved.
 						task0_name = task_list[0].name;
 						Y.Assert.isNotUndefined(task0_name, "Task 0 needs a name if we're to test sensibly");
-						Store.loadTask(task_list[0].localID, function(task) { found_task = task; TestUtils.continueRun() })
+						Store.loadTask(task_list[0].localID, function(task) { found_task = task })
 					},
 					function() {
-						Mojo.Log.info("Running part 5");
 						Y.Assert.areEqual(task0_name, found_task.name, "Doesn't store tasks when set in constructor");
-						Y.fail("Oh no!");
-						TestUtils.continueRun();
 					}
 				]
 			);

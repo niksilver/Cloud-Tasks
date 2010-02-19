@@ -9,13 +9,13 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
-		testContinueRun: function() {
+		testRunInSeries: function() {
 			doSomethingLengthy = function(onSuccess) {
-				window.setTimeout(onSuccess, 200);
+				window.setTimeout(onSuccess, 50);
 			}
 			
 			var output = "";
-			TestUtils.runInSeries(this, 1000,
+			TestUtils.runInSeries(this, 100,
 			[
 				function() {
 					output += "A";
@@ -23,13 +23,11 @@ testCases.push( function(Y) {
 					doSomethingLengthy(function() {
 						output += "B";
 						Y.Assert.areEqual("AB", output, "Got wrong output");
-						TestUtils.continueRun();
 					});
 				},
 				function() {
 					output += "C";
 					Y.Assert.areEqual("ABC", output, "Got wrong output");
-					TestUtils.continueRun();
 				},
 				function() {
 					output += "D";
@@ -37,12 +35,10 @@ testCases.push( function(Y) {
 					doSomethingLengthy(function() {
 						output += "E";
 						Y.Assert.areEqual("ABCDE", output, "Got wrong output");
-						TestUtils.continueRun();
 					});
 				},
 				function() {
 					Y.Assert.areEqual("ABCDE", output, "Got wrong output");
-					TestUtils.continueRun();
 				}
 			]);
 		}
