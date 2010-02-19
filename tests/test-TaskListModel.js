@@ -252,7 +252,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('83954367', task_array[1].taskID, "Task ID not picked up for second task");
 			Y.Assert.areEqual('2009-12-24T00:00:00Z', task_array[1].due, "Due date not picked up for second task");
 
-		} /*,
+		},
 
 		testDueTasksFlagged: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
@@ -337,23 +337,16 @@ testCases.push( function(Y) {
 		},
 		
 		testSetTaskListShouldErrorWithoutTaskModelObjects: function() {
-			TestUtils.quickLog("0");
-			alert("Why does this alert not show?");
 			var tasklist = new TaskListModel();
 			try {
-				TestUtils.quickLog("1");
 				tasklist.setTaskList(['hello', 'world']);
-				TestUtils.quickLog("2");
 			}
 			catch (e) {
-				TestUtils.quickLog("3");
-				Y.Assert.areEqual("xTaskListModel.setTaskList needs an array of TaskModel objects", e.message);
-				TestUtils.quickLog("4");
+				Y.Assert.areEqual("TaskListModel.setTaskList needs an array of TaskModel objects", e.message);
+				return;
 			}
-			TestUtils.quickLog("5");
 			Y.fail("Should have thrown error");
-			TestUtils.quickLog("6");
-		},
+		} /*,
 		
 		testSetTaskListShouldSaveTasksAndRemoveOldOnes: function() {
 			var tasklist = new TaskListModel();
