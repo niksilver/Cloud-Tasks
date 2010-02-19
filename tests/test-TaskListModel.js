@@ -210,7 +210,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_id_to_task['84630592'].deleted, "Task ID 84630592 should not be marked deleted");
 			Y.Assert.areEqual(true, task_id_to_task['62349079'].deleted, "Task ID 62349079 should be marked deleted");
 			Y.Assert.areEqual(true, task_id_to_task['59484931'].deleted, "Task ID 59484931 should be marked deleted");
-		} /*,
+		},
 		
 		testObjectToTaskListWithSomeCompletions: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
@@ -252,7 +252,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('83954367', task_array[1].taskID, "Task ID not picked up for second task");
 			Y.Assert.areEqual('2009-12-24T00:00:00Z', task_array[1].due, "Due date not picked up for second task");
 
-		},
+		} /*,
 
 		testDueTasksFlagged: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
