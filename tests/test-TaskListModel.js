@@ -129,7 +129,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('MB, AB - Update on testing companies', sample_task.name, "Task name not correct");
 			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");
 			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
-		} /*,
+		},
 		
 		testObjectToTaskListWhenUsingArrays: function() {
 
@@ -148,7 +148,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2637966', task_hash['66459582'].listID, "Test 3.1");
 			Y.Assert.areEqual('46489199', task_hash['66459582'].taskseriesID, "Test 3.2");
 			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
-		},
+		} /*,
 		
 		testObjectToTaskListWithRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
