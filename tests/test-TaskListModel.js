@@ -160,7 +160,7 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(task_with_rrule.rrule, "Task didn't get rrule");
 			Y.Assert.areEqual("1", task_with_rrule.rrule.every, "Rrule didn't have right 'every' property");
 			Y.Assert.areEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO", task_with_rrule.rrule['$t'], "Rrule didn't have right '$t' property");
-		} /*,
+		},
 		
 		testObjectToTaskListWithNoRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
@@ -184,7 +184,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Fifth task', task_id_to_task['83601519'].name, "Bad name for task ID 83601519");
 			Y.Assert.areEqual(true, task_id_to_task['83601413'].deleted, "Wrong deleted flag for task ID 83601413");
 			Y.Assert.areEqual(true, task_id_to_task['83601399'].deleted, "Wrong deleted flag for task ID 83601399");
-		},
+		} /*,
 		
 		testObjectToTaskListWithSingleDeletedItem: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response_with_just_one_deletion);
