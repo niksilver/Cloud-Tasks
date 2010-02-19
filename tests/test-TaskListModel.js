@@ -148,7 +148,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2637966', task_hash['66459582'].listID, "Test 3.1");
 			Y.Assert.areEqual('46489199', task_hash['66459582'].taskseriesID, "Test 3.2");
 			Y.Assert.areEqual('66459582', task_hash['66459582'].taskID, "Test 3.3");
-		} /*,
+		},
 		
 		testObjectToTaskListWithRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
@@ -160,7 +160,7 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(task_with_rrule.rrule, "Task didn't get rrule");
 			Y.Assert.areEqual("1", task_with_rrule.rrule.every, "Rrule didn't have right 'every' property");
 			Y.Assert.areEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO", task_with_rrule.rrule['$t'], "Rrule didn't have right '$t' property");
-		},
+		} /*,
 		
 		testObjectToTaskListWithNoRecurrenceRule: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
