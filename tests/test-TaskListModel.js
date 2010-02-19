@@ -346,22 +346,46 @@ testCases.push( function(Y) {
 				return;
 			}
 			Y.fail("Should have thrown error");
-		} /*,
+		},
 		
 		testSetTaskListShouldSaveTasksAndRemoveOldOnes: function() {
 			var tasklist = new TaskListModel();
 			var task1 = new TaskModel({	name: 'sometask' });
 			var task2 = new TaskModel({	name: 'some other task' });
+			var task3, found_task;
 			
-			tasklist.setTaskList([ task1, task2 ]);
-			Y.Assert.areEqual('sometask', Store.loadTask(task1.localID).name, "Didn't save task1");
-			Y.Assert.areEqual('some other task', Store.loadTask(task2.localID).name, "Didn't save task2");
-
-			var task3 = new TaskModel({	name: 'a third task' });
-			tasklist.setTaskList([ task3 ]);
-			Y.Assert.isUndefined(Store.loadTask(task1.localID), "Didn't erase task1");
-			Y.Assert.isUndefined(Store.loadTask(task2.localID), "Didn't erase task2");
-		},
+			TestUtils.runInSeries(this, 200,
+				[
+					function() {
+						tasklist.setTaskList([ task1, task2 ]);
+					},
+					function() {
+						Store.loadTask(task1.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('sometask', found_task.name, "Didn't save task1");
+						Store.loadTask(task2.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('some other task', found_task.name, "Didn't save task2");
+			
+						task3 = new TaskModel({	name: 'a third task' });
+						tasklist.setTaskList([ task3 ]);
+					},
+					function() {
+						Store.loadTask(task1.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.isUndefined(found_task, "Didn't erase task1");
+						Store.loadTask(task2.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.isUndefined(found_task, "Didn't erase task2");
+					}
+				]
+			);
+			
+		} /*,
 				
 		testTaskListStorage: function() {
 			var tasklist = new TaskListModel();
