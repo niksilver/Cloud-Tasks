@@ -184,7 +184,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Fifth task', task_id_to_task['83601519'].name, "Bad name for task ID 83601519");
 			Y.Assert.areEqual(true, task_id_to_task['83601413'].deleted, "Wrong deleted flag for task ID 83601413");
 			Y.Assert.areEqual(true, task_id_to_task['83601399'].deleted, "Wrong deleted flag for task ID 83601399");
-		} /*,
+		},
 		
 		testObjectToTaskListWithSingleDeletedItem: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.last_sync_response_with_just_one_deletion);
@@ -210,7 +210,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_id_to_task['84630592'].deleted, "Task ID 84630592 should not be marked deleted");
 			Y.Assert.areEqual(true, task_id_to_task['62349079'].deleted, "Task ID 62349079 should be marked deleted");
 			Y.Assert.areEqual(true, task_id_to_task['59484931'].deleted, "Task ID 59484931 should be marked deleted");
-		},
+		} /*,
 		
 		testObjectToTaskListWithSomeCompletions: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
