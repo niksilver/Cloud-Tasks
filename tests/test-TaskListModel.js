@@ -77,16 +77,30 @@ testCases.push( function(Y) {
 				]
 			);
 			
-		} /*,
+		},
 		
 		testConstructorWithNoArgumentDoesntRemovePreviousTasks: function() {
 			var task = new TaskModel({ name: 'hello' });
 			var model = new TaskListModel([task]);
-			Y.Assert.areEqual('hello', Store.loadTask(task.localID).name, "Should have saved task");
-			
-			model2 = new TaskListModel();
-			Y.Assert.isNotUndefined(Store.loadTask(task.localID), "Should have kept task");
-			Y.Assert.areEqual('hello', Store.loadTask(task.localID).name, "Should have stored task name");
+
+			var model2, found_task;
+
+			TestUtils.runInSeries(this, 200,
+				[
+					function() {
+						Store.loadTask(task.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('hello', found_task.name, "Should have saved task");
+						model2 = new TaskListModel();
+						Store.loadTask(task.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task, "Should have kept task");
+						Y.Assert.areEqual('hello', found_task.name, "Should have stored task name");
+					}
+				]
+			);
 		},
 		
 		testObjectToTaskList: function() {
@@ -115,7 +129,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('MB, AB - Update on testing companies', sample_task.name, "Task name not correct");
 			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");
 			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
-		},
+		} /*,
 		
 		testObjectToTaskListWhenUsingArrays: function() {
 
