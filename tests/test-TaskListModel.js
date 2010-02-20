@@ -430,8 +430,6 @@ testCases.push( function(Y) {
 		},
 		
 		testLoadTaskListAlsoSorts: function() {
-			TestUtils.showMojoLog();
-
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
 			var model, load_completed = false;
 			
@@ -466,12 +464,23 @@ testCases.push( function(Y) {
 				}
 			);
 			TestUtils.runInSeries(this, 200, series);
-		} /*,
+		},
 		
 		testGetLatestModified: function() {
-			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-			Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
-		},
+			var model;
+			TestUtils.runInSeries(this, 200,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+					},
+					function() {
+						Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
+					}
+				]
+			);
+		} /*,
 		
 		testGetLatestModifiedIfAllUndefined: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
