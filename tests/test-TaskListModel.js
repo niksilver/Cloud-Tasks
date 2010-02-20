@@ -394,34 +394,40 @@ testCases.push( function(Y) {
 				]
 			);
 			
-		} /*,
+		},
 				
 		testTaskListStorage: function() {
-			var tasklist = new TaskListModel();
+			var tasklist, tasklist2;
+			TestUtils.runInSeries(this, 200,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						tasklist = new TaskListModel();
+						tasklist.setTaskList([
+							new TaskModel({	name: 'A sometask' }),
+							new TaskModel({	name: 'B some other task' }),
+						]);
+					},
+					function() {
+						Y.Assert.areEqual('A sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
+						Y.Assert.areEqual('B some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
 
-			tasklist.setTaskList([
-				new TaskModel({	name: 'A sometask' }),
-				new TaskModel({	name: 'B some other task' }),
-			]);
-			this.wait(function(){}, 300);
-			Y.Assert.areEqual('A sometask', tasklist.getTaskList()[0].name, 'Task list does not hold task #1 after being set');
-			Y.Assert.areEqual('B some other task', tasklist.getTaskList()[1].name, 'Task list does not hold task #2 after being set');
-
-			var tasklist2 = new TaskListModel();
-			Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
-			Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
-			
-			test = this;
-			tasklist = undefined;
-			tasklist2.loadTaskList(function(tasks) {
-				test.resume(function() {
-					Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
-					Y.Assert.areEqual('A sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
-					Y.Assert.areEqual('B some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
-				});
-			});
-			this.wait(1000);
-		},
+						tasklist2 = new TaskListModel();
+						Y.Assert.isArray(tasklist2.getTaskList(), "Task list is not initially an array");
+						Y.Assert.areEqual(0, tasklist2.getTaskList().length, "Task list array is not initially empty");
+					},
+					function() {
+						tasklist2.loadTaskList();
+					},
+					function() {
+						Y.Assert.isInstanceOf(TaskModel, tasklist2.getTaskList()[0], 'Loaded task is not a TaskModel');
+						Y.Assert.areEqual('A sometask', tasklist2.getTaskList()[0].name, 'Task list does not hold task #1 after being loaded');
+						Y.Assert.areEqual('B some other task', tasklist2.getTaskList()[1].name, 'Task list does not hold task #2 after being loaded');
+					}
+				]
+			);
+		} /*,
 		
 		testLoadTaskListAlsoSorts: function() {
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
