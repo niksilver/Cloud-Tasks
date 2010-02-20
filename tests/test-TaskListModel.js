@@ -427,32 +427,46 @@ testCases.push( function(Y) {
 					}
 				]
 			);
-		} /*,
+		},
 		
 		testLoadTaskListAlsoSorts: function() {
+			TestUtils.showMojoLog();
+
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.big_remote_json);
+			var model, load_completed = false;
+			
+			var series = [
+				INITIALISE_STORE,
+				REMOVE_ALL_TASKS
+			];
 			tasks.each(function(task) {
-				Store.saveTask(task);
+				series.push(function() { Store.saveTask(task) });
 			});
-			
-			var model = new TaskListModel();
-			model.loadTaskList();
-			
-			Y.Assert.areEqual(tasks.length, model.getTaskList().length, "Saved task list and loaded task list are different lengths");
-			Y.assert(tasks.length > 0, "Should have saved some tasks");
-			
-			tasks.sort(TaskModel.sortByDueThenName);
-			for (var i = 0; i < tasks.length; i++) {
-				var orig_task = tasks[i];
-				var stored_task = model.getTaskList()[i];
-				Y.Assert.areEqual(orig_task.name, stored_task.name, "Task "
-					+ i + " names differ. Original is " + orig_task.toSummaryString()
-					+ ", stored is " + stored_task.toSummaryString());
-				Y.Assert.areEqual(orig_task.due, stored_task.due, "Task "
-					+ i + " due dates differ. Original is " + orig_task.toSummaryString()
-					+ ", stored is " + stored_task.toSummaryString());
-			}
-		},
+			series.push(
+				function() {
+					model = new TaskListModel();
+					model.loadTaskList(function(tasks) { load_completed = true });
+				},
+				function() {
+					Y.Assert.areEqual(true, load_completed, "Didn't load tasks");
+					Y.Assert.areEqual(tasks.length, model.getTaskList().length, "Saved task list and loaded task list are different lengths");
+					Y.assert(tasks.length > 0, "Should have saved some tasks");
+
+					tasks.sort(TaskModel.sortByDueThenName);
+					for (var i = 0; i < tasks.length; i++) {
+						var orig_task = tasks[i];
+						var stored_task = model.getTaskList()[i];
+						Y.Assert.areEqual(orig_task.name, stored_task.name, "Task "
+							+ i + " names differ. Original is " + orig_task.toSummaryString()
+							+ ", stored is " + stored_task.toSummaryString());
+						Y.Assert.areEqual(orig_task.due, stored_task.due, "Task "
+							+ i + " due dates differ. Original is " + orig_task.toSummaryString()
+							+ ", stored is " + stored_task.toSummaryString());
+					}
+				}
+			);
+			TestUtils.runInSeries(this, 200, series);
+		} /*,
 		
 		testGetLatestModified: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
