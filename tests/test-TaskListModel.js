@@ -515,10 +515,52 @@ testCases.push( function(Y) {
 				taskID: "79230749"
 			});
 			Y.Assert.isUndefined(task2, "Mistakenly found task");
-		} /*,
+		},
 		
 		testMergeTaskUsingNewTask: function() {
-			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var model, TaskModelExtended, new_task, num_tasks, extra_task, found_task;
+			TestUtils.runInSeries(this, 200,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+					},
+					function() {
+						TaskModelExtended = TestUtils.extend(TaskModel, {
+							today: function() { return Date.parse('2010-01-01T00:00:00Z') }
+						});
+						new_task = new TaskModelExtended({
+							listID: '11234',
+							taskseriesID: '556677',
+							taskID: '889900',
+							name: 'Do something new',
+							due: '2010-01-01T00:00:00Z'
+						});
+						num_tasks = model.getTaskList().length;
+						model.mergeTask(new_task);
+					},
+					function() {
+						Y.Assert.areEqual(num_tasks+1, model.getTaskList().length, "Task list isn't any bigger");
+						Store.loadTask(new_task.localID, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.areEqual('Do something new', found_task.name, "New task wasn't stored");
+					},
+					function() {
+						var extra_task = model.getTask({
+							listID: "11234",
+							taskseriesID: "556677",
+							taskID: "889900"});
+						Y.Assert.isNotUndefined(extra_task, "New task not found in list");
+						Y.Assert.areEqual(true, extra_task.isDueFlag, "New task's due flag not updated");
+						Y.Assert.areEqual(false, extra_task.isOverdueFlag, "New task's overdue flag not updated");
+					}
+				]
+			);
+			
+			
+			/* var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
 			var TaskModelExtended = TestUtils.extend(TaskModel, {
 				today: function() { return Date.parse('2010-01-01T00:00:00Z') }
@@ -543,8 +585,8 @@ testCases.push( function(Y) {
 				taskID: "889900"});
 			Y.Assert.isNotUndefined(extra_task, "New task not found in list");
 			Y.Assert.areEqual(true, extra_task.isDueFlag, "New task's due flag not updated");
-			Y.Assert.areEqual(false, extra_task.isOverdueFlag, "New task's overdue flag not updated");
-		},
+			Y.Assert.areEqual(false, extra_task.isOverdueFlag, "New task's overdue flag not updated"); */
+		} /*,
 		
 		testMergeTaskWithExistingTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
