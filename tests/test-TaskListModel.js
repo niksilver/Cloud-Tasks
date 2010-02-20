@@ -80,13 +80,16 @@ testCases.push( function(Y) {
 		},
 		
 		testConstructorWithNoArgumentDoesntRemovePreviousTasks: function() {
-			var task = new TaskModel({ name: 'hello' });
-			var model = new TaskListModel([task]);
-
-			var model2, found_task;
+			var task, model, model2, found_task;
 
 			TestUtils.runInSeries(this, 200,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						task = new TaskModel({ name: 'hello' });
+						model = new TaskListModel([task]);
+					},
 					function() {
 						Store.loadTask(task.localID, function(task) { found_task = task });
 					},
@@ -349,13 +352,19 @@ testCases.push( function(Y) {
 		},
 		
 		testSetTaskListShouldSaveTasksAndRemoveOldOnes: function() {
-			var tasklist = new TaskListModel();
-			var task1 = new TaskModel({	name: 'sometask' });
-			var task2 = new TaskModel({	name: 'some other task' });
-			var task3, found_task;
+			var tasklist, task1, task2, task3, found_task;
 			
 			TestUtils.runInSeries(this, 200,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						tasklist = new TaskListModel();
+						task1 = new TaskModel({	name: 'sometask' });
+					},
+					function() {
+						task2 = new TaskModel({	name: 'some other task' });
+					},
 					function() {
 						tasklist.setTaskList([ task1, task2 ]);
 					},
