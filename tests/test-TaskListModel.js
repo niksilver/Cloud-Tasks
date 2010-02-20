@@ -467,20 +467,9 @@ testCases.push( function(Y) {
 		},
 		
 		testGetLatestModified: function() {
-			var model;
-			TestUtils.runInSeries(this, 200,
-				[
-					INITIALISE_STORE,
-					REMOVE_ALL_TASKS,
-					function() {
-						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-					},
-					function() {
-						Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
-					}
-				]
-			);
-		} /*,
+			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			Y.Assert.areEqual('2009-11-18T16:58:19Z', model.getLatestModified(), "Latest modified time not found");
+		},
 		
 		testGetLatestModifiedIfAllUndefined: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
@@ -508,7 +497,7 @@ testCases.push( function(Y) {
 			model.getTaskList()[5].modified = '2009-11-19T16:58:19-04:00'; // = 20:58Z
 			model.getTaskList()[8].modified = '2009-11-19T16:58:19Z';      // = 16:58Z
 			Y.Assert.areEqual('2009-11-19T16:58:19-04:00', model.getLatestModified(), "Timezoned modification not calculated correctly");
-		},
+		} /*,
 
 		testGetTask: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));

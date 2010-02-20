@@ -22,7 +22,7 @@ function TaskListModel(optional_task_list, onSuccess) {
 /**
  * Set the task list. This will be persisted, wiping out any previously-stored tasks.
  * @param {Array} task_list  Should be an array of TaskModel objects.
- * @param {Function} onSuccess  Optional function called when the tasks have been stored.
+ * @param {Function} onSuccess  Optional function called when the tasks have been persisted.
  */
 TaskListModel.prototype.setTaskList = function(task_list, onSuccess) {
 	task_list.each(function(task) {
