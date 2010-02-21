@@ -39,7 +39,7 @@ testCases.push( function(Y) {
 			called_createTimeline = false;
 			retrier.fire();
 			Y.Assert.areEqual(false, called_createTimeline, "Timeline creation mistakenly attempted again");
-		} /*,
+		},
 		
 		testRetrierUsesGivenTaskListModel: function() {
 			var rtm = new RTM();
@@ -50,6 +50,7 @@ testCases.push( function(Y) {
 			
 			rtm.connectionManager = "Some pretend connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('12345');
 			rtm.timeline = '87654';
 			
@@ -68,6 +69,8 @@ testCases.push( function(Y) {
 		testRetrierRunsSetUpConnectionManagerIndependently: function() {
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
+
+			rtm.rawAjaxRequest = function(){};
 			retrier.serviceRequestConstructor = "Some service request constructor";
 			
 			Y.Assert.isUndefined(rtm.connectionManager, "Connection manager has been mistakenly initialised");
@@ -92,6 +95,7 @@ testCases.push( function(Y) {
 			var retrier = new Retrier(rtm);
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 0; };
@@ -123,6 +127,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -158,6 +163,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -196,6 +202,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -248,6 +255,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -286,6 +294,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -325,6 +334,7 @@ testCases.push( function(Y) {
 
 			rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
+			rtm.rawAjaxRequest = function(){};
 			rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
@@ -369,7 +379,7 @@ testCases.push( function(Y) {
 			var retrier = new RetrierExtended(rtm);
 			rtm.onNetworkRequestsChange('some old values', 'some new values');
 			Y.Assert.areEqual(true, called_onNetworkRequestsChange, "onNetworkRequestsChange not called");
-		} */
+		}
 
 	});
 
