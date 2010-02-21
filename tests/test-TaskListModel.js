@@ -859,42 +859,41 @@ testCases.push( function(Y) {
 			// Check the rrule's userText is updated
 			Y.Assert.areEqual('', task_hash['85269921'].rrule.userText, "Task 85269921 rrule.userText set appropriately");
 			Y.Assert.areEqual('', task_hash['85270009'].rrule.userText, "Task 85270009 rrule.userText set appropriately");
-		} /*,
+		},
 		
 		testAddTask: function() {
-			Store.HACK = 1;
-			var task = new TaskModel({
-				listID: '112233',
-				taskseriesID: '445566',
-				taskID: '778899',
-				name: 'My new task for testAddTask'
-			});
-			var model = new TaskListModel();
+			var task, model, found_task;
 			
-			var test = this;
-			var found_task;
-			TestUtils.runInSeries(this, 1000,
+			TestUtils.runInSeries(this, 200,
 				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
 					function() {
-						Store.loadTask(task.localID, function(task) { found_task = task; test.continueRun() });
+						task = new TaskModel({
+							listID: '112233',
+							taskseriesID: '445566',
+							taskID: '778899',
+							name: 'My new task for testAddTask'
+						});
+						model = new TaskListModel();
+
+						Store.loadTask(task.localID, function(task) { found_task = task });
 					},
 					function() {
-						alert("Hello");
 						Y.Assert.isUndefined(found_task, "New task has already been stored");
 						Y.Assert.isUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is already in list");
-						model.addTask(task, function() { test.continueRun() });
+						model.addTask(task);
 					},
 					function() {
-						Store.loadTask(task.localID, function(task) { found_task = task; test.continueRun() });
+						Store.loadTask(task.localID, function(task) { found_task = task });
 					},
 					function() {
 						Y.Assert.isNotUndefined(found_task, "New task has not been stored");
 						Y.Assert.isNotUndefined(model.getTask({ listID: '112233', taskseriesID: '445566', taskID: '778899' }), "Task is not in list");
-						test.continueRun();
 					}
 				]
 			);
-		} */
+		}
 
 	});
 
