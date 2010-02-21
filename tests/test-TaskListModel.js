@@ -519,7 +519,7 @@ testCases.push( function(Y) {
 		
 		testMergeTaskUsingNewTask: function() {
 			var model, TaskModelExtended, new_task, num_tasks, extra_task, found_task;
-			TestUtils.runInSeries(this, 200,
+			TestUtils.runInSeries(this, 250,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
@@ -695,50 +695,91 @@ testCases.push( function(Y) {
 					},
 				]
 			);
-		} /*,
+		},
 		
 		testPurgeTaskList: function() {
-			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-			var num_tasks = model.getTaskList().length;
-
-			// Save some tasks for checking later
-			var task_2 = model.getTaskList()[2];
-			var task_3 = model.getTaskList()[3];
-			var task_4 = model.getTaskList()[4];
-			var task_5 = model.getTaskList()[5];
-			var task_6 = model.getTaskList()[6];
-			var task_7 = model.getTaskList()[7];
-			var task_8 = model.getTaskList()[8];
+			var model, num_tasks;
+			var task_2, task_3, task_4, task_5, task_6, task_7, task_8;
+			var found_task_2, found_task_3, found_task_4, found_task_5, found_task_6,
+				found_task_7, found_task_8;
 			
-			// Set three tasks to be deleted
-			task_3.deleted = true;
-			task_5.deleted = true;
-			task_7.deleted = true;
+			TestUtils.runInSeries(this, 200,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+					},
+					function() {
+						num_tasks = model.getTaskList().length;
 			
-			// Set two tasks to be deleted locally, but changes need to be pushed
-			task_4.setForPush('deleted', true);
-			task_8.setForPush('deleted', true);
-			
-			// Set one task which has local changes which need to be pushed, but is not to be deleted
-			task_2.setForPush('name', "Do it again");
-			
-			model.purgeTaskList();
-			Y.Assert.areEqual(num_tasks-3, model.getTaskList().length, "Wrong tasks purged");
-			Y.Assert.isUndefined(model.getTask(task_3), "Task 3 not purged");
-			Y.Assert.isUndefined(model.getTask(task_5), "Task 5 not purged");
-			Y.Assert.isUndefined(model.getTask(task_7), "Task 7 not purged");
-			Y.Assert.isNotUndefined(model.getTask(task_4), "Task 4 was mistakenly purged");
-			Y.Assert.isNotUndefined(model.getTask(task_8), "Task 8 was mistakenly purged");
-			Y.Assert.isNotUndefined(model.getTask(task_2), "Task 2 was mistakenly purged");
-			
-			// Ensure the right tasks are (and are not) in the Store
-			Y.Assert.isUndefined(Store.loadTask(task_3.localID), "Didn't remove task 3 from store");
-			Y.Assert.isUndefined(Store.loadTask(task_5.localID), "Didn't remove task 5 from store");
-			Y.Assert.isUndefined(Store.loadTask(task_7.localID), "Didn't remove task 7 from store");
-			Y.Assert.isNotUndefined(Store.loadTask(task_4.localID), "Mistakenly removed task 4 from store");
-			Y.Assert.isNotUndefined(Store.loadTask(task_8.localID), "Mistakenly removed task 8 from store");
-			Y.Assert.isNotUndefined(Store.loadTask(task_2.localID), "Mistakenly removed task 2 from store");
-		},
+						// Save some tasks for checking later
+						task_2 = model.getTaskList()[2];
+						task_3 = model.getTaskList()[3];
+						task_4 = model.getTaskList()[4];
+						task_5 = model.getTaskList()[5];
+						task_6 = model.getTaskList()[6];
+						task_7 = model.getTaskList()[7];
+						task_8 = model.getTaskList()[8];
+						
+						// Set three tasks to be deleted
+						task_3.deleted = true;
+						task_5.deleted = true;
+						task_7.deleted = true;
+						
+						// Set two tasks to be deleted locally, but changes need to be pushed
+						task_4.setForPush('deleted', true);
+					},
+					function() {
+						task_8.setForPush('deleted', true);
+					},
+					function() {
+						
+						// Set one task which has local changes which need to be pushed, but is not to be deleted
+						task_2.setForPush('name', "Do it again");
+					},
+					function() {
+						
+						model.purgeTaskList();
+					},
+					function() {
+						Y.Assert.areEqual(num_tasks-3, model.getTaskList().length, "Wrong tasks purged");
+						Y.Assert.isUndefined(model.getTask(task_3), "Task 3 not purged");
+						Y.Assert.isUndefined(model.getTask(task_5), "Task 5 not purged");
+						Y.Assert.isUndefined(model.getTask(task_7), "Task 7 not purged");
+						Y.Assert.isNotUndefined(model.getTask(task_4), "Task 4 was mistakenly purged");
+						Y.Assert.isNotUndefined(model.getTask(task_8), "Task 8 was mistakenly purged");
+						Y.Assert.isNotUndefined(model.getTask(task_2), "Task 2 was mistakenly purged");
+						
+						// Ensure the right tasks are (and are not) in the Store
+						Store.loadTask(task_3.localID, function(task) { found_task_3 = task });
+					},
+					function() {
+						Y.Assert.isUndefined(found_task_3, "Didn't remove task 3 from store");
+						Store.loadTask(task_5.localID, function(task) { found_task_5 = task });
+					},
+					function() {
+						Y.Assert.isUndefined(found_task_5, "Didn't remove task 5 from store");
+						Store.loadTask(task_7.localID, function(task) { found_task_7 = task });
+					},
+					function() {
+						Y.Assert.isUndefined(found_task_7, "Didn't remove task 7 from store");
+						Store.loadTask(task_4.localID, function(task) { found_task_4 = task });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task_4, "Mistakenly removed task 4 from store");
+						Store.loadTask(task_8.localID, function(task) { found_task_8 = task });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task_8, "Mistakenly removed task 8 from store");
+						Store.loadTask(task_2.localID, function(task) { found_task_2 = task });
+					},
+					function() {
+						Y.Assert.isNotUndefined(found_task_2, "Mistakenly removed task 2 from store");
+					}
+				]
+			);
+		} /*,
 		
 		testGetListOfVisibleTasks: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
