@@ -832,7 +832,7 @@ testCases.push( function(Y) {
 			var task_hash = TestUtils.getTaskIDToTaskHash(taskseries);
 			Y.Assert.isNotUndefined(task_hash['85269921'], "Didn't get task 85269921");
 			Y.Assert.isNotUndefined(task_hash['85270009'], "Didn't get task 85270009");
-		} /*,
+		},
 		
 		testMarkAsDeletedAllTasksInSeries: function() {
 			var task_list = TaskListModel.objectToTaskList(SampleTestData.response_with_basic_and_recurring_completion);
@@ -859,7 +859,7 @@ testCases.push( function(Y) {
 			// Check the rrule's userText is updated
 			Y.Assert.areEqual('', task_hash['85269921'].rrule.userText, "Task 85269921 rrule.userText set appropriately");
 			Y.Assert.areEqual('', task_hash['85270009'].rrule.userText, "Task 85270009 rrule.userText set appropriately");
-		},
+		} /*,
 		
 		testAddTask: function() {
 			Store.HACK = 1;
