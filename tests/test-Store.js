@@ -139,7 +139,7 @@ testCases.push( function(Y) {
 			var task_list;
 			var local_id_to_task;
 			
-			TestUtils.runInSeries(this, 200,
+			TestUtils.runInSeries(this, 250,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
@@ -173,7 +173,7 @@ testCases.push( function(Y) {
 			
 			var loaded_task;
 			
-			TestUtils.runInSeries(this, 200,
+			TestUtils.runInSeries(this, 250,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
