@@ -619,92 +619,83 @@ testCases.push( function(Y) {
 					}
 				]
 			);
-			
-			/* var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-			var existing_task = model.getTaskList()[5];
-			var existing_task_local_id = existing_task.localID;
-			
-			// Make make a task model that thinks it is the due date
-			var TaskModelExtended = TestUtils.extend(TaskModel, {
-				today: function() { return Date.parse(existing_task.due) }
-			});
-			var updated_name = existing_task.name + " again";
-			var existing_task_updated = new TaskModelExtended({
-				listID: existing_task.listID,
-				taskseriesID: existing_task.taskseriesID,
-				taskID: existing_task.taskID,
-				name: updated_name,
-				due: existing_task.due
-			});
-			var existing_task_updated_local_id = existing_task_updated.localID;			
-			Y.Assert.areNotEqual(existing_task_local_id, existing_task_updated.localID, "Newly-generated updated task should not have same local ID");
-
-			var num_tasks = model.getTaskList().length;
-			model.mergeTask(existing_task_updated);
-			Y.Assert.areEqual(num_tasks, model.getTaskList().length, "Task list should be same size");
-
-			Y.Assert.areEqual(existing_task_local_id, existing_task_updated.localID, "Newly-generated updated task should have original's local ID after merge");
-			Y.Assert.areEqual(existing_task_local_id, existing_task.localID, "Original task should have kept local ID");
-			Y.Assert.isUndefined(Store.loadTask(existing_task_updated_local_id), "Should not have stored task with ID from newly-generated updated task");
-			Y.Assert.areEqual(updated_name, Store.loadTask(existing_task_local_id).name, "Did not store updated name in existing task");
-			
-			var found_task = model.getTask({
-				listID: existing_task.listID,
-				taskseriesID: existing_task.taskseriesID,
-				taskID: existing_task.taskID});
-			Y.Assert.areEqual(updated_name, found_task.name, "Task not updated");
-			Y.Assert.areEqual(true, found_task.isDueFlag, "Task's due flag not updated");
-			Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
-			Y.Assert.areEqual(existing_task_local_id, found_task.localID, "Task's local ID should have been retrieved"); */
-		} /*,
+		},
 		
 		testMergeTaskWithLocalChangesWithExistingTask: function() {
-			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-			var original_task = model.getTaskList()[5];
-			var original_task_local_id = original_task.localID;
+			var model;
+			var original_task, original_task_local_id;
+			var TaskModelExtended;
+			var remotely_updated_name, original_task_updated_remotely, original_task_updated_local_id;
+			var locally_updated_due, num_tasks;
+			var found_task;
 			
-			// Make make a task model that thinks it is not yet the due date
-			var TaskModelExtended = TestUtils.extend(TaskModel, {
-				today: function() {	return Date.parse(original_task.due).add({ days: -1 }) }
-			});
-			var remotely_updated_name = original_task.name + " again";
-			var original_task_updated_remotely = new TaskModelExtended({
-				listID: original_task.listID,
-				taskseriesID: original_task.taskseriesID,
-				taskID: original_task.taskID,
-				name: remotely_updated_name,
-				due: original_task.due
-			});
-			var original_task_updated_local_id = original_task_updated_remotely.localID;
-			Y.Assert.areNotEqual(original_task_local_id, original_task_updated_local_id, "Newly-generated updated task should not have same local ID");
+			TestUtils.runInSeries(this, 200,
+				[
+					INITIALISE_STORE,
+					REMOVE_ALL_TASKS,
+					function() {
+						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+					},
+					function() {
+						original_task = model.getTaskList()[5];
+						original_task_local_id = original_task.localID;
+						
+						// Make make a task model that thinks it is not yet the due date
+						TaskModelExtended = TestUtils.extend(TaskModel, {
+							today: function() {	return Date.parse(original_task.due).add({ days: -1 }) }
+						});
+						remotely_updated_name = original_task.name + " again";
+						original_task_updated_remotely = new TaskModelExtended({
+							listID: original_task.listID,
+							taskseriesID: original_task.taskseriesID,
+							taskID: original_task.taskID,
+							name: remotely_updated_name,
+							due: original_task.due
+						});
+						original_task_updated_local_id = original_task_updated_remotely.localID;
+						Y.Assert.areNotEqual(original_task_local_id, original_task_updated_local_id, "Newly-generated updated task should not have same local ID");
+						
+						// Also make sure the original task thinks it's not yet the due date
+						original_task.today = TaskModelExtended.today;
+						
+						// Now update the original task locally
+						locally_updated_due = Date.parse(original_task.due).add({ days: 1 }).toISOString();
+						original_task.setForPush('due', locally_updated_due);
 			
-			// Also make sure the original task thinks it's not yet the due date
-			original_task.today = TaskModelExtended.today;
+						num_tasks = model.getTaskList().length;
+						model.mergeTask(original_task_updated_remotely);
+					},
+					function() {
+						Y.Assert.areEqual(num_tasks, model.getTaskList().length, "Task list should be same size");
 			
-			// Now update the original task locally
-			var locally_updated_due = Date.parse(original_task.due).add({ days: 1 }).toISOString();
-			original_task.setForPush('due', locally_updated_due);
-
-			var num_tasks = model.getTaskList().length;
-			model.mergeTask(original_task_updated_remotely);
-			Y.Assert.areEqual(num_tasks, model.getTaskList().length, "Task list should be same size");
-
-			Y.Assert.areEqual(original_task_local_id, original_task_updated_remotely.localID, "Newly-generated updated task should have original's local ID after merge");
-			Y.Assert.areEqual(original_task_local_id, original_task.localID, "Original task should have kept local ID");
-			Y.Assert.isUndefined(Store.loadTask(original_task_updated_local_id), "Should not have stored task with ID from newly-generated updated task");
-			Y.Assert.areEqual(remotely_updated_name, Store.loadTask(original_task_local_id).name, "Did not store updated name in existing task");
-			Y.Assert.areEqual(locally_updated_due, Store.loadTask(original_task_local_id).due, "Did not store locally-updated due date in existing task");
-
-			var found_task = model.getTask({
-				listID: original_task.listID,
-				taskseriesID: original_task.taskseriesID,
-				taskID: original_task.taskID});
-			Y.Assert.areEqual(remotely_updated_name, found_task.name, "Task not updated from merged task");
-			Y.Assert.areEqual(locally_updated_due, found_task.due, "Task does not carry locally updated due date");
-			Y.Assert.areEqual('due', found_task.localChanges[0], "Local change flags are lost");
-			Y.Assert.areEqual(false, found_task.isDueFlag, "Task's due flag not updated");
-			Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
-		},
+						Y.Assert.areEqual(original_task_local_id, original_task_updated_remotely.localID, "Newly-generated updated task should have original's local ID after merge");
+						Y.Assert.areEqual(original_task_local_id, original_task.localID, "Original task should have kept local ID");
+						Y.Assert.isUndefined(Store.loadTask(original_task_updated_local_id), "Should not have stored task with ID from newly-generated updated task");
+						Store.loadTask(original_task_local_id, function(task) { found_task = task });
+					},
+					function() {
+						Y.Assert.areEqual(remotely_updated_name, found_task.name, "Did not store updated name in existing task");
+						Y.Assert.areEqual(locally_updated_due, found_task.due, "Did not store locally-updated due date in existing task");
+			
+						found_task = model.getTask({
+							listID: original_task.listID,
+							taskseriesID: original_task.taskseriesID,
+							taskID: original_task.taskID});
+						Y.Assert.areEqual(remotely_updated_name, found_task.name, "Task not updated from merged task");
+						Y.Assert.areEqual(locally_updated_due, found_task.due, "Task does not carry locally updated due date");
+						Y.Assert.areEqual('due', found_task.localChanges[0], "Local change flags are lost");
+						Y.Assert.areEqual(false, found_task.isDueFlag, "Task's due flag not updated");
+						Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
+					},
+					function() {
+					},
+					function() {
+					},
+					function() {
+					},
+				]
+			);
+		} /*,
 		
 		testPurgeTaskList: function() {
 			var model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
