@@ -180,7 +180,7 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 	if (choice == 'one') {
 		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of one");
 		task.setForPush('deleted', true);
-		this.popScene(false);
+		this.popScene(false); // Wasn't cancelled (i.e. false)
 	}
 	else if (choice == 'all'){
 		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of all in series");
@@ -188,27 +188,27 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 			listID: task.listID,
 			taskseriesID: task.taskseriesID
 		});
-		this.popScene(false);
+		this.popScene(false); // Wasn't cancelled (i.e. false)
 	}
 }
 
 EditTaskAssistant.prototype.handleCompleteTaskEvent = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCompleteTaskEvent: Entering");
 	this.config.task.setForPush('completed', true);
-	this.popScene(false);
+	this.popScene(false); // Wasn't cancelled (i.e. false)
 }
 
 EditTaskAssistant.prototype.handleCancelTaskEvent = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCancelTaskEvent: Entering");
 	this.config.task.restoreFromObject(this.savedTaskProperties);
-	this.popScene(true);
+	this.popScene(true); // Was cancelled (i.e. true)
 }
 
 EditTaskAssistant.prototype.handleCommand = function(event){
 	Mojo.Log.info("EditTaskAssistant.handleCommand: Entering");
 	if (event.type == Mojo.Event.back) {
 		Mojo.Log.info("TaskListAssistant.handleCommand: Got back event");
-		this.popScene(false);
+		this.popScene(false); // Wasn't cancelled (i.e. false)
 	}
 }
 

@@ -11,8 +11,7 @@ function TaskListAssistant(config) {
 	this.config = config;
 	this.rtm = config.rtm;
 	this.taskListModel = config.taskListModel;
-	this.taskListModel.loadTaskList();
-	this.taskListWidgetModel = { items: this.taskListModel.getListOfVisibleTasks() };
+	this.taskListModel.loadTaskList(this.onTaskListLoaded.bind(this));
 	this.rtm.retrier.onTaskListModelChange = this.onTaskListModelChange.bind(this);
 	
 	this.appMenuModel = {
@@ -31,6 +30,13 @@ function TaskListAssistant(config) {
 		items: [
 			{ label: 'Add', command: 'do-add' }
 		]
+	}
+}
+
+TaskListAssistant.prototype.onTaskListLoaded = function() {
+	this.taskListWidgetModel = { items: this.taskListModel.getListOfVisibleTasks() };
+	if (this.controller) {
+		this.setUpTaskListWidget();
 	}
 }
 
@@ -58,16 +64,19 @@ TaskListAssistant.prototype.setup = function() {
 	
 	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);
 	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.commandMenuModel);
-	
-	// Set up the task list
 
-	var listInfo = this.getListInfo();
-	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
-	Mojo.Event.listen(this.controller.get(listInfo.elementId), Mojo.Event.listTap, this.handleListTap.bind(this));
+	if (this.taskListWidgetModel) {
+		this.setUpTaskListWidget();
+	}	
 }
 
-TaskListAssistant.prototype.getListInfo = function() {
-	return {
+/**
+ * Set up the task list widget.
+ * Should only be called if both (a) this.taskListWidgetModel and (b) this.controller
+ * have been set.
+ */
+TaskListAssistant.prototype.setUpTaskListWidget = function(){
+	var listInfo = {
 		attributes: {
 			itemTemplate: "TaskList/TaskList-item",
 			listTemplate: "TaskList/TaskList-container",
@@ -78,7 +87,9 @@ TaskListAssistant.prototype.getListInfo = function() {
 		event: Mojo.Event.listTap,
 		handler: this.handleListTap
 	};
-};
+	this.controller.setupWidget(listInfo.elementId, listInfo.attributes, listInfo.model);
+	Mojo.Event.listen(this.controller.get(listInfo.elementId), Mojo.Event.listTap, this.handleListTap.bind(this));
+}
 
 TaskListAssistant.prototype.handleListTap = function(event) {
 	Mojo.Log.info("TaskListAssistant.handleListTap: Entering");
