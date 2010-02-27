@@ -21,5 +21,36 @@ var RecurrenceTranslator = {
 			obj[pair[0]] = pair[1];
 		}
 		return obj;
+	},
+	
+	dayCodeToDay: {
+		"MO": "Monday",
+		"TU": "Tuesday",
+		"WE": "Wednesday",
+		"TH": "Thursday",
+		"FR": "Friday",
+		"SA": "Saturday",
+		"SU": "Sunday"
+	},
+	
+	/**
+	 * Take a recurrence code object such as 
+	 * {"every": "1", "$t": "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE"}
+	 * and return the human-readable text string
+	 * (in this case "Every Wednesday").
+	 * @param {Object} code_obj
+	 */
+	toText: function(obj) {
+		var data = RecurrenceTranslator.codeStringToObject(obj["$t"]);
+		data.every = obj.every;
+		if (data.every == "1" && data.FREQ == "WEEKLY") {
+			return RecurrenceTranslator.everyWeekByDay(data);
+		}
+		
+		return "Unknown recurrence code";
+	},
+	
+	everyWeekByDay: function(data) {
+		return "Every " + RecurrenceTranslator.dayCodeToDay[data.BYDAY];
 	}
 }
