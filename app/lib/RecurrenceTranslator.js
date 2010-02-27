@@ -42,7 +42,7 @@ var RecurrenceTranslator = {
 	},
 	
 	dayCodeToDay: function(day_code) {
-		return RecurrenceTranslator.dayCodeToDayHash[day_code];
+		return this.dayCodeToDayHash[day_code];
 	},
 	
 	/**
@@ -53,18 +53,19 @@ var RecurrenceTranslator = {
 	 * @param {Object} code_obj
 	 */
 	toText: function(obj) {
-		var data = RecurrenceTranslator.codeStringToObject(obj["$t"]);
+		var data = this.codeStringToObject(obj["$t"]);
 		data.every = obj.every;
 		if (data.every == "1" && data.FREQ == "WEEKLY") {
-			return RecurrenceTranslator.everyWeekByDay(data);
+			return this.everyWeekByDay(data);
 		}
 		
 		return "Unknown recurrence code";
 	},
 	
 	everyWeekByDay: function(data) {
-		var days = data.BYDAY.map(function(code) { return RecurrenceTranslator.dayCodeToDay(code) });
-		return "Every " + RecurrenceTranslator.joinWithCommasAndAnd(days);
+		var inst = this;
+		var days = data.BYDAY.map(function(code) { return inst.dayCodeToDay(code) });
+		return "Every " + this.joinWithCommasAndAnd(days);
 	},
 	
 	/**
