@@ -20,10 +20,25 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("WEEKLY", obj.FREQ);
 			Y.Assert.areEqual("1", obj.INTERVAL);
 			Y.Assert.areEqual("WE", obj.BYDAY);
+
+			obj = RecurrenceTranslator.codeStringToObject("FREQ=WEEKLY;INTERVAL=1;BYDAY=WE,TH");
+			Y.Assert.areEqual("WEEKLY", obj.FREQ);
+			Y.Assert.areEqual("1", obj.INTERVAL);
+			Y.Assert.areEqual("WE", obj.BYDAY[0]);
+			Y.Assert.areEqual("TH", obj.BYDAY[1]);
 		},
 		
 		testToText: function() {
+			assertToText("Every Monday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO");
+			assertToText("Every Tuesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU");
 			assertToText("Every Wednesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE");
+			assertToText("Every Thursday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=TH");
+			assertToText("Every Friday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR");
+			assertToText("Every Saturday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=SA");
+			assertToText("Every Sunday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=SU");
+
+			assertToText("Every Monday and Tuesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU");
+			assertToText("Every Monday, Tuesday and Wednesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE");
 		}
 
 	});

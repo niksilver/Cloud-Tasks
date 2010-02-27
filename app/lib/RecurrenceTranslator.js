@@ -18,7 +18,14 @@ var RecurrenceTranslator = {
 		var obj = {};
 		for (var i = 0; i < pairs.length; i++) {
 			var pair = pairs[i].split('=');
-			obj[pair[0]] = pair[1];
+			var key = pair[0];
+			var value = pair[1];
+			if (value.indexOf(',') >= 0) {
+				obj[key] = value.split(',');
+			}
+			else {
+				obj[key] = value;
+			}
 		}
 		return obj;
 	},
@@ -51,6 +58,26 @@ var RecurrenceTranslator = {
 	},
 	
 	everyWeekByDay: function(data) {
-		return "Every " + RecurrenceTranslator.dayCodeToDay[data.BYDAY];
+		var day_part;
+		if (typeof data.BYDAY == 'string') {
+			day_part = RecurrenceTranslator.dayCodeToDay[data.BYDAY];
+		}
+		else {
+			day_part = '';
+			var day_codes = data.BYDAY;
+			var max_index = day_codes.length - 1;
+			var index_before_and = max_index - 1;
+			for (var i = 0; i <= max_index; i++) {
+				day_part += RecurrenceTranslator.dayCodeToDay[day_codes[i]];
+				if (i == index_before_and) {
+					day_part += ' and ';
+				}
+				else if (i < index_before_and) {
+					day_part += ", ";
+				}
+			}
+		}
+		
+		return "Every " + day_part;
 	}
 }
