@@ -63,16 +63,8 @@ var RecurrenceTranslator = {
 	},
 	
 	everyWeekByDay: function(data) {
-		var day_part;
-		if (typeof data.BYDAY == 'string') {
-			day_part = RecurrenceTranslator.dayCodeToDay(data.BYDAY);
-		}
-		else {
-			var days = data.BYDAY.map(function(code) { return RecurrenceTranslator.dayCodeToDay(code) });
-			day_part = RecurrenceTranslator.joinWithCommasAndAnd(days);
-		}
-		
-		return "Every " + day_part;
+		var days = data.BYDAY.map(function(code) { return RecurrenceTranslator.dayCodeToDay(code) });
+		return "Every " + RecurrenceTranslator.joinWithCommasAndAnd(days);
 	},
 	
 	/**
