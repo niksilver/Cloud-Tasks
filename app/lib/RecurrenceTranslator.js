@@ -10,7 +10,8 @@ var RecurrenceTranslator = {
 	
 	/**
 	 * Convert a string like "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE" into an object
-	 * like { FREQ: "WEEKLY", INTERVAL: "1" BYDAY: "WE" }
+	 * like { FREQ: "WEEKLY", INTERVAL: "1" BYDAY: ["WE"] }.
+	 * Note BYDAY always gets translated into an array.
 	 * @param {Object} str
 	 */
 	codeStringToObject: function(str) {
@@ -20,7 +21,7 @@ var RecurrenceTranslator = {
 			var pair = pairs[i].split('=');
 			var key = pair[0];
 			var value = pair[1];
-			if (value.indexOf(',') >= 0) {
+			if (key == 'BYDAY') {
 				obj[key] = value.split(',');
 			}
 			else {

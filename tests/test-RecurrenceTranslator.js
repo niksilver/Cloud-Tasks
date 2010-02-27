@@ -19,7 +19,7 @@ testCases.push( function(Y) {
 			var obj = RecurrenceTranslator.codeStringToObject("FREQ=WEEKLY;INTERVAL=1;BYDAY=WE");
 			Y.Assert.areEqual("WEEKLY", obj.FREQ);
 			Y.Assert.areEqual("1", obj.INTERVAL);
-			Y.Assert.areEqual("WE", obj.BYDAY);
+			Y.Assert.areEqual("WE", obj.BYDAY[0]);
 
 			obj = RecurrenceTranslator.codeStringToObject("FREQ=WEEKLY;INTERVAL=1;BYDAY=WE,TH");
 			Y.Assert.areEqual("WEEKLY", obj.FREQ);
