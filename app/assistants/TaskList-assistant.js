@@ -11,7 +11,8 @@ function TaskListAssistant(config) {
 	this.config = config;
 	this.rtm = config.rtm;
 	this.taskListModel = config.taskListModel;
-	this.taskListModel.loadTaskList(this.onTaskListLoaded.bind(this));
+	this.taskListWidgetModel = { items: [] }; // Initial value, before task list loaded
+	this.initialiseStoreAndLoadTaskList();
 	this.rtm.retrier.onTaskListModelChange = this.onTaskListModelChange.bind(this);
 	
 	this.appMenuModel = {
@@ -33,11 +34,18 @@ function TaskListAssistant(config) {
 	}
 }
 
+TaskListAssistant.prototype.initialiseStoreAndLoadTaskList = function() {
+	Mojo.Log.info("TaskListAssistant.initialiseStoreAndLoadTaskList: Entering");
+	var inst = this;
+	Store.initialise(function() {
+		inst.taskListModel.loadTaskList(inst.onTaskListLoaded.bind(inst));
+	});
+}
+
 TaskListAssistant.prototype.onTaskListLoaded = function() {
-	this.taskListWidgetModel = { items: this.taskListModel.getListOfVisibleTasks() };
-	if (this.controller) {
-		this.setUpTaskListWidget();
-	}
+	Mojo.Log.info("TaskListAssistant.onTaskListLoaded: Entering");
+	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
+	this.onTaskListModelChange();
 }
 
 TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
@@ -65,17 +73,11 @@ TaskListAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);
 	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.commandMenuModel);
 
-	if (this.taskListWidgetModel) {
-		this.setUpTaskListWidget();
-	}	
+	this.setUpTaskListWidget();
 }
 
-/**
- * Set up the task list widget.
- * Should only be called if both (a) this.taskListWidgetModel and (b) this.controller
- * have been set.
- */
 TaskListAssistant.prototype.setUpTaskListWidget = function(){
+	Mojo.Log.info("TaskListAssistant.setUpTaskListWidget: Entering");
 	var listInfo = {
 		attributes: {
 			itemTemplate: "TaskList/TaskList-item",
@@ -150,6 +152,10 @@ TaskListAssistant.prototype.handleAddTaskCommand = function() {
 
 TaskListAssistant.prototype.onTaskListModelChange = function() {
 	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Entering");
+	if (!this.controller) {
+		Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Controller not set, exiting");
+	}
+	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Acting on change");
 	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
 	this.controller.modelChanged(this.taskListWidgetModel);
 }
