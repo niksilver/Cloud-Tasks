@@ -31,7 +31,7 @@ var RecurrenceTranslator = {
 		return obj;
 	},
 	
-	dayCodeToDay: {
+	dayCodeToDayHash: {
 		"MO": "Monday",
 		"TU": "Tuesday",
 		"WE": "Wednesday",
@@ -39,6 +39,10 @@ var RecurrenceTranslator = {
 		"FR": "Friday",
 		"SA": "Saturday",
 		"SU": "Sunday"
+	},
+	
+	dayCodeToDay: function(day_code) {
+		return RecurrenceTranslator.dayCodeToDayHash[day_code];
 	},
 	
 	/**
@@ -61,10 +65,10 @@ var RecurrenceTranslator = {
 	everyWeekByDay: function(data) {
 		var day_part;
 		if (typeof data.BYDAY == 'string') {
-			day_part = RecurrenceTranslator.dayCodeToDay[data.BYDAY];
+			day_part = RecurrenceTranslator.dayCodeToDay(data.BYDAY);
 		}
 		else {
-			var days = data.BYDAY.map(function(code) { return RecurrenceTranslator.dayCodeToDay[code] });
+			var days = data.BYDAY.map(function(code) { return RecurrenceTranslator.dayCodeToDay(code) });
 			day_part = RecurrenceTranslator.joinWithCommasAndAnd(days);
 		}
 		
