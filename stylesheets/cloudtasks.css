@@ -78,7 +78,7 @@
 }
 
 #TaskListHeader {
-	text-align: center;
+	text-align: left;
 }
 
 /* ----- Edit task recurrence note (instructions and problem warning) ----- */
