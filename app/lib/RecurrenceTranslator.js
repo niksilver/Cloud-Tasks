@@ -69,17 +69,33 @@ var RecurrenceTranslator = {
 	toText: function(obj) {
 		var data = this.codeStringToObject(obj["$t"]);
 		data.every = obj.every;
-		if (data.every == "1" && data.FREQ == "WEEKLY") {
+		if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
 			return this.everyWeekByDay(data);
+		}
+		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
+			return this.everyWeekByNthDay(data);
 		}
 		
 		return "Unknown recurrence code";
 	},
 	
+	/**
+	 * Data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
+	 */
 	everyWeekByDay: function(data) {
 		var inst = this;
 		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
 		return "Every " + this.joinWithCommasAndAnd(days);
+	},
+	
+	/**
+	 * Data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
+	 */
+	everyWeekByNthDay: function(data) {
+		var inst = this;
+		var ordinal = this.toOrdinal(data.INTERVAL);
+		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
+		return "Every " + ordinal + " " + this.joinWithCommasAndAnd(days);
 	},
 	
 	/**
