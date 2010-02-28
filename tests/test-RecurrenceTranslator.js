@@ -150,6 +150,7 @@ testCases.push( function(Y) {
 		
 		testToTextEveryMonthOnTheNth: function(){
 			assertToText("Every month on the 4th", "1", "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=4");
+			assertToText("Every month on the 1st and 7th", "1", "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=1,7");
 		}
 	});
 

@@ -11,7 +11,8 @@ var RecurrenceTranslator = {
 	/**
 	 * Convert a string like "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE" into an object
 	 * like { FREQ: "WEEKLY", INTERVAL: "1" BYDAY: ["WE"] }.
-	 * Note BYDAY always gets translated into an array.
+	 * Note the following keys always gets translated into an array:
+	 * BYDAY, BYMONTHDAY
 	 * @param {Object} str
 	 */
 	codeStringToObject: function(str) {
@@ -21,7 +22,7 @@ var RecurrenceTranslator = {
 			var pair = pairs[i].split('=');
 			var key = pair[0];
 			var value = pair[1];
-			if (key == 'BYDAY') {
+			if (key == 'BYDAY' || key == 'BYMONTHDAY') {
 				obj[key] = value.split(',');
 			}
 			else {
@@ -134,8 +135,10 @@ var RecurrenceTranslator = {
 	 * with data of the form FREQ=MONTHLY;BYMONTHDAY=xxx (and optional INTERVAL=xxx)
 	 */
 	everyNMonthsOnTheXth: function(data) {
-		var ordinal = this.toOrdinal(data.BYMONTHDAY);
-		return "Every month on the " + ordinal;
+		var inst = this;
+		var ordinal_array = data.BYMONTHDAY.map(function(day) { return inst.toOrdinal(day) });
+		var ordinal_text = this.joinWithCommasAndAnd(ordinal_array);
+		return "Every month on the " + ordinal_text;
 	},
 	
 	/**
