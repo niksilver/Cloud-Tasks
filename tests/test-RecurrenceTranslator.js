@@ -146,6 +146,10 @@ testCases.push( function(Y) {
 			assertToText("Every year", "1", "FREQ=YEARLY;INTERVAL=1");
 			assertToText("Every 2 years", "1", "FREQ=YEARLY;INTERVAL=2");
 			assertToText("Every 3 years", "1", "FREQ=YEARLY;INTERVAL=3");
+		},
+		
+		testToTextEveryMonthOnTheNth: function(){
+			assertToText("Every month on the 4th", "1", "FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=4");
 		}
 	});
 

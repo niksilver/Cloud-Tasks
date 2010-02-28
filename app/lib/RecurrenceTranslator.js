@@ -81,6 +81,9 @@ var RecurrenceTranslator = {
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
 			return this.everyWeekByNthDay(data);
 		}
+		else if (data.every == "1" && data.FREQ == "MONTHLY" && data.BYMONTHDAY) {
+			return this.everyNMonthsOnTheXth(data);
+		}
 		else if (data.every == "1" && data.FREQ == "MONTHLY") {
 			return this.everyNMonths(data);
 		}
@@ -124,6 +127,15 @@ var RecurrenceTranslator = {
 		else {
 			return "Every month";
 		}
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=MONTHLY;BYMONTHDAY=xxx (and optional INTERVAL=xxx)
+	 */
+	everyNMonthsOnTheXth: function(data) {
+		var ordinal = this.toOrdinal(data.BYMONTHDAY);
+		return "Every month on the " + ordinal;
 	},
 	
 	/**
