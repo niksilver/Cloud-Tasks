@@ -87,5 +87,23 @@ var RecurrenceTranslator = {
 			}
 		}
 		return out;
+	},
+	
+	/**
+	 * Take a cardinal (e.g. 2) and generate the ordinal (e.g. "2nd").
+	 * @param {String} cardinal  The cardinal number.
+	 */
+	toOrdinal: function(cardinal) {
+		var mod10 = cardinal % 10;
+		if (mod10 == 1) {
+			return cardinal + "st";
+		}
+		else if (mod10 == 2) {
+			return cardinal + "nd";
+		}
+		else if (mod10 == 3) {
+			return cardinal + "rd";
+		}
+		return cardinal + "th";
 	}
 }

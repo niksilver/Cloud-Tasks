@@ -28,6 +28,19 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("TH", obj.BYDAY[1]);
 		},
 		
+		testToOrdinal: function() {
+			Y.Assert.areEqual("1st", RecurrenceTranslator.toOrdinal(1));
+			Y.Assert.areEqual("2nd", RecurrenceTranslator.toOrdinal(2));
+			Y.Assert.areEqual("3rd", RecurrenceTranslator.toOrdinal(3));
+			Y.Assert.areEqual("4th", RecurrenceTranslator.toOrdinal(4));
+			Y.Assert.areEqual("5th", RecurrenceTranslator.toOrdinal(5));
+			Y.Assert.areEqual("6th", RecurrenceTranslator.toOrdinal(6));
+			Y.Assert.areEqual("7th", RecurrenceTranslator.toOrdinal(7));
+			Y.Assert.areEqual("8th", RecurrenceTranslator.toOrdinal(8));
+			Y.Assert.areEqual("9th", RecurrenceTranslator.toOrdinal(9));
+			Y.Assert.areEqual("10th", RecurrenceTranslator.toOrdinal(10));
+		},
+		
 		testToText: function() {
 			assertToText("Every Monday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO");
 			assertToText("Every Tuesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU");
