@@ -118,6 +118,8 @@ testCases.push( function(Y) {
 			assertToText("Every 2nd Friday", "1", "FREQ=WEEKLY;INTERVAL=2;BYDAY=FR");
 			assertToText("Every 3rd Tuesday and Wednesday", "1", "FREQ=WEEKLY;INTERVAL=3;BYDAY=TU,WE");
 			assertToText("Every 4th Tuesday, Friday and Sunday", "1", "FREQ=WEEKLY;INTERVAL=4;BYDAY=TU,FR,SU");
+
+			assertToText("Every 2nd Monday, Tuesday, Wednesday, Thursday and Friday", "1", "FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,TU,WE,TH,FR");
 		},
 		
 		testToTextByDayUsingWeekday: function(){
