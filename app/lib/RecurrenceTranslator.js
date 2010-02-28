@@ -84,6 +84,9 @@ var RecurrenceTranslator = {
 		else if (data.every == "1" && data.FREQ == "MONTHLY") {
 			return this.everyNMonths(data);
 		}
+		else if (data.every == "1" && data.FREQ == "YEARLY") {
+			return this.everyNYears(data);
+		}
 
 		
 		return "Unknown recurrence code";
@@ -120,6 +123,19 @@ var RecurrenceTranslator = {
 		}
 		else {
 			return "Every month";
+		}
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=YEARLY (and optional INTERVAL=xxx)
+	 */
+	everyNYears: function(data) {
+		if (data.INTERVAL >= 2) {
+			return "Every " + data.INTERVAL + " years";
+		}
+		else {
+			return "Every year";
 		}
 	},
 	
