@@ -132,6 +132,8 @@ testCases.push( function(Y) {
 		
 		testToTextWeeklyWithoutByDay: function(){
 			assertToText("Every week", "1", "FREQ=WEEKLY;INTERVAL=1");
+			assertToText("Every 2 weeks", "1", "FREQ=WEEKLY;INTERVAL=2");
+			assertToText("Every 3 weeks", "1", "FREQ=WEEKLY;INTERVAL=3");
 		}
 	});
 

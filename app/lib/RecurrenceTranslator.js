@@ -95,10 +95,15 @@ var RecurrenceTranslator = {
 	
 	/**
 	 * Interpret an "every" rule,
-	 * with data of the form FREQ=WEEKLY
+	 * with data of the form FREQ=WEEKLY;INTERVAL=xxx
 	 */
 	everyWeek: function(data) {
-		return "Every week";
+		if (data.INTERVAL >= 2) {
+			return "Every " + data.INTERVAL + " weeks";
+		}
+		else {
+			return "Every week";
+		}
 	},
 	
 	/**
