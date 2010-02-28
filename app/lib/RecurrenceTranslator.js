@@ -83,9 +83,29 @@ var RecurrenceTranslator = {
 	 * Data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
 	 */
 	everyWeekByDay: function(data) {
+		if (this.hasAllWeekdaysOnly(data)) {
+			return "Every weekday";
+		}
+
 		var inst = this;
 		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
 		return "Every " + this.joinWithCommasAndAnd(days);
+	},
+	
+	hasAllWeekdaysOnly: function(data) {
+		var days = data.BYDAY;
+		if (days.length == 5
+			&& days.indexOf('MO') >= 0
+			&& days.indexOf('TU') >= 0
+			&& days.indexOf('WE') >= 0
+			&& days.indexOf('TH') >= 0
+			&& days.indexOf('FR') >= 0)
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
 	},
 	
 	/**
