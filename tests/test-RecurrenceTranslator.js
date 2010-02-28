@@ -155,6 +155,8 @@ testCases.push( function(Y) {
 		
 		testToTextEveryMonthOnTheNthBlahday: function(){
 			assertToText("Every month on the 3rd Tuesday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU");
+			assertToText("Every month on the 3rd Tuesday and 3rd Friday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU,3FR");
+			assertToText("Every month on the 3rd Tuesday, 3rd Friday and 3rd Saturday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU,3FR,3SA");
 		}
 	});
 

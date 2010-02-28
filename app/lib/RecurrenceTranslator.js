@@ -148,7 +148,8 @@ var RecurrenceTranslator = {
 	 * with data of the form FREQ=MONTHLY;BYDAY=xxx
 	 */
 	everyMonthOnTheXthBlahday: function(data) {
-		var day_text = this.dayCodeToText(data.BYDAY[0]);
+		var day_text_array = data.BYDAY.map(this.dayCodeToText.bind(this)); //this.dayCodeToText(data.BYDAY[0]);
+		var day_text = this.joinWithCommasAndAnd(day_text_array);
 		return "Every month on the " + day_text;
 	},
 	
