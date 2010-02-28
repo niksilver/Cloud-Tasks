@@ -41,8 +41,22 @@ var RecurrenceTranslator = {
 		"SU": "Sunday"
 	},
 	
-	dayCodeToDay: function(day_code) {
-		return this.dayCodeToDayHash[day_code];
+	/**
+	 * Take a day code such as "TU" or "2SA" and return a human-readable translation,
+	 * e.g. "Tuesday" or "2nd Saturday"
+	 * @param {String} day_code  The day code to translate.
+	 */
+	dayCodeToText: function(day_code) {
+		var match = day_code.match(/^(\d*)([A-Z]*)/); // Matching e.g. 2MO or just MO
+		var numeric = match[1];
+		var text = match[2];
+		var day_name = this.dayCodeToDayHash[text];
+		if (!numeric) {
+			return day_name;
+		}
+		else {
+			return this.toOrdinal(numeric) + " " + day_name;
+		}
 	},
 	
 	/**
@@ -64,7 +78,7 @@ var RecurrenceTranslator = {
 	
 	everyWeekByDay: function(data) {
 		var inst = this;
-		var days = data.BYDAY.map(function(code) { return inst.dayCodeToDay(code) });
+		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
 		return "Every " + this.joinWithCommasAndAnd(days);
 	},
 	

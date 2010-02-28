@@ -88,6 +88,19 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("119th", RecurrenceTranslator.toOrdinal(119));
 		},
 		
+		testDayCodeToText: function() {
+			Y.Assert.areEqual("Monday", RecurrenceTranslator.dayCodeToText("MO"));
+			Y.Assert.areEqual("Tuesday", RecurrenceTranslator.dayCodeToText("TU"));
+			Y.Assert.areEqual("Wednesday", RecurrenceTranslator.dayCodeToText("WE"));
+			Y.Assert.areEqual("Thursday", RecurrenceTranslator.dayCodeToText("TH"));
+			Y.Assert.areEqual("Friday", RecurrenceTranslator.dayCodeToText("FR"));
+			Y.Assert.areEqual("Saturday", RecurrenceTranslator.dayCodeToText("SA"));
+			Y.Assert.areEqual("Sunday", RecurrenceTranslator.dayCodeToText("SU"));
+
+			Y.Assert.areEqual("2nd Monday", RecurrenceTranslator.dayCodeToText("2MO"));
+			Y.Assert.areEqual("3rd Friday", RecurrenceTranslator.dayCodeToText("3FR"));
+		},
+		
 		testToText: function() {
 			assertToText("Every Monday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO");
 			assertToText("Every Tuesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU");
