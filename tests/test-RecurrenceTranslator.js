@@ -101,7 +101,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("3rd Friday", RecurrenceTranslator.dayCodeToText("3FR"));
 		},
 		
-		testToTextWeeklyByDay: function() {
+		testToTextEveryNthBlahday: function() {
 			assertToText("Every Monday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO");
 			assertToText("Every Tuesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=TU");
 			assertToText("Every Wednesday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE");
@@ -122,18 +122,24 @@ testCases.push( function(Y) {
 			assertToText("Every 2nd Monday, Tuesday, Wednesday, Thursday and Friday", "1", "FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,TU,WE,TH,FR");
 		},
 		
-		testToTextWeeklyByDayUsingWeekday: function(){
+		testToTextEveryWeekday: function(){
 			assertToText("Every weekday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
 		},
 		
-		testToTextDailyUsingDay: function(){
+		testToTextEveryDay: function(){
 			assertToText("Every day", "1", "FREQ=DAILY;INTERVAL=1");
 		},
 		
-		testToTextWeeklyWithoutByDay: function(){
+		testToTextEveryNWeeks: function(){
 			assertToText("Every week", "1", "FREQ=WEEKLY;INTERVAL=1");
 			assertToText("Every 2 weeks", "1", "FREQ=WEEKLY;INTERVAL=2");
 			assertToText("Every 3 weeks", "1", "FREQ=WEEKLY;INTERVAL=3");
+		},
+		
+		testToTextEveryNMonths: function(){
+			assertToText("Every month", "1", "FREQ=MONTHLY;INTERVAL=1");
+			assertToText("Every 2 months", "1", "FREQ=MONTHLY;INTERVAL=2");
+			assertToText("Every 3 months", "1", "FREQ=MONTHLY;INTERVAL=3");
 		}
 	});
 

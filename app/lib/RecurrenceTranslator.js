@@ -73,7 +73,7 @@ var RecurrenceTranslator = {
 			return this.everyDay(data);
 		}
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && !data.BYDAY) {
-			return this.everyWeek(data);
+			return this.everyNWeeks(data);
 		}
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
 			return this.everyWeekByDay(data);
@@ -81,6 +81,10 @@ var RecurrenceTranslator = {
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
 			return this.everyWeekByNthDay(data);
 		}
+		else if (data.every == "1" && data.FREQ == "MONTHLY") {
+			return this.everyNMonths(data);
+		}
+
 		
 		return "Unknown recurrence code";
 	},
@@ -95,14 +99,27 @@ var RecurrenceTranslator = {
 	
 	/**
 	 * Interpret an "every" rule,
-	 * with data of the form FREQ=WEEKLY;INTERVAL=xxx
+	 * with data of the form FREQ=WEEKLY (and optional INTERVAL=xxx)
 	 */
-	everyWeek: function(data) {
+	everyNWeeks: function(data) {
 		if (data.INTERVAL >= 2) {
 			return "Every " + data.INTERVAL + " weeks";
 		}
 		else {
 			return "Every week";
+		}
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=MONTHLY (and optional INTERVAL=xxx)
+	 */
+	everyNMonths: function(data) {
+		if (data.INTERVAL >= 2) {
+			return "Every " + data.INTERVAL + " months";
+		}
+		else {
+			return "Every month";
 		}
 	},
 	
