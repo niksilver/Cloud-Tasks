@@ -38,7 +38,54 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("7th", RecurrenceTranslator.toOrdinal(7));
 			Y.Assert.areEqual("8th", RecurrenceTranslator.toOrdinal(8));
 			Y.Assert.areEqual("9th", RecurrenceTranslator.toOrdinal(9));
+			
 			Y.Assert.areEqual("10th", RecurrenceTranslator.toOrdinal(10));
+			
+			Y.Assert.areEqual("11th", RecurrenceTranslator.toOrdinal(11));
+			Y.Assert.areEqual("12th", RecurrenceTranslator.toOrdinal(12));
+			Y.Assert.areEqual("13th", RecurrenceTranslator.toOrdinal(13));
+			Y.Assert.areEqual("14th", RecurrenceTranslator.toOrdinal(14));
+			Y.Assert.areEqual("15th", RecurrenceTranslator.toOrdinal(15));
+			Y.Assert.areEqual("16th", RecurrenceTranslator.toOrdinal(16));
+			Y.Assert.areEqual("17th", RecurrenceTranslator.toOrdinal(17));
+			Y.Assert.areEqual("18th", RecurrenceTranslator.toOrdinal(18));
+			Y.Assert.areEqual("19th", RecurrenceTranslator.toOrdinal(19));
+
+			Y.Assert.areEqual("20th", RecurrenceTranslator.toOrdinal(20));
+
+			Y.Assert.areEqual("21st", RecurrenceTranslator.toOrdinal(21));
+			Y.Assert.areEqual("22nd", RecurrenceTranslator.toOrdinal(22));
+			Y.Assert.areEqual("23rd", RecurrenceTranslator.toOrdinal(23));
+			Y.Assert.areEqual("24th", RecurrenceTranslator.toOrdinal(24));
+			Y.Assert.areEqual("25th", RecurrenceTranslator.toOrdinal(25));
+			Y.Assert.areEqual("26th", RecurrenceTranslator.toOrdinal(26));
+			Y.Assert.areEqual("27th", RecurrenceTranslator.toOrdinal(27));
+			Y.Assert.areEqual("28th", RecurrenceTranslator.toOrdinal(28));
+			Y.Assert.areEqual("29th", RecurrenceTranslator.toOrdinal(29));
+
+			Y.Assert.areEqual("100th", RecurrenceTranslator.toOrdinal(100));
+
+			Y.Assert.areEqual("101st", RecurrenceTranslator.toOrdinal(101));
+			Y.Assert.areEqual("102nd", RecurrenceTranslator.toOrdinal(102));
+			Y.Assert.areEqual("103rd", RecurrenceTranslator.toOrdinal(103));
+			Y.Assert.areEqual("104th", RecurrenceTranslator.toOrdinal(104));
+			Y.Assert.areEqual("105th", RecurrenceTranslator.toOrdinal(105));
+			Y.Assert.areEqual("106th", RecurrenceTranslator.toOrdinal(106));
+			Y.Assert.areEqual("107th", RecurrenceTranslator.toOrdinal(107));
+			Y.Assert.areEqual("108th", RecurrenceTranslator.toOrdinal(108));
+			Y.Assert.areEqual("109th", RecurrenceTranslator.toOrdinal(109));
+			
+			Y.Assert.areEqual("110th", RecurrenceTranslator.toOrdinal(110));
+			
+			Y.Assert.areEqual("111th", RecurrenceTranslator.toOrdinal(111));
+			Y.Assert.areEqual("112th", RecurrenceTranslator.toOrdinal(112));
+			Y.Assert.areEqual("113th", RecurrenceTranslator.toOrdinal(113));
+			Y.Assert.areEqual("114th", RecurrenceTranslator.toOrdinal(114));
+			Y.Assert.areEqual("115th", RecurrenceTranslator.toOrdinal(115));
+			Y.Assert.areEqual("116th", RecurrenceTranslator.toOrdinal(116));
+			Y.Assert.areEqual("117th", RecurrenceTranslator.toOrdinal(117));
+			Y.Assert.areEqual("118th", RecurrenceTranslator.toOrdinal(118));
+			Y.Assert.areEqual("119th", RecurrenceTranslator.toOrdinal(119));
 		},
 		
 		testToText: function() {

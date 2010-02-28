@@ -95,6 +95,13 @@ var RecurrenceTranslator = {
 	 */
 	toOrdinal: function(cardinal) {
 		var mod10 = cardinal % 10;
+		var tens = cardinal % 100 - mod10;
+		
+		if (tens == 10) {
+			// 10-19
+			return cardinal + "th";
+		}
+		
 		if (mod10 == 1) {
 			return cardinal + "st";
 		}
