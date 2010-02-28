@@ -72,6 +72,9 @@ var RecurrenceTranslator = {
 		if (data.every == "1" && data.FREQ == 'DAILY') {
 			return this.everyDay(data);
 		}
+		else if (data.every == "1" && data.FREQ == "WEEKLY" && !data.BYDAY) {
+			return this.everyWeek(data);
+		}
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
 			return this.everyWeekByDay(data);
 		}
@@ -88,6 +91,14 @@ var RecurrenceTranslator = {
 	 */
 	everyDay: function(data) {
 		return "Every day";
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=WEEKLY
+	 */
+	everyWeek: function(data) {
+		return "Every week";
 	},
 	
 	/**
