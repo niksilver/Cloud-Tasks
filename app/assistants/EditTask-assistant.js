@@ -75,7 +75,8 @@ EditTaskAssistant.prototype.setUpDueWidget = function() {
 EditTaskAssistant.prototype.setUpRecurrenceWidget = function() {
 	var recurrence_attributes = {
 		modelProperty: 'text',
-		multiline: false,
+		multiline: true,
+		enterSubmits: true,
 		autoFocus: false
 	};
 	this.controller.setupWidget('TaskRecurrenceField', recurrence_attributes, this.recurrenceModel);

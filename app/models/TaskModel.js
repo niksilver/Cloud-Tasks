@@ -219,7 +219,7 @@ TaskModel.prototype.getRecurrenceEditText = function() {
 		return this.rrule.userText;
 	}
 	else if (this.isRecurring()) {
-		return 'To be defined!';
+		return RecurrenceTranslator.toText(this.rrule);
 	}
 	else {
 		return '';
