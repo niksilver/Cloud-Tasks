@@ -124,6 +124,10 @@ testCases.push( function(Y) {
 		
 		testToTextByDayUsingWeekday: function(){
 			assertToText("Every weekday", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+		},
+		
+		testToTextByDayUsingDay: function(){
+			assertToText("Every day", "1", "FREQ=DAILY;INTERVAL=1");
 		}
 	});
 

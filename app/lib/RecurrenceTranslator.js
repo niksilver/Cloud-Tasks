@@ -69,7 +69,10 @@ var RecurrenceTranslator = {
 	toText: function(obj) {
 		var data = this.codeStringToObject(obj["$t"]);
 		data.every = obj.every;
-		if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
+		if (data.every == "1" && data.FREQ == 'DAILY') {
+			return this.everyDay(data);
+		}
+		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
 			return this.everyWeekByDay(data);
 		}
 		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
@@ -80,7 +83,16 @@ var RecurrenceTranslator = {
 	},
 	
 	/**
-	 * Data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=DAILY
+	 */
+	everyDay: function(data) {
+		return "Every day";
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
 	 */
 	everyWeekByDay: function(data) {
 		if (this.hasAllWeekdaysOnly(data)) {
@@ -109,7 +121,8 @@ var RecurrenceTranslator = {
 	},
 	
 	/**
-	 * Data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=WEEKLY;INTERVAL=1;BYDAY=xxx,xxx
 	 */
 	everyWeekByNthDay: function(data) {
 		var inst = this;
