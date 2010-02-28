@@ -10,6 +10,8 @@
   - Have tasks with no due dates appear after overdue tasks
 - Efficiency
   - When trying to merge a task which is completed or deleted it should be just ignored.
+- Usability
+  - When starting up without authorisation, push the auth screen to the user.
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
