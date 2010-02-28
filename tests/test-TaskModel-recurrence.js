@@ -100,7 +100,7 @@ testCases.push( function(Y) {
                 	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
                  }
 			});
-			Y.Assert.areEqual('To be defined!', task.getRecurrenceEditText(), "Some non-empty rrule gives wrong edit text");
+			Y.Assert.areEqual('Every Monday', task.getRecurrenceEditText(), "Some non-empty rrule gives wrong edit text");
 		},
 		
 		testGetRecurrenceEditTextWhenAProblem: function() {

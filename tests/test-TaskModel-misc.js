@@ -404,7 +404,7 @@ testCases.push( function(Y) {
 			});
 			var task2_with_changes = new TaskModel({
 				deleted: true,
-				rrule: { every: '0', '$t': 'FREQ=WEEKLY;INTERVAL=2' },
+				rrule: { every: '0', '$t': 'FREQ=WEEKLY;INTERVAL=2', problem: true, userText: "Neep" },
 				localChanges: ['deleted']
 			});
 			
@@ -412,6 +412,7 @@ testCases.push( function(Y) {
 			Y.assert(task1.localChanges.indexOf('due') >= 0, "Didn't keep local change of due");
 			Y.Assert.areEqual(true, task1.deleted, "Didn't take deleted as a change");
 			Y.assert(task1.localChanges.indexOf('deleted') >= 0, "Didn't take fact of local change of deleted");
+			Y.Assert.areEqual(true, task1.hasRRuleFlag, "Didn't update hasRRuleFlag");
 		}
 
 	});

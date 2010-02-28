@@ -194,6 +194,8 @@ TaskModel.prototype.takeLocalChanges = function(other_task) {
 		this.rrule = this.rrule || {};
 		this.rrule.problem = other_problem;
 	}
+	
+	this.update();
 }
 
 TaskModel.prototype.hasNoIDs = function() {

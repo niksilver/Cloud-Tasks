@@ -13,7 +13,6 @@
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
-  - Put a nonsense recurrence on a task, restart the app, and problem flag disappears
   
 Done
 ----
@@ -49,4 +48,5 @@ Done
     (After task added and success received, the task list should be saved, but isn't.)
   - Every change to a task in RTM should save the task
   - On the physical device after restarting the application only locally-created tasks appear.
+  - Put a nonsense recurrence on a task, restart the app, and problem flag disappears
   
