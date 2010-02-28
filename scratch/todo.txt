@@ -13,6 +13,7 @@
 - Bugs
   - Editing a date but keeping it the same should note create a sync
   - Editing a recurrence but keeping it the same should note create a sync
+  - Put a nonsense recurrence on a task, restart the app, and problem flag disappears
   
 Done
 ----
