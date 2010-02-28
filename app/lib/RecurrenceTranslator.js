@@ -136,7 +136,7 @@ var RecurrenceTranslator = {
 	 */
 	everyNMonthsOnTheXth: function(data) {
 		var inst = this;
-		var ordinal_array = data.BYMONTHDAY.map(function(day) { return inst.toOrdinal(day) });
+		var ordinal_array = data.BYMONTHDAY.map(this.toOrdinal.bind(this));
 		var ordinal_text = this.joinWithCommasAndAnd(ordinal_array);
 		return "Every month on the " + ordinal_text;
 	},
@@ -164,8 +164,9 @@ var RecurrenceTranslator = {
 		}
 
 		var inst = this;
-		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
-		return "Every " + this.joinWithCommasAndAnd(days);
+		var days = data.BYDAY.map(this.dayCodeToText.bind(this));
+		var days_text = this.joinWithCommasAndAnd(days)
+		return "Every " + days_text;
 	},
 	
 	hasAllWeekdaysOnly: function(data) {
@@ -191,7 +192,7 @@ var RecurrenceTranslator = {
 	everyWeekByNthDay: function(data) {
 		var inst = this;
 		var ordinal = this.toOrdinal(data.INTERVAL);
-		var days = data.BYDAY.map(function(code) { return inst.dayCodeToText(code) });
+		var days = data.BYDAY.map(this.dayCodeToText.bind(this));
 		return "Every " + ordinal + " " + this.joinWithCommasAndAnd(days);
 	},
 	
