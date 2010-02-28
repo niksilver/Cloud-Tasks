@@ -83,7 +83,10 @@ var RecurrenceTranslator = {
 			return this.everyWeekByNthDay(data);
 		}
 		else if (data.every == "1" && data.FREQ == "MONTHLY" && data.BYMONTHDAY) {
-			return this.everyNMonthsOnTheXth(data);
+			return this.everyMonthOnTheXth(data);
+		}
+		else if (data.every == "1" && data.FREQ == "MONTHLY" && data.BYDAY) {
+			return this.everyMonthOnTheXthBlahday(data);
 		}
 		else if (data.every == "1" && data.FREQ == "MONTHLY") {
 			return this.everyNMonths(data);
@@ -132,13 +135,21 @@ var RecurrenceTranslator = {
 	
 	/**
 	 * Interpret an "every" rule,
-	 * with data of the form FREQ=MONTHLY;BYMONTHDAY=xxx (and optional INTERVAL=xxx)
+	 * with data of the form FREQ=MONTHLY;BYMONTHDAY=xxx
 	 */
-	everyNMonthsOnTheXth: function(data) {
-		var inst = this;
+	everyMonthOnTheXth: function(data) {
 		var ordinal_array = data.BYMONTHDAY.map(this.toOrdinal.bind(this));
 		var ordinal_text = this.joinWithCommasAndAnd(ordinal_array);
 		return "Every month on the " + ordinal_text;
+	},
+	
+	/**
+	 * Interpret an "every" rule,
+	 * with data of the form FREQ=MONTHLY;BYDAY=xxx
+	 */
+	everyMonthOnTheXthBlahday: function(data) {
+		var day_text = this.dayCodeToText(data.BYDAY[0]);
+		return "Every month on the " + day_text;
 	},
 	
 	/**
