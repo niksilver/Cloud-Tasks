@@ -46,6 +46,7 @@ TaskListModel.prototype.getTaskList = function() {
  * @returns {Array} An array of TaskModel objects.
  */
 TaskListModel.objectToTaskList = function(data_obj) {
+	Mojo.Log.info("TaskListModel.objectToTaskList: Entering");
 	var task_list = [];
 	var tasks_obj = data_obj.rsp.tasks;
 	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
@@ -80,6 +81,7 @@ TaskListModel.objectToTaskList = function(data_obj) {
 
 	});
 	
+	Mojo.Log.info("TaskListModel.objectToTaskList: Exiting");
 	return task_list;
 }
 

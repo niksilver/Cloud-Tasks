@@ -243,6 +243,11 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_hash['85270009'].completed, "Didn't get recurring created task's completed property");
 		},
 		
+		testObjectToTaskListWithReallyBigData: function() {
+			var tasks = TaskListModel.objectToTaskList(EverythingTestData.everything_response);
+			Y.Assert.isNotUndefined(tasks, "Should have got some tasks");
+		},
+		
 		testTaskseriesObjectToTasks: function() {
 			var taskseries_obj = SampleTestData.taskseries_obj_with_multiple_tasks;
 			var task_array = TaskListModel.taskseriesObjectToTasks(taskseries_obj, '11223');
@@ -900,7 +905,7 @@ testCases.push( function(Y) {
 		testAddTask: function() {
 			var task, model, found_task;
 			
-			TestUtils.runInSeries(this, 200,
+			TestUtils.runInSeries(this, 250,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
