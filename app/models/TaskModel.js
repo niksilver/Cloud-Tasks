@@ -198,6 +198,10 @@ TaskModel.prototype.takeLocalChanges = function(other_task) {
 	this.update();
 }
 
+TaskModel.prototype.needsPurging = function() {
+	return this.shouldNotBeVisible() && !this.hasLocalChanges();
+}
+
 TaskModel.prototype.hasNoIDs = function() {
 	return !this.listID && !this.taskseriesID && !this.taskID;
 }

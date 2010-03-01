@@ -319,7 +319,7 @@ TaskListModel.prototype.purgeTaskList = function() {
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
 		Mojo.Log.info("TaskListModel.purgeTaskList: Considering purging task[" + i + "]: " + task.toSummaryString());
-		if (task.shouldNotBeVisible() && !task.hasLocalChanges()) {
+		if (task.needsPurging()) {
 			// Need to purge this task
 			this._task_list.splice(i, 1);
 			Store.removeTask(task);
