@@ -284,8 +284,11 @@ TaskListModel.prototype.addTask = function(task, onSuccess) {
 TaskListModel.prototype.mergeTask = function(task) {
 	Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task.toSummaryString());
 	var task_index = this.getTaskIndex(task);
-	if (task_index == -1) {
-		Mojo.Log.info("TaskListModel.mergeTask: Task is new");
+	if (task_index == -1 && task.needsPurging()) {
+		Mojo.Log.info("TaskListModel.mergeTask: Task is new but won't add task as it needs purging");
+	}
+	else if (task_index == -1) {
+		Mojo.Log.info("TaskListModel.mergeTask: Task is new and live so will add");
 		this.addTask(task);
 	}
 	else {

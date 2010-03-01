@@ -561,6 +561,42 @@ testCases.push( function(Y) {
 			
 		},
 		
+		testMergeTaskUsingNewTaskWillStoreTaskWhichDoesntNeedPurging: function() {
+			var model = new TaskListModel();
+			var new_task_not_needing_purging = new TaskModel({
+				listID: '54321',
+				taskseriesID: '665544',
+				taskID: '776655',
+				name: 'Do something new',
+				due: '2010-01-03T00:00:00Z',
+				completed: false
+			});
+			var called_add_task;
+			model.addTask = function(task) { called_add_task = true };
+
+			called_add_task = false;
+			model.mergeTask(new_task_not_needing_purging);
+			Y.Assert.areEqual(true, called_add_task, "Should have added task which doesn't need purging");			
+		},
+		
+		testMergeTaskUsingNewTaskWontStoreTaskNeedingPurging: function() {
+			var model = new TaskListModel();
+			var new_task_needing_purging = new TaskModel({
+				listID: '11234',
+				taskseriesID: '556677',
+				taskID: '889900',
+				name: 'Do something done',
+				due: '2010-01-02T00:00:00Z',
+				completed: true
+			});
+			var called_add_task;
+			model.addTask = function(task) { called_add_task = true };
+
+			called_add_task = false;
+			model.mergeTask(new_task_needing_purging);
+			Y.Assert.areEqual(false, called_add_task, "Should not have added task which needs purging");			
+		},
+		
 		testMergeTaskWithExistingTask: function() {
 			var model;
 			var existing_task, existing_task_local_id, updated_name;

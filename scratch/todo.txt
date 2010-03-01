@@ -8,8 +8,6 @@
   - Handle postponing of recurring tasks
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
-- Efficiency
-  - When trying to merge a task which is completed or deleted it should be just ignored.
 - Usability
   - When starting up without authorisation, push the auth screen to the user.
 - Bugs
@@ -41,6 +39,8 @@ Done
   - Have tasks with no due dates have a blank where due date usually appears.
 - Auth screen:
   - Put spinner on Go and Finish buttons
+- Efficiency
+  - When trying to merge a task which is completed or deleted it should be just ignored.
 - Bugs (fixed):
   - New date set as tomorrow shows as bold as if today.
   - In task list, the momentary highlight on tasks of 3+ lines long does not cover the whole task. 
