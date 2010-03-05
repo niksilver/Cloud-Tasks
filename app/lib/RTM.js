@@ -54,29 +54,33 @@ RTM.prototype.rawAjaxRequest = function(url, options) {
  *     which is "forPushingChanges" or "forPullingTasks".
  */
 RTM.prototype.ajaxRequest = function(url, options) {
-	Mojo.Log.info("RTM.ajaxRequest: Entering");
+	Mojo.Log.info("RTM.ajaxRequest: Entering with URL " + url);
 	var orig_on_success = options.onSuccess;
 	var orig_on_failure = options.onFailure;
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
-		Mojo.Log.info("RTM.ajaxRequest.onSuccess: Entering");
+		Mojo.Log.info("RTM.ajaxRequest.onSuccess: Entering for URL " + url);
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
 		--inst.numNetworkRequests.total;
+		Mojo.Log.info("RTM.ajaxRequest.onSuccess: Decremented purpose " + options.rtmMethodPurpose + ", is now " + inst.numNetworkRequests[options.rtmMethodPurpose]);
 		orig_on_success(response);
 		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 	};
 	options.onFailure = function(response) {
+		Mojo.Log.info("RTM.ajaxRequest.onFailure: Entering for URL " + url);
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
 		--inst.numNetworkRequests.total;
+		Mojo.Log.info("RTM.ajaxRequest.onFailure: Decremented purpose " + options.rtmMethodPurpose + ", is now " + inst.numNetworkRequests[options.rtmMethodPurpose]);
 		orig_on_failure(response);
 		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 	};
 	var old_counters = Object.clone(this.numNetworkRequests);
 	++this.numNetworkRequests[options.rtmMethodPurpose];
 	++this.numNetworkRequests.total;
+	Mojo.Log.info("RTM.ajaxRequest: Incremented purpose " + options.rtmMethodPurpose + ", is now " + this.numNetworkRequests[options.rtmMethodPurpose]);
 	this.onNetworkRequestsChange(old_counters, this.numNetworkRequests);
 	this.rawAjaxRequest(url, options);
 }

@@ -78,5 +78,32 @@ var Utils = {
 	_eraseNextIDCookie: function() {
 		var id_cookie = new Mojo.Model.Cookie('nextID');
 		id_cookie.remove();
+	},
+	
+	/**
+	 * Run a function several times, each time feeding it the next few elements of an array.
+	 * After the first time the function is called each subsequent call is deferred
+	 * (see Prototype's defer() method) so that another routine or event can be handled.
+	 * When the array is entirely processed then a final function is run.
+	 * @param {Array} array  The array which is to be fed into the function, slice by slice.
+	 * @param {Number} size   The size of each slice of the array which must be passed into the function.
+	 * @param {Function} array_func  The function which handles the array. It must take one parameter,
+	 *     which is the an array. It will be fed the next slice of the array each time.
+	 * @param {Function} final_func  The function which will be run when the array has been
+	 *     entirely fed into the array function.
+	 */
+	splitAndDefer: function(array, size, array_func, final_func) {
+		var first = array.slice(0, size);
+		var rest;
+		if (array.length > size) {
+			rest = array.slice(size);
+		}
+		array_func(first);
+		if (rest) {
+			(function() { Utils.splitAndDefer(rest, size, array_func, final_func) }).defer();
+		}
+		else {
+			final_func.defer();
+		}
 	}
 }

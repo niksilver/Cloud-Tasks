@@ -121,21 +121,9 @@ Retrier.prototype.firePullTasksSequence = function() {
 	}
 	else {
 		Mojo.Log.info("Retrier.firePullTasksSequence: Pulling tasks");
-		var inst = this;
 		this.rtm.callMethod('rtm.tasks.getList',
 			this.getListParameters(),
-			function(response) {
-				Mojo.Log.info("Retrier.firePullTasksSequence: Response is good");
-				RTM.logResponse(response);
-				var json = response.responseJSON;
-				var task_list = TaskListModel.objectToTaskList(json);
-				inst.taskListModel.mergeTaskList(task_list);
-				inst.taskListModel.purgeTaskList();
-				inst.taskListModel.sort();
-				inst.rtm.setLatestModified(inst.taskListModel.getLatestModified());
-				inst.pullEventSpacer.haveFired();
-				inst.onTaskListModelChange();
-			},
+			this.getListOnSuccessCallback.bind(this),
 			function(err_msg) {
 				Mojo.Log.info("Retrier.firePullTasksSequence: Error: " + err_msg);
 				ErrorHandler.notify(err_msg);
@@ -143,6 +131,27 @@ Retrier.prototype.firePullTasksSequence = function() {
 		);
 
 	}
+}
+
+Retrier.prototype.getListOnSuccessCallback = function(response) {
+	Mojo.Log.info("Retrier.getListOnSuccessCallback: Response is good");
+	RTM.logResponse(response);
+	var json = response.responseJSON;
+	Mojo.Log.info("Retrier.getListOnSuccessCallback: Faking response");
+	json = LongResponse;
+	var task_list = TaskListModel.objectToTaskList(json);
+	Utils.splitAndDefer(task_list, 10,
+		this.taskListModel.mergeTaskList.bind(this.taskListModel),
+		this.afterGetListSuccessAndMerge.bind(this));
+}
+
+Retrier.prototype.afterGetListSuccessAndMerge = function() {
+	Mojo.Log.info("Retrier.afterGetListSuccessAndMerge: Entering");
+	this.taskListModel.purgeTaskList();
+	this.taskListModel.sort();
+	this.rtm.setLatestModified(this.taskListModel.getLatestModified());
+	this.pullEventSpacer.haveFired();
+	this.onTaskListModelChange();
 }
 
 Retrier.prototype.getListParameters = function() {

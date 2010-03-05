@@ -72,12 +72,12 @@ var Store = {
 		}
 		var obj = task.toObject();
 		onSuccess = onSuccess || function(){};
-		Store.execute(
+		/* Store.execute(
 			"insert or replace into tasks (id, json) values (?, ?)",
 			[task.localID, Object.toJSON(obj)],
 			function() { onSuccess(task) },
 			"Could not save task"
-		);
+		); */
 	},
 	
 	/**
@@ -135,12 +135,12 @@ var Store = {
 			return;
 		}
 		onSuccess = onSuccess || function(){};
-		Store.execute(
+		/* Store.execute(
 			"delete from tasks where id = ?",
 			[local_id],
 			onSuccess,
 			"Could not delete task"
-		);
+		); */
 	},
 	
 	/**
@@ -185,12 +185,12 @@ var Store = {
 			return;
 		}
 		onSuccess = onSuccess || function(){};
-		Store.execute(
+		/* Store.execute(
 			"delete from tasks",
 			[],
 			onSuccess,
 			"Could not delete tasks"
-		);
+		); */
 	},
 	
 	/**
@@ -206,7 +206,7 @@ var Store = {
 			return;
 		}
 		onSuccess = onSuccess || function(){};
-		Store.database.transaction(
+		/* Store.database.transaction(
 			// The transaction function
 			function(transaction) {
 				Mojo.Log.info("Store.replaceAllTasks: Inserting new tasks");
@@ -235,7 +235,7 @@ var Store = {
 			{
 				handleEvent: function() { onSuccess() }
 			}
-		);
+		); */
 	},
 	
 	// As defined at http://dev.w3.org/html5/webdatabase/#sqltransactionerrorcallback

@@ -54,6 +54,79 @@ testCases.push( function(Y) {
 			Utils._eraseNextIDCookie();
 			Y.Assert.areEqual(0, Utils.getNextID(), "First ID should be 0");
 			Y.Assert.areEqual(1, Utils.getNextID(), "Second ID should be 1");
+		},
+		
+		testSplitAndDeferWithLongList: function() {
+			var last_values = [];
+			var push_last = function(list) {
+				var last;
+				for (var i = 0; i < list.length; i++) {
+					last = list[i];
+				}
+				last_values.push(last);
+			};
+			var the_length;
+			var set_the_length = function() { the_length = last_values.length };
+
+			var list_arg = [11,22,33, 44,55,66, 77,88,99, 12,23,34, 45];
+			
+			Utils.splitAndDefer(list_arg, 3, push_last, set_the_length);
+			this.wait(function() {
+				Y.Assert.areEqual(5, last_values.length, "Wrong number of values pushed");
+				Y.Assert.areEqual(33, last_values[0]);
+				Y.Assert.areEqual(66, last_values[1]);
+				Y.Assert.areEqual(99, last_values[2]);
+				Y.Assert.areEqual(34, last_values[3]);
+				Y.Assert.areEqual(45, last_values[4]);
+				Y.Assert.areEqual(5, the_length, "Didn't run set_the_length() successfully");
+			}, 100);
+		},
+		
+		testSplitAndDeferWithExactlyFittingList: function() {
+			var last_values = [];
+			var push_last = function(list) {
+				var last;
+				for (var i = 0; i < list.length; i++) {
+					last = list[i];
+				}
+				last_values.push(last);
+			};
+			var the_length;
+			var set_the_length = function() { the_length = last_values.length };
+
+			var list_arg = [11,22,33, 44,55,66, 77,88,99, 12,23,34];
+			
+			Utils.splitAndDefer(list_arg, 3, push_last, set_the_length);
+			this.wait(function() {
+				Y.Assert.areEqual(4, last_values.length, "Wrong number of values pushed");
+				Y.Assert.areEqual(33, last_values[0]);
+				Y.Assert.areEqual(66, last_values[1]);
+				Y.Assert.areEqual(99, last_values[2]);
+				Y.Assert.areEqual(34, last_values[3]);
+				Y.Assert.areEqual(4, the_length, "Didn't run set_the_length() successfully");
+			}, 100);
+		},
+		
+		testSplitAndDeferWithShortList: function() {
+			var last_values = [];
+			var push_last = function(list) {
+				var last;
+				for (var i = 0; i < list.length; i++) {
+					last = list[i];
+				}
+				last_values.push(last);
+			};
+			var the_length;
+			var set_the_length = function() { the_length = last_values.length };
+
+			var list_arg = [11];
+			
+			Utils.splitAndDefer(list_arg, 3, push_last, set_the_length);
+			this.wait(function() {
+				Y.Assert.areEqual(1, last_values.length, "Wrong number of values pushed");
+				Y.Assert.areEqual(11, last_values[0]);
+				Y.Assert.areEqual(1, the_length, "Didn't run set_the_length() successfully");
+			}, 100);
 		}
 
 	});
