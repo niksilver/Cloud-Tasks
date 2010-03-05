@@ -9,6 +9,14 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
+		setUp: function() {
+			TestUtils.captureMojoLog();
+		},
+		
+		tearDown: function() {
+			TestUtils.restoreMojoLog();
+		},
+
 		testClone: function() {
 			Y.Assert.isUndefined(Utils.clone(undefined), "Didn't clone undefined correctly");
 			
@@ -79,7 +87,7 @@ testCases.push( function(Y) {
 				Y.Assert.areEqual(34, last_values[3]);
 				Y.Assert.areEqual(45, last_values[4]);
 				Y.Assert.areEqual(5, the_length, "Didn't run set_the_length() successfully");
-			}, 100);
+			}, 300);
 		},
 		
 		testSplitAndDeferWithExactlyFittingList: function() {
@@ -104,7 +112,7 @@ testCases.push( function(Y) {
 				Y.Assert.areEqual(99, last_values[2]);
 				Y.Assert.areEqual(34, last_values[3]);
 				Y.Assert.areEqual(4, the_length, "Didn't run set_the_length() successfully");
-			}, 100);
+			}, 200);
 		},
 		
 		testSplitAndDeferWithShortList: function() {

@@ -137,8 +137,6 @@ Retrier.prototype.getListOnSuccessCallback = function(response) {
 	Mojo.Log.info("Retrier.getListOnSuccessCallback: Response is good");
 	RTM.logResponse(response);
 	var json = response.responseJSON;
-	Mojo.Log.info("Retrier.getListOnSuccessCallback: Faking response");
-	json = LongResponse;
 	var task_list = TaskListModel.objectToTaskList(json);
 	Utils.splitAndDefer(task_list, 10,
 		this.taskListModel.mergeTaskList.bind(this.taskListModel),
