@@ -203,57 +203,49 @@ testCases.push( function(Y) {
 			}, 300);
 		},
 		
-		testRetrierPullTasksSequenceSortsTasks: function() {
+		testRetrierGetListOnSuccessCallbackSortsTasks: function() {
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
 			var task_list_model = new TaskListModel();
 			
 			retrier.taskListModel = task_list_model;
-			retrier.firePushChangesSequence = function() {};
+			
+			retrier.getListOnSuccessCallback({ responseJSON: SampleTestData.big_remote_json });
+			
+			// This processes the tasks in deferred functions, so we'll have to
+			// wait before checking that they were sorted correctly.
 
-			rtm.connectionManager = "Some dummy connection manager";
-			rtm.haveNetworkConnectivity = true;
-			rtm.rawAjaxRequest = function(){};
-			rtm.setToken('87654');
-			rtm.networkRequests = function() { return 1; };
-			rtm.networkRequestsForPushingChanges = function() { return 1; };
-			rtm.networkRequestsForPullingTasks = function() { return 0; };
-			
-			// Calling a remote method is the next action in the sequence for pushing changes
-			var sample_json = SampleTestData.big_remote_json;
-			rtm.ajaxRequest = function(url, options) {
-				options.onSuccess({ responseJSON: sample_json });
-			}
-			
-			retrier.fire();
-			Y.Assert.areEqual(18, task_list_model.getTaskList().length, "Task list model not updated correctly");
-			
-			for (var i = 1; i < task_list_model.getTaskList().length; i++) {
-				var prev_task  = task_list_model.getTaskList()[i-1];
-				var prev_name = prev_task.name;
-				var prev_due = prev_task.due;
-				var curr_task  = task_list_model.getTaskList()[i];
-				var curr_name = curr_task.name;
-				var curr_due = curr_task.due;
-				var prev_date = Date.parse(prev_due);
-				var curr_date = Date.parse(curr_due);
-				if (prev_date.isBefore(curr_date)) {
-					// Ordered by date, good
-					continue;
-				}
-				else if (prev_date.isAfter(curr_date)) {
-					// Out of date order -- bad
-					Y.fail("Out of date order: task[" + (i-1) + "] is '" + prev_name + " due " + prev_due
-						+ ", task[" + i + "] is '" + curr_name + "' due " + curr_due);
-				}
-				else {
-					// Dates are the same
-					if (prev_name > curr_name) {
-						Y.fail("Same dates, out of alpha-order: task[" + (i-1) + "] is '" + prev_name + " due " + prev_due
+			this.wait(function() {
+				Y.Assert.areEqual(18, task_list_model.getTaskList().length, "Task list model not updated correctly");
+				
+				for (var i = 1; i < task_list_model.getTaskList().length; i++) {
+					var prev_task  = task_list_model.getTaskList()[i-1];
+					var prev_name = prev_task.name;
+					var prev_due = prev_task.due;
+					var curr_task  = task_list_model.getTaskList()[i];
+					var curr_name = curr_task.name;
+					var curr_due = curr_task.due;
+					var prev_date = Date.parse(prev_due);
+					var curr_date = Date.parse(curr_due);
+					if (prev_date.isBefore(curr_date)) {
+						// Ordered by date, good
+						continue;
+					}
+					else if (prev_date.isAfter(curr_date)) {
+						// Out of date order -- bad
+						Y.fail("Out of date order: task[" + (i-1) + "] is '" + prev_name + " due " + prev_due
 							+ ", task[" + i + "] is '" + curr_name + "' due " + curr_due);
 					}
+					else {
+						// Dates are the same
+						if (prev_name > curr_name) {
+							Y.fail("Same dates, out of alpha-order: task[" + (i-1) + "] is '" + prev_name + " due " + prev_due
+								+ ", task[" + i + "] is '" + curr_name + "' due " + curr_due);
+						}
+					}
 				}
-			}
+			}, 200);
+			
 		},
 		
 		testRetrierPullTasksSequencePullsOnlyTheDelta: function() {
