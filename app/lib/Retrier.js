@@ -138,7 +138,7 @@ Retrier.prototype.pullTasks = function() {
 
 Retrier.prototype.getListOnSuccessCallback = function(response) {
 	Mojo.Log.info("Retrier.getListOnSuccessCallback: Response is good");
-	RTM.logResponse(response);
+	// RTM.logResponse(response);
 	var json = response.responseJSON;
 	var task_list = TaskListModel.objectToTaskList(json);
 	Utils.splitAndDefer(task_list, 10,

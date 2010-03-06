@@ -10,8 +10,10 @@
   - Have tasks with no due dates appear after overdue tasks
 - Usability
   - When starting up without authorisation, push the auth screen to the user.
+- Development:
+  - Add a README file to help other developers.
 - Bugs
-  - Editing a date but keeping it the same should note create a sync
+  - Editing a date but keeping it the same should not create a sync
   - Editing a recurrence but keeping it the same should note create a sync
   
 Done
@@ -51,4 +53,6 @@ Done
   - Every change to a task in RTM should save the task
   - On the physical device after restarting the application only locally-created tasks appear.
   - Put a nonsense recurrence on a task, restart the app, and problem flag disappears
+  - Long routine processing getList response gets killed by webOS. Broken this up
+    into several deferred functions.
   

@@ -284,7 +284,6 @@ TaskListModel.prototype.addTask = function(task, onSuccess) {
 TaskListModel.prototype.mergeTask = function(task) {
 	Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task.toSummaryString());
 	var task_index = this.getTaskIndex(task);
-	Mojo.Log.info("TaskListModel.mergeTask: Task index is " + task_index);
 	if (task_index == -1 && task.needsPurging()) {
 		Mojo.Log.info("TaskListModel.mergeTask: Task is new but won't add task as it needs purging");
 	}
@@ -300,7 +299,6 @@ TaskListModel.prototype.mergeTask = function(task) {
 		this._task_list[task_index] = task;
 		Store.saveTask(task);
 	}
-	Mojo.Log.info("TaskListModel.mergeTask: Exiting");
 }
 
 /**
@@ -311,11 +309,8 @@ TaskListModel.prototype.mergeTask = function(task) {
 TaskListModel.prototype.mergeTaskList = function(task_list) {
 	Mojo.Log.info("TaskListModel.mergeTaskList: Entering");
 	for (var i = 0; i < task_list.length; i++) {
-		Mojo.Log.info("TaskListModel.mergeTaskList: Merging task i=" + i + "/" + (task_list.length-1));
 		this.mergeTask(task_list[i]);
-		Mojo.Log.info("TaskListModel.mergeTaskList: Called this.mergeTask");
 	}
-	Mojo.Log.info("TaskListModel.mergeTaskList: Exiting");
 }
 
 /**

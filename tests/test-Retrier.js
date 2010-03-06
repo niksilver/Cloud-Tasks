@@ -311,19 +311,14 @@ testCases.push( function(Y) {
 		},
 
 		testRetrierSpacesPullTasksSequence: function() {
-			TestUtils.showMojoLog();
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
 			var task_list_model = new TaskListModel();
 
 			retrier.taskListModel = task_list_model;
 			retrier.pullEventSpacer = new EventSpacer(100);
-			// retrier.firePushChangesSequence = function() {};
 
-			// rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
-			// rtm.rawAjaxRequest = function(){};
-			// rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
 			rtm.networkRequestsForPullingTasks = function() { return 0; };
@@ -345,19 +340,16 @@ testCases.push( function(Y) {
 					retrier.firePullTasksSequence();
 				},
 				function() {
-					Mojo.Log.info("At 1");
 					Y.Assert.areEqual(true, called_callMethod, "Didn't try to call the method");
 					
 					called_callMethod = false;
 					retrier.firePullTasksSequence();
 				},
 				function() {
-					Mojo.Log.info("At 2");
 					Y.Assert.areEqual(false, called_callMethod, "Shouldn't be pulling tasks again right after firing");
 					retrier.firePullTasksSequence();
 				},
 				function() {
-					Mojo.Log.info("At 3");
 					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
 				}
 			]);

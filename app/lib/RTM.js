@@ -369,7 +369,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	var parameters;
 	var inst = this;
 	var augmented_success_callback = function(response) {
-		RTM.logResponse(response);
+		// RTM.logResponse(response);
 		task.markNotForPush(property);
 		Mojo.Log.info("RTM.pushLocalChange: Marked not for change property " + property + " of task " + task.name);
 		successCallback(response);
@@ -521,7 +521,7 @@ RTM.prototype.addTask = function(task, onSuccess) {
 	this.callMethod('rtm.tasks.add', parameters,
 		function(response) {
 			Mojo.Log.info("RTM.addTask.onSuccess: Got response");
-			RTM.logResponse(response);
+			// RTM.logResponse(response);
 			var json = response.responseJSON;
 			task.listID = json.rsp.list.id;
 			task.taskseriesID = json.rsp.list.taskseries.id;
