@@ -347,9 +347,18 @@ testCases.push( function(Y) {
 				},
 				function() {
 					Y.Assert.areEqual(false, called_callMethod, "Shouldn't be pulling tasks again right after firing");
-					retrier.firePullTasksSequence();
 				},
 				function() {
+					// Pause for 50ms
+				},
+				function() {
+					// Pause for another 50ms, making 100ms in all
+				},
+				function() {
+					// Pause for another 50ms, making 150ms in all
+				},
+				function() {
+					retrier.firePullTasksSequence();
 					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
 				}
 			]);

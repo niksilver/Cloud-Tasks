@@ -524,7 +524,7 @@ testCases.push( function(Y) {
 		
 		testMergeTaskUsingNewTask: function() {
 			var model, TaskModelExtended, new_task, num_tasks, extra_task, found_task;
-			TestUtils.runInSeries(this, 250,
+			TestUtils.runInSeries(this, 300,
 				[
 					INITIALISE_STORE,
 					REMOVE_ALL_TASKS,
