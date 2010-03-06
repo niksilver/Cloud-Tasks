@@ -133,24 +133,38 @@ testCases.push( function(Y) {
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
 			rtm.networkRequestsForPullingTasks = function() { return 0; };
 			
+			var called_pullTasks;
+			// Calling the pullTasks() method is the next action in the sequence for pulling tasks
+			retrier.pullTasks = function() {
+				called_pullTasks = true;
+			}
+			
+			called_pullTasks = false;
+			retrier.fire();
+			Y.Assert.areEqual(true, called_pullTasks, "Didn't try to pull the tasks");
+			
+			rtm.networkRequests = function() { return 1; };
+			rtm.networkRequestsForPushingChanges = function() { return 0; };
+			rtm.networkRequestsForPullingTasks = function() { return 1; };
+			
+			called_pullTasks = false;
+			retrier.fire();
+			Y.Assert.areEqual(false, called_pullTasks, "Tried to pull tasks despite other activity for pulling tasks");
+		},
+
+		testRetrierPullTasksCallsRightGetMethod: function() {
+			var rtm = new RTM();
+			var retrier = new Retrier(rtm);
+			
 			var called_callMethod;
-			// Calling a remote method is the next action in the sequence for pulling tasks
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
 				called_callMethod = true;
 				Y.Assert.areEqual('rtm.tasks.getList', method_name, "Didn't call method to get name");
 			}
 			
 			called_callMethod = false;
-			retrier.fire();
+			retrier.pullTasks();
 			Y.Assert.areEqual(true, called_callMethod, "Didn't try to call the method");
-			
-			rtm.networkRequests = function() { return 1; };
-			rtm.networkRequestsForPushingChanges = function() { return 0; };
-			rtm.networkRequestsForPullingTasks = function() { return 1; };
-			
-			called_callMethod = false;
-			retrier.fire();
-			Y.Assert.areEqual(false, called_callMethod, "Tried to call method despite other activity for pulling tasks");
 		},
 		
 		testRetrierPullTasksSequenceSetsUpTasks: function() {
@@ -159,17 +173,7 @@ testCases.push( function(Y) {
 			var task_list_model = new TaskListModel();
 			
 			retrier.taskListModel = task_list_model;
-			retrier.firePushChangesSequence = function() {};
-
-			rtm.connectionManager = "Some dummy connection manager";
-			rtm.haveNetworkConnectivity = true;
-			rtm.rawAjaxRequest = function(){};
-			rtm.setToken('87654');
-			rtm.networkRequests = function() { return 1; };
-			rtm.networkRequestsForPushingChanges = function() { return 1; };
-			rtm.networkRequestsForPullingTasks = function() { return 0; };
 			
-			// Calling a remote method is the next action in the sequence for pushing changes
 			var sample_json = SampleTestData.big_remote_json;
 			var url_used;
 			rtm.ajaxRequest = function(url, options) {
@@ -183,13 +187,20 @@ testCases.push( function(Y) {
 			}
 			
 			called_onTaskListModelChange = false;
-			retrier.fire();
-			Y.Assert.areEqual(-1, url_used.indexOf('last_sync'), "last_sync parameter was mistakenly set, URL is " + url_used);
-			Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
-			Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
+			retrier.pullTasks();
 			
-			var latest_modified = task_list_model.getLatestModified();
-			Y.Assert.areEqual(latest_modified, rtm.getLatestModified(), "Didn't record latest modified time");
+			// The processing of the pulled tasks is split up and deferred to
+			// avoid the webOS 10 second timeout, so we need to defer our
+			// assertions until we know the processing is done
+			
+			this.wait(function() {
+				Y.Assert.areEqual(-1, url_used.indexOf('last_sync'), "last_sync parameter was mistakenly set, URL is " + url_used);
+				Y.Assert.areEqual(true, called_onTaskListModelChange, "Didn't try to flag task list model change");
+				Y.Assert.areEqual(18, retrier.taskListModel.getTaskList().length, "Task list model not updated correctly");
+				
+				var latest_modified = task_list_model.getLatestModified();
+				Y.Assert.areEqual(latest_modified, rtm.getLatestModified(), "Didn't record latest modified time");
+			}, 300);
 		},
 		
 		testRetrierPullTasksSequenceSortsTasks: function() {

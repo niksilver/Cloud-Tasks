@@ -120,17 +120,20 @@ Retrier.prototype.firePullTasksSequence = function() {
 		Mojo.Log.info("Retrier.firePullTasksSequence: No auth token, can't go further");
 	}
 	else {
-		Mojo.Log.info("Retrier.firePullTasksSequence: Pulling tasks");
-		this.rtm.callMethod('rtm.tasks.getList',
-			this.getListParameters(),
-			this.getListOnSuccessCallback.bind(this),
-			function(err_msg) {
-				Mojo.Log.info("Retrier.firePullTasksSequence: Error: " + err_msg);
-				ErrorHandler.notify(err_msg);
-			}
-		);
-
+		this.pullTasks();
 	}
+}
+
+Retrier.prototype.pullTasks = function() {
+	Mojo.Log.info("Retrier.pullTasks: Pulling tasks");
+	this.rtm.callMethod('rtm.tasks.getList',
+		this.getListParameters(),
+		this.getListOnSuccessCallback.bind(this),
+		function(err_msg) {
+			Mojo.Log.info("Retrier.pullTasks: Error: " + err_msg);
+			ErrorHandler.notify(err_msg);
+		}
+	);
 }
 
 Retrier.prototype.getListOnSuccessCallback = function(response) {
