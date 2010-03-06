@@ -281,23 +281,14 @@ testCases.push( function(Y) {
 			var task_list_model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
 			
 			retrier.taskListModel = task_list_model;
-			retrier.firePushChangesSequence = function() {};
-
-			rtm.connectionManager = "Some dummy connection manager";
-			rtm.haveNetworkConnectivity = true;
-			rtm.rawAjaxRequest = function(){};
-			rtm.setToken('87654');
-			rtm.networkRequests = function() { return 1; };
-			rtm.networkRequestsForPushingChanges = function() { return 1; };
-			rtm.networkRequestsForPullingTasks = function() { return 0; };
 			
 			var latest_modified = task_list_model.getLatestModified();
 			rtm.setLatestModified(latest_modified);
 			
-			// Calling a remote method is the next action in the sequence for pushing changes
-			var sample_json = SampleTestData.last_sync_response_deleting_task_5;
+			// The Retrier should call the method to get the tasks
+			var json_which_deletes_task = SampleTestData.last_sync_response_deleting_task_5;
 			rtm.callMethod = function(method_name, params, on_success, on_failure) {
-				on_success({ responseJSON: sample_json });
+				on_success({ responseJSON: json_which_deletes_task });
 			}
 			
 			var orig_num_tasks = task_list_model.getTaskList().length;
@@ -309,9 +300,14 @@ testCases.push( function(Y) {
 			
 			Y.Assert.isNotUndefined(task_list_model.getTask(task_5_spec), "Couldn't find task 5 in original list");
 			
-			retrier.fire();
-			Y.Assert.areEqual(orig_num_tasks-1, task_list_model.getTaskList().length, "Task list model not updated correctly");
-			Y.Assert.isUndefined(task_list_model.getTask(task_5_spec), "Can still find task 5 in updated list");
+			retrier.pullTasks();
+			// The success callback from this splits its work into deferred functions, so
+			// we need to wait a bit before making our assertions.
+			
+			this.wait(function() {
+				Y.Assert.areEqual(orig_num_tasks-1, task_list_model.getTaskList().length, "Task list model not updated correctly");
+				Y.Assert.isUndefined(task_list_model.getTask(task_5_spec), "Can still find task 5 in updated list");
+			}, 200);
 		},
 
 		testRetrierSpacesPullTasksSequence: function() {
