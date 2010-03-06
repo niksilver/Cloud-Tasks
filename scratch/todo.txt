@@ -10,8 +10,6 @@
   - Have tasks with no due dates appear after overdue tasks
 - Usability
   - When starting up without authorisation, push the auth screen to the user.
-- Development:
-  - Add a README file to help other developers.
 - Bugs
   - Editing a date but keeping it the same should not create a sync
   - Editing a recurrence but keeping it the same should note create a sync
@@ -43,6 +41,8 @@ Done
   - Put spinner on Go and Finish buttons
 - Efficiency
   - When trying to merge a task which is completed or deleted it should be just ignored.
+- Development:
+  - Add a README file to help other developers.
 - Bugs (fixed):
   - New date set as tomorrow shows as bold as if today.
   - In task list, the momentary highlight on tasks of 3+ lines long does not cover the whole task. 
