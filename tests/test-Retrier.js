@@ -311,18 +311,19 @@ testCases.push( function(Y) {
 		},
 
 		testRetrierSpacesPullTasksSequence: function() {
+			TestUtils.showMojoLog();
 			var rtm = new RTM();
 			var retrier = new Retrier(rtm);
-			var task_list_model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
+			var task_list_model = new TaskListModel();
 
 			retrier.taskListModel = task_list_model;
 			retrier.pullEventSpacer = new EventSpacer(100);
-			retrier.firePushChangesSequence = function() {};
+			// retrier.firePushChangesSequence = function() {};
 
-			rtm.connectionManager = "Some dummy connection manager";
+			// rtm.connectionManager = "Some dummy connection manager";
 			rtm.haveNetworkConnectivity = true;
-			rtm.rawAjaxRequest = function(){};
-			rtm.setToken('87654');
+			// rtm.rawAjaxRequest = function(){};
+			// rtm.setToken('87654');
 			rtm.networkRequests = function() { return 1; };
 			rtm.networkRequestsForPushingChanges = function() { return 1; };
 			rtm.networkRequestsForPullingTasks = function() { return 0; };
@@ -334,20 +335,32 @@ testCases.push( function(Y) {
 				Y.Assert.areEqual('rtm.tasks.getList', method_name, "Didn't call method to get name");
 				on_success({ responseJSON: SampleTestData.last_sync_response_deleting_task_5 });
 			}
+
+			// It will take a moment to run the success callback each time, as they are deferred
+			// functions, so we need to space things out a bit.
 			
-			called_callMethod = false;
-			retrier.fire();
-			Y.Assert.areEqual(true, called_callMethod, "Didn't try to call the method");
-			
-			called_callMethod = false;
-			retrier.fire();
-			Y.Assert.areEqual(false, called_callMethod, "Shouldn't be pulling tasks again right after firing");
-			
-			this.wait(function() {
-					retrier.fire();
-					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
+			TestUtils.runInSeries(this, 50, [
+				function() {
+					called_callMethod = false;
+					retrier.firePullTasksSequence();
 				},
-				120);
+				function() {
+					Mojo.Log.info("At 1");
+					Y.Assert.areEqual(true, called_callMethod, "Didn't try to call the method");
+					
+					called_callMethod = false;
+					retrier.firePullTasksSequence();
+				},
+				function() {
+					Mojo.Log.info("At 2");
+					Y.Assert.areEqual(false, called_callMethod, "Shouldn't be pulling tasks again right after firing");
+					retrier.firePullTasksSequence();
+				},
+				function() {
+					Mojo.Log.info("At 3");
+					Y.Assert.areEqual(true, called_callMethod, "Should be pulling tasks again right after firing and a pause");
+				}
+			]);
 		},
 		
 		testRetrierHandlesOnNetworkRequestsChange: function() {

@@ -23,9 +23,11 @@ EventSpacer.prototype.isReady = function() {
 }
 
 EventSpacer.prototype.haveFired = function() {
+	Mojo.Log.info("EventSpacer.haveFired: Entering");
 	this._is_ready = false;
 	var inst = this;
 	setTimeout(function() {
+			Mojo.Log.info("EventSpacer.haveFired: Is ready again");
 			inst._is_ready = true;
 		},
 		this._spacing_ms);
