@@ -70,9 +70,16 @@ var RecurrenceTranslator = {
 	 *     E.g. { "every": 1, "$t": "FREQ=YEARLY;INTERVAL=1" }
 	 */
 	toText: function(obj) {
-		var basic_text = this.toBasicText(obj);
-		
+		var basic_text;
 		var data = this.codeStringToObject(obj["$t"]);
+
+		if (obj.every == "1") {
+			basic_text = this.toBasicTextForEveryRule(data);
+		}
+		else if (obj.every == "0") {
+			basic_text = this.toBasicTextForAfterRule(data);
+		}
+		
 		if (data.UNTIL) {
 			var until_date = this.untilParameterToText(data.UNTIL);
 			return basic_text + " until " + until_date;
@@ -109,43 +116,42 @@ var RecurrenceTranslator = {
 	
 	/**
 	 * Take a basic recurrence code object such as 
-	 * {"every": "1", "$t": "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE"}
-	 * and return the human-readable text string
-	 * (in this case "Every Wednesday").
-	 * This function ignores any "until (date)".
-	 * @param {Object} obj  The recurrence object from the server.
-	 *     E.g. { "every": 1, "$t": "FREQ=YEARLY;INTERVAL=1" }
+	 * { FREQ: 'YEARLY', INTERVAL: '1' }
+	 * and return the human-readable text string of the "Every..." kind
+	 * (in this case "Every year").
+	 * This function ignores any "until (date)" and assumes that we
+	 * this is an "Every..." rule.
+	 * @param {Object} data  The data object of the "$t" string from the server.
+	 *     E.g. { FREQ: 'YEARLY', INTERVAL: '1' }
 	 */
-	toBasicText: function(obj) {
-		var data = this.codeStringToObject(obj["$t"]);
-		data.every = obj.every;
-		if (data.every == "1" && data.FREQ == 'DAILY') {
+	toBasicTextForEveryRule: function(data) {
+		if (data.FREQ == 'DAILY') {
 			return this.everyDay(data);
 		}
-		else if (data.every == "1" && data.FREQ == "WEEKLY" && !data.BYDAY) {
+		else if (data.FREQ == "WEEKLY" && !data.BYDAY) {
 			return this.everyNWeeks(data);
 		}
-		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
+		else if (data.FREQ == "WEEKLY" && data.INTERVAL == "1") {
 			return this.everyWeekByDay(data);
 		}
-		else if (data.every == "1" && data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
+		else if (data.FREQ == "WEEKLY" && data.INTERVAL >= 2) {
 			return this.everyWeekByNthDay(data);
 		}
-		else if (data.every == "1" && data.FREQ == "MONTHLY" && data.BYMONTHDAY) {
+		else if (data.FREQ == "MONTHLY" && data.BYMONTHDAY) {
 			return this.everyMonthOnTheXth(data);
 		}
-		else if (data.every == "1" && data.FREQ == "MONTHLY" && data.BYDAY) {
+		else if (data.FREQ == "MONTHLY" && data.BYDAY) {
 			return this.everyMonthOnTheXthBlahday(data);
 		}
-		else if (data.every == "1" && data.FREQ == "MONTHLY") {
+		else if (data.FREQ == "MONTHLY") {
 			return this.everyNMonths(data);
 		}
-		else if (data.every == "1" && data.FREQ == "YEARLY") {
+		else if (data.FREQ == "YEARLY") {
 			return this.everyNYears(data);
 		}
 
 		
-		return "Unknown recurrence code";
+		return "Every <something>";
 	},
 	
 	/**
@@ -255,6 +261,29 @@ var RecurrenceTranslator = {
 		var ordinal = this.toOrdinal(data.INTERVAL);
 		var days = data.BYDAY.map(this.dayCodeToText.bind(this));
 		return "Every " + ordinal + " " + this.joinWithCommasAndAnd(days);
+	},
+	
+	
+	/**
+	 * Take a basic recurrence code object such as 
+	 * { FREQ: 'DAILY', INTERVAL: '5' }
+	 * and return the human-readable text string of the "After..." kind
+	 * (in this case "After 5 days").
+	 * This function ignores any "until (date)" and assumes that we
+	 * this is an "After..." rule.
+	 * @param {Object} data  The data object of the "$t" string from the server.
+	 *     E.g. { FREQ: 'DAILY', INTERVAL: '5' }
+	 */
+	toBasicTextForAfterRule: function(data) {
+		if (data.FREQ == 'DAILY' && data.INTERVAL == '1') {
+			return "After 1 day";
+		}
+		else if (data.FREQ == 'DAILY') {
+			return "After " + data.INTERVAL + " days";
+		}
+		else {
+			return "After <something>";
+		}
 	},
 	
 	/**

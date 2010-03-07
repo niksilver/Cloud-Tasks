@@ -202,6 +202,11 @@ testCases.push( function(Y) {
 		testToTextEverySomethingForXTimes: function(){
 			assertToText("Every week for 20 times", "1", "FREQ=WEEKLY;INTERVAL=1;COUNT=20");
 			assertToText("Every week for 1 time", "1", "FREQ=WEEKLY;INTERVAL=1;COUNT=1");
+		},
+		
+		testToTextAfterXDays: function() {
+			assertToText("After 5 days", "0", "FREQ=DAILY;INTERVAL=5");
+			assertToText("After 1 day", "0", "FREQ=DAILY;INTERVAL=1");
 		}
 	});
 
