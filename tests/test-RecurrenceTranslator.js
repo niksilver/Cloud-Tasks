@@ -212,6 +212,11 @@ testCases.push( function(Y) {
 		testToTextAfterXWeeks: function() {
 			assertToText("After 1 week", "0", "FREQ=WEEKLY;INTERVAL=1");
 			assertToText("After 5 weeks", "0", "FREQ=WEEKLY;INTERVAL=5");
+		},
+		
+		testToTextAfterXMonths: function() {
+			assertToText("After 2 months", "0", "FREQ=MONTHLY;INTERVAL=2");
+			assertToText("After 1 month", "0", "FREQ=MONTHLY;INTERVAL=1");
 		}
 	});
 

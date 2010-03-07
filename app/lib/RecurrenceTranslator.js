@@ -290,6 +290,12 @@ var RecurrenceTranslator = {
 		else if (data.FREQ == 'WEEKLY') {
 			return "After " + data.INTERVAL + " weeks";
 		}
+		else if (data.FREQ == 'MONTHLY' && data.INTERVAL == '1') {
+			return "After 1 month";
+		}
+		else if (data.FREQ == 'MONTHLY') {
+			return "After " + data.INTERVAL + " months";
+		}
 		else {
 			return "After <something>";
 		}
