@@ -15,12 +15,17 @@ function TaskListAssistant(config) {
 	this.initialiseStoreAndLoadTaskList();
 	this.rtm.retrier.onTaskListModelChange = this.onTaskListModelChange.bind(this);
 	
+	this.appMenuAttributes = {
+		omitDefaultItems: true
+	};
 	this.appMenuModel = {
 		visible: true,
 		items: [
+			Mojo.Menu.editItem,
 			{ label: "Sync now", command: 'do-sync', disabled: !this.rtm.getToken() },
 			{ label: "Authorise...", command: 'do-authorise' },
-			{ label: "Deauthorise", command: 'do-deauthorise', disabled: !this.rtm.getToken() }
+			{ label: "Deauthorise", command: 'do-deauthorise', disabled: !this.rtm.getToken() },
+			{ label: "Help", command: 'do-help' },
 		]
 	};
 	this.setUpAppMenuItemListeners();
@@ -70,7 +75,7 @@ TaskListAssistant.prototype.setup = function() {
 
 	// Set up the app menu and command menu
 	
-	this.controller.setupWidget(Mojo.Menu.appMenu, {}, this.appMenuModel);
+	this.controller.setupWidget(Mojo.Menu.appMenu, this.appMenuAttributes, this.appMenuModel);
 	this.controller.setupWidget(Mojo.Menu.commandMenu, {}, this.commandMenuModel);
 
 	this.setUpTaskListWidget();
@@ -123,6 +128,10 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				this.rtm.resetPullEventSpacer();
 				this.rtm.fireNextEvent();
 				break;
+			case 'do-help':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-help");
+				this.handleHelpCommand();
+				break;
 			case 'do-add':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-add");
 				this.handleAddTaskCommand();
@@ -132,6 +141,16 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				break;
 		}
 	}
+}
+
+TaskListAssistant.prototype.handleHelpCommand = function() {
+	this.controller.serviceRequest("palm://com.palm.applicationManager", {
+		method: "open",
+		parameters: {
+			  id: 'com.palm.app.browser',
+			  params: { target: 'http://niksilver.com/cloud-tasks' }
+		}
+	});
 }
 
 TaskListAssistant.prototype.handleAddTaskCommand = function() {
