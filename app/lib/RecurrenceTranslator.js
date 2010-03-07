@@ -73,12 +73,15 @@ var RecurrenceTranslator = {
 		var basic_text = this.toBasicText(obj);
 		
 		var data = this.codeStringToObject(obj["$t"]);
-		if (!data.UNTIL) {
-			return basic_text;
+		if (data.UNTIL) {
+			var until_date = this.untilParameterToText(data.UNTIL);
+			return basic_text + " until " + until_date;
 		}
-		
-		var until_date = this.untilParameterToText(data.UNTIL);
-		return basic_text + " until " + until_date;
+		else if (data.COUNT) {
+			return basic_text + " for " + this.countParameterToText(data.COUNT);
+		}
+
+		return basic_text;
 	},
 	
 	/** Return the UNTIL parameter as a human-readable string.
@@ -88,6 +91,20 @@ var RecurrenceTranslator = {
 	untilParameterToText: function(until_str) {
 		var until_date = until_str.substr(0, 8);
 		return Date.parseExact(until_date, 'yyyyMMdd').toString('ddd d MMM yyyy');
+	},
+	
+	/**
+	 * Return the COUNT parameter as a human-readable string.
+	 * E.g. "20 times"
+	 * @param {Object} count_str  The COUNT parameter, e.g. "20".
+	 */
+	countParameterToText: function(count_str) {
+		if (count_str == 1) {
+			return "1 time";
+		}
+		else {
+			return count_str + " times";
+		}
 	},
 	
 	/**

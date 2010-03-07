@@ -197,6 +197,11 @@ testCases.push( function(Y) {
 		
 		testToTextEverySomethingUntilSometime: function(){
 			assertToText("Every Monday until Tue 2 Mar 2010", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;UNTIL=20100302T000000");
+		},
+		
+		testToTextEverySomethingForXTimes: function(){
+			assertToText("Every week for 20 times", "1", "FREQ=WEEKLY;INTERVAL=1;COUNT=20");
+			assertToText("Every week for 1 time", "1", "FREQ=WEEKLY;INTERVAL=1;COUNT=1");
 		}
 	});
 
