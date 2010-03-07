@@ -65,9 +65,41 @@ var RecurrenceTranslator = {
 	 * {"every": "1", "$t": "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE"}
 	 * and return the human-readable text string
 	 * (in this case "Every Wednesday").
-	 * @param {Object} code_obj
+	 * This also handles "until (date)".
+	 * @param {Object} obj  The recurrence object from the server.
+	 *     E.g. { "every": 1, "$t": "FREQ=YEARLY;INTERVAL=1" }
 	 */
 	toText: function(obj) {
+		var basic_text = this.toBasicText(obj);
+		
+		var data = this.codeStringToObject(obj["$t"]);
+		if (!data.UNTIL) {
+			return basic_text;
+		}
+		
+		var until_date = this.untilParameterToText(data.UNTIL);
+		return basic_text + " until " + until_date;
+	},
+	
+	/** Return the UNTIL parameter as a human-readable string.
+	 * E.g. "Tue 2 March 2010"
+	 * @param {String} until_str  The UNTIL parameter, e.g. "20100302T000000".
+	 */
+	untilParameterToText: function(until_str) {
+		var until_date = until_str.substr(0, 8);
+		return Date.parseExact(until_date, 'yyyyMMdd').toString('ddd d MMM yyyy');
+	},
+	
+	/**
+	 * Take a basic recurrence code object such as 
+	 * {"every": "1", "$t": "FREQ=WEEKLY;INTERVAL=1;BYDAY=WE"}
+	 * and return the human-readable text string
+	 * (in this case "Every Wednesday").
+	 * This function ignores any "until (date)".
+	 * @param {Object} obj  The recurrence object from the server.
+	 *     E.g. { "every": 1, "$t": "FREQ=YEARLY;INTERVAL=1" }
+	 */
+	toBasicText: function(obj) {
 		var data = this.codeStringToObject(obj["$t"]);
 		data.every = obj.every;
 		if (data.every == "1" && data.FREQ == 'DAILY') {

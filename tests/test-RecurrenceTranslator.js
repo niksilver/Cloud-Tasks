@@ -187,6 +187,16 @@ testCases.push( function(Y) {
 		
 		testToTextEveryMonthOnTheNthLastBlahday: function(){
 			assertToText("Every month on the last Monday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=-1MO");
+			assertToText("Every month on the 2nd last Friday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=-2FR");
+			assertToText("Every month on the 2nd last Friday and 2nd last Tuesday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=-2FR,-2TU");
+		},
+		
+		testUntilParameterToText: function() {
+			Y.Assert.areEqual("Tue 2 Mar 2010", RecurrenceTranslator.untilParameterToText('20100302T000000'));
+		},
+		
+		testToTextEverySomethingUntilSometime: function(){
+			assertToText("Every Monday until Tue 2 Mar 2010", "1", "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;UNTIL=20100302T000000");
 		}
 	});
 
