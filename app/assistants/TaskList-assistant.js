@@ -158,6 +158,7 @@ TaskListAssistant.prototype.onTaskListModelChange = function() {
 	Mojo.Log.info("TaskListAssistant.onTaskListModelChange: Acting on change");
 	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
 	this.controller.modelChanged(this.taskListWidgetModel);
+	this.hideOrDisplayAuthInstructions();
 }
 
 /**
@@ -174,8 +175,6 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 	
-	this.hideOrDisplayAuthInstructions();
-	
 	// Add in a new task if we've got one with a proper name
 	if (returnValue
 			&& returnValue.isNew
@@ -183,6 +182,8 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 			&& returnValue.task.name != '') {
 		this.addNewTask(returnValue.task);
 	}
+	
+	this.hideOrDisplayAuthInstructions();
 
 	Mojo.Log.info("TaskListAssistant.activate: Firing next event...");
 	// This may push local changes, or do what's needed before that.
@@ -246,7 +247,7 @@ TaskListAssistant.prototype.hideOrDisplayAuthInstructions = function() {
 	var is_authorised = this.rtm.getToken();
 	var need_instructions = (num_tasks == 0 && !is_authorised);
 	this.controller.get('AuthInstructions').setStyle({
-		display: (need_instructions ? 'inline' : none)
+		display: (need_instructions ? 'block' : 'none')
 	});
 }
 

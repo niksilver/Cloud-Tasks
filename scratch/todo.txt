@@ -5,8 +5,6 @@
   - Handle postponing of recurring tasks
 - Due dates
   - Have tasks with no due dates appear after overdue tasks
-- Usability
-  - When starting up without authorisation, push the auth screen to the user.
 - Bugs
   - Editing a date but keeping it the same should not create a sync
   - Editing a recurrence but keeping it the same should note create a sync
@@ -41,6 +39,9 @@ Done
   - Show recurrence in edit task scene
 - Efficiency
   - When trying to merge a task which is completed or deleted it should be just ignored.
+- Usability
+  - When the task list displays without tasks and without having authorisation a message
+    displays to tell the user to authenticate.
 - Development:
   - Add a README file to help other developers.
 - Bugs (fixed):
