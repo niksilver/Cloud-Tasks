@@ -296,6 +296,12 @@ var RecurrenceTranslator = {
 		else if (data.FREQ == 'MONTHLY') {
 			return "After " + data.INTERVAL + " months";
 		}
+		else if (data.FREQ == 'YEARLY' && data.INTERVAL == '1') {
+			return "After 1 year";
+		}
+		else if (data.FREQ == 'YEARLY') {
+			return "After " + data.INTERVAL + " years";
+		}
 		else {
 			return "After <something>";
 		}
