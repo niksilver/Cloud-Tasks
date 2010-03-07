@@ -48,7 +48,7 @@ var RecurrenceTranslator = {
 	 * @param {String} day_code  The day code to translate.
 	 */
 	dayCodeToText: function(day_code) {
-		var match = day_code.match(/^(\d*)([A-Z]*)/); // Matching e.g. 2MO or just MO
+		var match = day_code.match(/^(-?\d*)([A-Z]*)/); // Matching e.g. 2MO or just MO
 		var numeric = match[1];
 		var text = match[2];
 		var day_name = this.dayCodeToDayHash[text];
@@ -234,23 +234,28 @@ var RecurrenceTranslator = {
 	 * @param {String} cardinal  The cardinal number.
 	 */
 	toOrdinal: function(cardinal) {
-		var mod10 = cardinal % 10;
-		var tens = cardinal % 100 - mod10;
+		var optional_last_suffix = (cardinal < 0) ? " last" : "";
+		abs_cardinal = Math.abs(cardinal);
+		var mod10 = abs_cardinal % 10;
+		var tens = abs_cardinal % 100 - mod10;
 		
 		if (tens == 10) {
 			// 10-19
-			return cardinal + "th";
+			return abs_cardinal + "th" + optional_last_suffix;
 		}
 		
-		if (mod10 == 1) {
-			return cardinal + "st";
+		if (cardinal == -1) {
+			return "last";
+		}
+		else if (mod10 == 1) {
+			return abs_cardinal + "st" + optional_last_suffix;
 		}
 		else if (mod10 == 2) {
-			return cardinal + "nd";
+			return abs_cardinal + "nd" + optional_last_suffix;
 		}
 		else if (mod10 == 3) {
-			return cardinal + "rd";
+			return abs_cardinal + "rd" + optional_last_suffix;
 		}
-		return cardinal + "th";
+		return abs_cardinal + "th" + optional_last_suffix;
 	}
 }

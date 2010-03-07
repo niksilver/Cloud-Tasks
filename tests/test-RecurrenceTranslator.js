@@ -87,7 +87,26 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual("118th", RecurrenceTranslator.toOrdinal(118));
 			Y.Assert.areEqual("119th", RecurrenceTranslator.toOrdinal(119));
 		},
-		
+		testNegativeNumbersToOrdinal: function() {
+			Y.Assert.areEqual("last", RecurrenceTranslator.toOrdinal(-1));
+			Y.Assert.areEqual("2nd last", RecurrenceTranslator.toOrdinal(-2));
+			Y.Assert.areEqual("3rd last", RecurrenceTranslator.toOrdinal(-3));
+			Y.Assert.areEqual("4th last", RecurrenceTranslator.toOrdinal(-4));
+
+			Y.Assert.areEqual("10th last", RecurrenceTranslator.toOrdinal(-10));
+			
+			Y.Assert.areEqual("11th last", RecurrenceTranslator.toOrdinal(-11));
+			Y.Assert.areEqual("12th last", RecurrenceTranslator.toOrdinal(-12));
+			Y.Assert.areEqual("13th last", RecurrenceTranslator.toOrdinal(-13));
+
+			Y.Assert.areEqual("20th last", RecurrenceTranslator.toOrdinal(-20));
+
+			Y.Assert.areEqual("21st last", RecurrenceTranslator.toOrdinal(-21));
+			Y.Assert.areEqual("22nd last", RecurrenceTranslator.toOrdinal(-22));
+			Y.Assert.areEqual("23rd last", RecurrenceTranslator.toOrdinal(-23));
+			Y.Assert.areEqual("24th last", RecurrenceTranslator.toOrdinal(-24));
+		},
+				
 		testDayCodeToText: function() {
 			Y.Assert.areEqual("Monday", RecurrenceTranslator.dayCodeToText("MO"));
 			Y.Assert.areEqual("Tuesday", RecurrenceTranslator.dayCodeToText("TU"));
@@ -99,6 +118,13 @@ testCases.push( function(Y) {
 
 			Y.Assert.areEqual("2nd Monday", RecurrenceTranslator.dayCodeToText("2MO"));
 			Y.Assert.areEqual("3rd Friday", RecurrenceTranslator.dayCodeToText("3FR"));
+		},
+		
+		testDayCodeToTextWithNegatives: function() {
+			Y.Assert.areEqual("last Sunday", RecurrenceTranslator.dayCodeToText("-1SU"));
+			Y.Assert.areEqual("2nd last Monday", RecurrenceTranslator.dayCodeToText("-2MO"));
+			Y.Assert.areEqual("3rd last Tuesday", RecurrenceTranslator.dayCodeToText("-3TU"));
+			Y.Assert.areEqual("4th last Wednesday", RecurrenceTranslator.dayCodeToText("-4WE"));
 		},
 		
 		testToTextEveryNthBlahday: function() {
@@ -157,6 +183,10 @@ testCases.push( function(Y) {
 			assertToText("Every month on the 3rd Tuesday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU");
 			assertToText("Every month on the 3rd Tuesday and 3rd Friday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU,3FR");
 			assertToText("Every month on the 3rd Tuesday, 3rd Friday and 3rd Saturday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=3TU,3FR,3SA");
+		},
+		
+		testToTextEveryMonthOnTheNthLastBlahday: function(){
+			assertToText("Every month on the last Monday", "1", "FREQ=MONTHLY;INTERVAL=1;BYDAY=-1MO");
 		}
 	});
 
