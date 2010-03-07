@@ -79,6 +79,9 @@ var RecurrenceTranslator = {
 		else if (obj.every == "0") {
 			basic_text = this.toBasicTextForAfterRule(data);
 		}
+		else {
+			basic_text = "<Some frequency>";
+		}
 		
 		if (data.UNTIL) {
 			var until_date = this.untilParameterToText(data.UNTIL);
@@ -280,6 +283,12 @@ var RecurrenceTranslator = {
 		}
 		else if (data.FREQ == 'DAILY') {
 			return "After " + data.INTERVAL + " days";
+		}
+		else if (data.FREQ == 'WEEKLY' && data.INTERVAL == '1') {
+			return "After 1 week";
+		}
+		else if (data.FREQ == 'WEEKLY') {
+			return "After " + data.INTERVAL + " weeks";
 		}
 		else {
 			return "After <something>";
