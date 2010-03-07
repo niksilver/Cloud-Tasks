@@ -81,6 +81,19 @@
 	text-align: left;
 }
 
+/* ----------------- Auth instructions ----------------- */
+
+#AuthInstructions {
+	display: none;
+	padding-top: 3em;
+	padding-left: 24px;
+	padding-right: 24px;
+	text-align: left;
+	color: #666;
+	font-style: italic;
+	font-size: 22px;
+}
+
 /* ----- Edit task recurrence note (instructions and problem warning) ----- */
 
 #TaskRecurrenceRow {

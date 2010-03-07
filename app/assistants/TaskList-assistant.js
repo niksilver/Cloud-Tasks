@@ -174,6 +174,8 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 	
 	Mojo.Log.info("TaskListAssistant.activate: Entering");
 	
+	this.hideOrDisplayAuthInstructions();
+	
 	// Add in a new task if we've got one with a proper name
 	if (returnValue
 			&& returnValue.isNew
@@ -235,6 +237,17 @@ TaskListAssistant.prototype.addNewTask = function(task) {
 	this.taskListModel.addTask(task);
 	this.taskListModel.sort();
 	Store.saveTask(task);
+}
+
+TaskListAssistant.prototype.hideOrDisplayAuthInstructions = function() {
+	Mojo.Log.info("TaskListAssistance.hideOrDisplayAuthInstructions: Entering");
+
+	var num_tasks = this.taskListModel.getTaskList().length;
+	var is_authorised = this.rtm.getToken();
+	var need_instructions = (num_tasks == 0 && !is_authorised);
+	this.controller.get('AuthInstructions').setStyle({
+		display: (need_instructions ? 'inline' : none)
+	});
 }
 
 TaskListAssistant.prototype.deactivate = function(event) {

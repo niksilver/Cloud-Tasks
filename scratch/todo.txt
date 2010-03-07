@@ -1,8 +1,5 @@
 - Completing tasks
   - Allow swipe to complete
-- Recurring tasks
-  - Add these
-  - Show recurrence in edit task scene
 - Postponing tasks
   - Allow task postponing
   - Handle postponing of recurring tasks
@@ -39,6 +36,9 @@ Done
   - Have tasks with no due dates have a blank where due date usually appears.
 - Auth screen:
   - Put spinner on Go and Finish buttons
+- Recurring tasks
+  - Add these
+  - Show recurrence in edit task scene
 - Efficiency
   - When trying to merge a task which is completed or deleted it should be just ignored.
 - Development:
