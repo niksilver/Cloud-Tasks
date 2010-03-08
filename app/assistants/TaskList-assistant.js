@@ -57,8 +57,9 @@ TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
 	var inst = this;
 	Mojo.Event.listen(document, 'token-changed', function(event) {
 		Mojo.Log.info("TaskListAssistant.setUpAppMenuItemListeners handler: Entering");
-		inst.appMenuModel.items[0].disabled = !event.tokenSet;
-		inst.appMenuModel.items[2].disabled = !event.tokenSet;
+		inst.appMenuModel.items[1].disabled = !event.tokenSet; // Sync
+		inst.appMenuModel.items[2].disabled = event.tokenSet;  // Authorise
+		inst.appMenuModel.items[3].disabled = !event.tokenSet; // Deauthorise
 	})
 }
 
