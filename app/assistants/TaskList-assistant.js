@@ -43,14 +43,8 @@ TaskListAssistant.prototype.initialiseStoreAndLoadTaskList = function() {
 	Mojo.Log.info("TaskListAssistant.initialiseStoreAndLoadTaskList: Entering");
 	var inst = this;
 	Store.initialise(function() {
-		inst.taskListModel.loadTaskList(inst.onTaskListLoaded.bind(inst));
+		inst.taskListModel.loadTaskList(inst.onTaskListModelChange.bind(inst));
 	});
-}
-
-TaskListAssistant.prototype.onTaskListLoaded = function() {
-	Mojo.Log.info("TaskListAssistant.onTaskListLoaded: Entering");
-	this.taskListWidgetModel.items = this.taskListModel.getListOfVisibleTasks();
-	this.onTaskListModelChange();
 }
 
 TaskListAssistant.prototype.setUpAppMenuItemListeners = function() {
