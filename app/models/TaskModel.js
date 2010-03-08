@@ -207,6 +207,7 @@ TaskModel.prototype.hasNoIDs = function() {
 }
 
 TaskModel.prototype.shouldNotBeVisible = function() {
+	// We can filter Nik's "Test 1" tasks listID 11122940 here
 	return this.deleted || this.completed;
 }
 
