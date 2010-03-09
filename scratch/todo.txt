@@ -56,4 +56,5 @@ Done
   - Put a nonsense recurrence on a task, restart the app, and problem flag disappears
   - Long routine processing getList response gets killed by webOS. Broken this up
     into several deferred functions.
+  - Editing a date but keeping it the same should not create a sync
   
