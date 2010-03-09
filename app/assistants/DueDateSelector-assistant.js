@@ -114,9 +114,14 @@ DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Got tap event on cell " + row + ", " + col);
 	var date = this.grid.get(row, col).date;
 	var date_str = date.toISOString();
-	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Setting date " + date_str);
-	this.task.setForPush('due', date_str);
-	this.config.updateTaskDueDisplayFromTask(this.task);
+	if (date_str != this.task.due) {
+		Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Setting date " + date_str);
+		this.task.setForPush('due', date_str);
+		this.config.updateTaskDueDisplayFromTask(this.task);
+	}
+	else {
+		Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Date is the same");
+	}
 	this.config.closeDueDateSelectorDialog();
 }
 

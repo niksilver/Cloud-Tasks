@@ -74,6 +74,15 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Feb', jan_2010_with_monday.get(5, 0).date.toString('MMM'), "2: Didn't get Mon 1 Feb");
 			Y.Assert.areEqual('Feb', jan_2010_with_monday.get(5, 6).date.toString('MMM'), "2: Didn't get Sun 7 Jan");
 		},
+		
+		testDateFromGetDateIsMidnight: function() {
+			var jan_2010 = new CalendarGrid({
+				month: Date.parse('2010-01-05T01:23:45Z'), // Not midnight
+				firstDay: 1
+			});
+
+			Y.Assert.areEqual(0, jan_2010.get(0, 0).date.getHours(), "Hour is not midnight");
+		},
 
 		testGetDayOfWeekLetter: function() {
 			var month1 = Date.parse('2010-01-05T00:00:00Z');
