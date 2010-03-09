@@ -108,6 +108,13 @@
 	float: right;
 }
 
+#TaskRecurrenceNote-instructions, #TaskRecurrenceNote-warning {
+	/* Don't display by default, or it will show
+	 * briefly during the transition.
+	 */
+	display: none;
+}
+
 #TaskRecurrencePaddingRow {
 	min-height: 14px;
 }
