@@ -257,6 +257,28 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, jan_2010.get(5, 6).isWeekend, "1: Didn't get Sun 7 Jan");
 		},
 		
+		testAgainstDaylightSaving: function() {
+			var mar_2010 = new CalendarGrid({
+				month: Date.parse('2010-03-09T21:28:00Z'),
+				firstDay: 1
+			});
+			
+			Y.Assert.areEqual(25, mar_2010.get(4, 3).dayOfMonth, "Didn't get date of Thu 25 Mar 2010");
+			Y.Assert.areEqual(false, mar_2010.get(4, 3).isWeekend, "Didn't get weekendness of Thu 25 Mar 2010");
+			
+			Y.Assert.areEqual(26, mar_2010.get(4, 4).dayOfMonth, "Didn't get date of Fri 26 Mar 2010");
+			Y.Assert.areEqual(false, mar_2010.get(4, 4).isWeekend, "Didn't get weekendness of Fri 26 Mar 2010");
+			
+			Y.Assert.areEqual(27, mar_2010.get(4, 5).dayOfMonth, "Didn't get date of Sat 27 Mar 2010");
+			Y.Assert.areEqual(true, mar_2010.get(4, 5).isWeekend, "Didn't get weekendness of Sat 27 Mar 2010");
+			
+			Y.Assert.areEqual(28, mar_2010.get(4, 6).dayOfMonth, "Didn't get date of Sun 28 Mar 2010");
+			Y.Assert.areEqual(true, mar_2010.get(4, 6).isWeekend, "Didn't get weekendness of Sun 28 Mar 2010");
+			
+			Y.Assert.areEqual(29, mar_2010.get(5, 0).dayOfMonth, "Didn't get date of Mon 29 Mar 2010");
+			Y.Assert.areEqual(false, mar_2010.get(5, 0).isWeekend, "Didn't get weekendness of Mon 29 Mar 2010");
+		},
+		
 		testGetIsToday: function() {
 			var CalendarGridExtended = TestUtils.extend(CalendarGrid, {
 				today: function() { return Date.parse('2010-01-03T00:00:00Z') }
