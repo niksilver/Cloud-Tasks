@@ -163,11 +163,12 @@ var Store = {
 				var count = result.rows.length;
 				for (var i = 0; i < count; i++) {
 					var json = result.rows.item(i).json;
+					Mojo.Log.info("Store.loadAllTasks: Loaded " + json);
 					var obj = json.evalJSON();
 					var task = TaskModel.createFromObject(obj);
 					tasks.push(task);
 				}
-				Mojo.Log.info("Store.loadAllTasks: Loaded " + i + " tasks");
+				Mojo.Log.info("Store.loadAllTasks: Loaded " + count + " tasks");
 				onSuccess(tasks);
 			},
 			"Could not load tasks"
