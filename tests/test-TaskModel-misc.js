@@ -164,6 +164,24 @@ testCases.push( function(Y) {
 
 		},
 		
+		testDueDateDuringSummerTime: function() {
+			/*
+			 * [20100321-10:44:46.121000] info: Store.loadAllTasks: Loaded {"localID": 3444, "listID": "11122940", "taskseriesID": "674
+47625", "taskID": "97529399", "name": "Toe tee", "due": "2010-03-31T23:00:00Z", "modified": "2010-03-21T10:17:25Z", "del
+eted": false, "localChanges": [], "completed": false}
+			 */
+			
+			// During summer time RTM can set a due date as 2010-03-31T23:00:00Z
+			// (Sun 31 March 2010 at 2300hrs) which actually means Mon 1 April 2010
+			// at midnight because of summer time.
+			
+			var task = TaskModel.createFromObject({
+				"listID": "11122940", "taskseriesID": "67447625", "taskID": "97529399",
+				"name": "Toe tee", "due": "2010-03-31T23:00:00Z",
+				"deleted": false, "localChanges": [], "completed": false
+			});
+		},
+		
 		testSortByDueThenName: function(){
 			var nov30 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'B' });
 			var nov30_2 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'A' });

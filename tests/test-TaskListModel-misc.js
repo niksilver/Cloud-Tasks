@@ -593,13 +593,7 @@ testCases.push( function(Y) {
 						Y.Assert.areEqual('due', found_task.localChanges[0], "Local change flags are lost");
 						Y.Assert.areEqual(false, found_task.isDueFlag, "Task's due flag not updated");
 						Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");
-					},
-					function() {
-					},
-					function() {
-					},
-					function() {
-					},
+					}
 				]
 			);
 		},

@@ -152,6 +152,10 @@ TaskListModel.prototype.dueDateFormatter = function(utc_string) {
 	if (utc_date == null) {
 		return '';
 	}
+	
+	// For safety around daylight savings, add 1 hour
+	// For conformance and equality tests reset time to midnight
+	utc_date.add({ hours: 1 });
 	utc_date.set({ hour: 0, minute: 0, second: 0});
 
 	var today = this.today();
@@ -282,18 +286,19 @@ TaskListModel.prototype.addTask = function(task, onSuccess) {
  * @param {TaskModel} task  The task to be merged.
  */
 TaskListModel.prototype.mergeTask = function(task) {
-	Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task.toSummaryString());
+	// Mojo.Log.info("TaskListModel.mergeTask: Merging task " + task.toSummaryString());
 	var task_index = this.getTaskIndex(task);
 	if (task_index == -1 && task.needsPurging()) {
-		Mojo.Log.info("TaskListModel.mergeTask: Task is new but won't add task as it needs purging");
+		// Mojo.Log.info("TaskListModel.mergeTask: Task is new but won't add task as it needs purging");
 	}
 	else if (task_index == -1) {
-		Mojo.Log.info("TaskListModel.mergeTask: Task is new and live so will add");
+		Mojo.Log.info("TaskListModel.mergeTask: Task is new and live so will add: " + task.toSummaryString());
 		this.addTask(task);
 	}
 	else {
 		var existing_task = this._task_list[task_index];
-		Mojo.Log.info("TaskListModel.mergeTask: Merging with " + existing_task.toSummaryString());
+		Mojo.Log.info("TaskListModel.mergeTask: Merging " + task.toSummaryString()
+			+ " with " + existing_task.toSummaryString());
 		task.takeLocalChanges(existing_task);
 		task.localID = existing_task.localID;
 		this._task_list[task_index] = task;
@@ -321,7 +326,7 @@ TaskListModel.prototype.purgeTaskList = function() {
 	var made_changes = false;
 	for (var i = this._task_list.length-1; i >= 0; i--) {
 		var task = this._task_list[i];
-		Mojo.Log.info("TaskListModel.purgeTaskList: Considering purging task[" + i + "]: " + task.toSummaryString());
+		// Mojo.Log.info("TaskListModel.purgeTaskList: Considering purging task[" + i + "]: " + task.toSummaryString());
 		if (task.needsPurging()) {
 			// Need to purge this task
 			this._task_list.splice(i, 1);

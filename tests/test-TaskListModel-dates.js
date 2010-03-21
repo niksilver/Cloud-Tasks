@@ -102,7 +102,18 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Sun 22 Nov', model.dueDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
 			Y.Assert.areEqual('Mon 2 Jun', model.dueDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
 		},
+		
+		testDueDateFormatterWithDayLightSaving: function() {
+			TestUtils.showMojoLog();
+			var model = new TaskListModel();
+			model.today = function() {
+				return Date.parse('20 Mar 2010');
+			};
 
+			// Actual due date returned by RTM which the website interprets as Mon 5 April 2010
+			Y.Assert.areEqual('Mon 5 Apr', model.dueDateFormatter('2010-04-04T23:00:00Z'), 'Daylight saving date');
+		},
+		
 		testGetLatestModified: function() {
 			var model;
 			
