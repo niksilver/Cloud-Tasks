@@ -29,7 +29,7 @@ function TaskModel(properties) {
 		this.taskseriesID = properties.taskseriesID;
 		this.taskID = properties.taskID;
 		this.name = properties.name;
-		this.due = properties.due;
+		this.dueUTC = properties.due;
 		this.modified = properties.modified;
 		this.deleted = properties.deleted || false;
 		this.rrule = properties.rrule;
@@ -85,6 +85,13 @@ TaskModel.prototype.update = function() {
 	this.isOverdueFlag = this.isOverdue();
 	this.hasRRuleFlag = this.isRecurring();
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
+}
+
+/**
+ * Return the due date as a UTC-format string
+ */
+TaskModel.prototype.dueUTCDateString = function() {
+	return this.dueUTC;
 }
 
 TaskModel.prototype.today = function() {

@@ -393,7 +393,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			timeline: this.timeline
 		};
 		if (task.due) {
-			parameters.due = task.due;
+			parameters.due = task.dueUTCDateString();
 		}
 	}
 	else if (property == 'deleted') {
