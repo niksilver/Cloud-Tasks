@@ -90,8 +90,20 @@ TaskModel.prototype.update = function() {
 /**
  * Return the due date as a UTC-format string
  */
-TaskModel.prototype.dueUTCDateString = function() {
+TaskModel.prototype.dueAsUTCString = function() {
 	return this.dueUTC;
+}
+
+/**
+ * Return the due date a Date object relative to the current locale
+ * but you should ignore the timezone.
+ * For example, a due date of 2010-03-31T16:00:00Z will return
+ * a Date object of 1 April 2010 in Perth (because Perth is timezone +0800).
+ */
+TaskModel.prototype.dueAsLocalDate = function() {
+	var date = Date.parse(this.dueUTC);
+	var timezone_offset = date.getTimezoneOffset();
+	return date.add({ minutes: -1 * timezone_offset });
 }
 
 TaskModel.prototype.today = function() {

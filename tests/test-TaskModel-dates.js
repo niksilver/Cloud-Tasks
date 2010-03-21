@@ -8,6 +8,14 @@
 testCases.push( function(Y) {
 
 	return new Y.Test.Case({
+
+		setUp: function() {
+			TestUtils.captureMojoLog();
+		},
+		
+		tearDown: function() {
+			TestUtils.restoreMojoLog();
+		},
 		
 		testConstructorSetsDeletedDefault: function() {
 			var task = new TaskModel({
@@ -147,10 +155,32 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(date_a, undef_a), 'Defined should be after undefined');
 		},
 		
-		testDueUTCDateString: function() {
+		testDueAsUTCString: function() {
 			var task = new TaskModel({ due: '2010-03-31T23:00:00Z'});
-			Y.Assert.areEqual('2010-03-31T23:00:00Z', task.dueUTCDateString(), "Didn't get UTC date string");
+			Y.Assert.areEqual('2010-03-31T23:00:00Z', task.dueAsUTCString(), "Didn't get UTC date string");
 		},
+
+		/**
+		 * When in Perth, which is +0800, this is what we get...
+		 * Mojo.Log.info(Date.today().getTimezoneOffset()); // -480
+		 * Mojo.Log.info(Date.today().getUTCOffset()); // +0800
+		 * Mojo.Log.info(Date.parse('2010-03-31T16:00:00Z').getUTCOffset()); // +0800
+		 * Mojo.Log.info(Date.parse('2010-03-31T17:00:00Z').getUTCOffset()); // +0800
+		 * Mojo.Log.info(Date.parse('2010-03-31T16:00-0100').getUTCOffset()); // +0800
+		 * Mojo.Log.info(Date.parse('2010-03-31T10:00-0100').getHours()); // 19
+		 * Mojo.Log.info(Date.parse('2010-03-31T10:00+0100').getHours()); // 17
+		 */
+		
+		testDueAsLocalDateInPerth: function() {
+			// Perth is +0800
+			var task_for_perth = new TaskModel({ due: '2010-03-31T16:00:00Z'}); // 1 April 2010 in Perth
+			var local_date = task_for_perth.dueAsLocalDate();
+			Y.Assert.areEqual(1, local_date.getDate(), "Should be 1st day of month");
+			Y.Assert.areEqual(3, local_date.getMonth(), "Should be April (month index = 3)");
+			Y.Assert.areEqual(2010, local_date.getFullYear(), "Should be 2010");
+			Y.Assert.areEqual(0, local_date.getHours(), "Should be 0 hours (midnight)");
+			Y.Assert.areEqual(0, local_date.getMinutes(), "Should be 0 minutes (midnight exactly)");
+		}
 		
 		/* testDueDateDuringSummerTime: function() {
 			
