@@ -172,9 +172,33 @@ testCases.push( function(Y) {
 		 */
 		
 		testDueAsLocalDateInPerth: function() {
-			// Perth is +0800
+			// Perth is +0800 (hours) or -480 (timezone offset)
 			var task_for_perth = new TaskModel({ due: '2010-03-31T16:00:00Z'}); // 1 April 2010 in Perth
 			var local_date = task_for_perth.dueAsLocalDate();
+			Y.Assert.areEqual(1, local_date.getDate(), "Should be 1st day of month");
+			Y.Assert.areEqual(3, local_date.getMonth(), "Should be April (month index = 3)");
+			Y.Assert.areEqual(2010, local_date.getFullYear(), "Should be 2010");
+			Y.Assert.areEqual(0, local_date.getHours(), "Should be 0 hours (midnight)");
+			Y.Assert.areEqual(0, local_date.getMinutes(), "Should be 0 minutes (midnight exactly)");
+		},
+		
+		testSetDueAsLocalDateInPerth: function() {
+			// Perth is +0800 (hours) or -480 (timezone offset)
+
+			var task1 = new TaskModel();
+			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
+			Y.Assert.areEqual('2010-03-31T16:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+
+			var task2 = new TaskModel();
+			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
+			Y.Assert.areEqual('2010-03-31T16:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+		},
+		
+		testDueAsLocalDateInLondonBST: function() {
+			// London during BST is +0800
+			// 1 April 2010 in London during BST
+			var task_for_london_bst = new TaskModel({ due: '2010-03-31T23:00:00Z'});
+			var local_date = task_for_london_bst.dueAsLocalDate();
 			Y.Assert.areEqual(1, local_date.getDate(), "Should be 1st day of month");
 			Y.Assert.areEqual(3, local_date.getMonth(), "Should be April (month index = 3)");
 			Y.Assert.areEqual(2010, local_date.getFullYear(), "Should be 2010");

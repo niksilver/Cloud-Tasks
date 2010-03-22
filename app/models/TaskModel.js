@@ -106,6 +106,16 @@ TaskModel.prototype.dueAsLocalDate = function() {
 	return date.add({ minutes: -1 * timezone_offset });
 }
 
+/**
+ * Set the due date according to local time.
+ * @param {Date} date  The due date in local time.
+ */
+TaskModel.prototype.setDueAsLocalDate = function(date) {
+	var timezone_offset = date.getTimezoneOffset();
+	var utc_date = date.clone().add({ minutes: timezone_offset });
+	this.dueUTC = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
+}
+
 TaskModel.prototype.today = function() {
 	return Date.today();
 }
