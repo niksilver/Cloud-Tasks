@@ -194,6 +194,16 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2010-03-31T16:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
 		},
 		
+		testGetAndSetLocalDateInPerth: function() {
+			// Perth is +0800 (hours) or -480 (timezone offset)
+
+			var original_utc_string = '2010-03-31T16:00:00Z'; // 1 April 2010 in Perth
+			var task_for_perth = new TaskModel({ due: original_utc_string});
+			var local_date = task_for_perth.dueAsLocalDate();
+			task_for_perth.setDueAsLocalDate(local_date);
+			Y.Assert.areEqual(task_for_perth.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
+		},
+		
 		testDueAsLocalDateInLondonBST: function() {
 			// London during BST is +0800
 			// 1 April 2010 in London during BST
