@@ -269,8 +269,8 @@ testCases.push( function(Y) {
 		},
 		
 		testSetDueAsLocalDateLondonGMT: function() {
-			// London during winter (GMT) is +0100
-			// 23 February 2010 in London during winter
+			// London during winter (GMT) is +0000
+			// 23 February 2010 in London is during winter
 
 			var task1 = new TaskModel();
 			task1.getTimezoneOffset = function(date) { return 0; };
@@ -286,7 +286,7 @@ testCases.push( function(Y) {
 		},
 		
 		testGetAndSetLocalDateInLondonGMT: function() {
-			// London in winter (GMT) is +0100 (hours) or -60 (timezone offset)
+			// London in winter (GMT) is +0000 (hours) or +0 (timezone offset)
 
 			var original_utc_string = '2010-02-23T00:00:00Z'; // 23 February 2010 in London is GMT
 			var task_for_london_gmt = new TaskModel({ due: original_utc_string});
