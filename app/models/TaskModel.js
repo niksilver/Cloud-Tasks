@@ -102,7 +102,7 @@ TaskModel.prototype.dueAsUTCString = function() {
  */
 TaskModel.prototype.dueAsLocalDate = function() {
 	var date = Date.parse(this.dueUTC);
-	var timezone_offset = date.getTimezoneOffset();
+	var timezone_offset = this.getTimezoneOffset(date);
 	return date.add({ minutes: -1 * timezone_offset });
 }
 
@@ -111,9 +111,25 @@ TaskModel.prototype.dueAsLocalDate = function() {
  * @param {Date} date  The due date in local time.
  */
 TaskModel.prototype.setDueAsLocalDate = function(date) {
-	var timezone_offset = date.getTimezoneOffset();
+	var timezone_offset = this.getTimezoneOffset(date);
 	var utc_date = date.clone().add({ minutes: timezone_offset });
 	this.dueUTC = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
+}
+
+/**
+ * Get the timezone offset for a given date.
+ * For London during summertime this is -60 (60 minutes west of the meridian),
+ * for London during winter this is 0 (GMT),
+ * for Perth on 1 April this is -480 (8 hours = 480 minutes west of the meridian),
+ * etc.
+ * Locations east of the meridian have +ve values.
+ * Ordinarily this is just Javascript's own Date.getTimezoneOffset() function,
+ * but by putting it here it can be overridden when testing the software
+ * as if in different timezones.
+ * @param {Date} date  The date whose timezone offset we want.
+ */
+TaskModel.prototype.getTimezoneOffset = function(date) {
+	return date.getTimezoneOffset();
 }
 
 TaskModel.prototype.today = function() {

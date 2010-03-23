@@ -174,6 +174,8 @@ testCases.push( function(Y) {
 		testDueAsLocalDateInPerth: function() {
 			// Perth is +0800 (hours) or -480 (timezone offset)
 			var task_for_perth = new TaskModel({ due: '2010-03-31T16:00:00Z'}); // 1 April 2010 in Perth
+			task_for_perth.getTimezoneOffset = function(date) { return -480; };
+			
 			var local_date = task_for_perth.dueAsLocalDate();
 			Y.Assert.areEqual(1, local_date.getDate(), "Should be 1st day of month");
 			Y.Assert.areEqual(3, local_date.getMonth(), "Should be April (month index = 3)");
@@ -186,10 +188,13 @@ testCases.push( function(Y) {
 			// Perth is +0800 (hours) or -480 (timezone offset)
 
 			var task1 = new TaskModel();
+			task1.getTimezoneOffset = function(date) { return -480; };
+			
 			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
 			Y.Assert.areEqual('2010-03-31T16:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
 
 			var task2 = new TaskModel();
+			task2.getTimezoneOffset = function(date) { return -480; };
 			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
 			Y.Assert.areEqual('2010-03-31T16:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
 		},
@@ -199,6 +204,8 @@ testCases.push( function(Y) {
 
 			var original_utc_string = '2010-03-31T16:00:00Z'; // 1 April 2010 in Perth
 			var task_for_perth = new TaskModel({ due: original_utc_string});
+			task_for_perth.getTimezoneOffset = function(date) { return -480; };
+
 			var local_date = task_for_perth.dueAsLocalDate();
 			task_for_perth.setDueAsLocalDate(local_date);
 			Y.Assert.areEqual(task_for_perth.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
@@ -208,6 +215,8 @@ testCases.push( function(Y) {
 			// London during BST is +0100
 			// 1 April 2010 in London during BST
 			var task_for_london_bst = new TaskModel({ due: '2010-03-31T23:00:00Z'});
+			task_for_london_bst.getTimezoneOffset = function(date) { return -60; };
+
 			var local_date = task_for_london_bst.dueAsLocalDate();
 			Y.Assert.areEqual(1, local_date.getDate(), "Should be 1st day of month");
 			Y.Assert.areEqual(3, local_date.getMonth(), "Should be April (month index = 3)");
@@ -221,10 +230,14 @@ testCases.push( function(Y) {
 			// 1 April 2010 in London during BST
 
 			var task1 = new TaskModel();
+			task1.getTimezoneOffset = function(date) { return -60; };
+
 			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
 			Y.Assert.areEqual('2010-03-31T23:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
 
 			var task2 = new TaskModel();
+			task2.getTimezoneOffset = function(date) { return -60; };
+
 			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
 			Y.Assert.areEqual('2010-03-31T23:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
 		},
@@ -234,6 +247,8 @@ testCases.push( function(Y) {
 
 			var original_utc_string = '2010-03-31T23:00:00Z'; // 1 April 2010 in London BST
 			var task_for_london_bst = new TaskModel({ due: original_utc_string});
+			task_for_london_bst.getTimezoneOffset = function(date) { return -60; };
+
 			var local_date = task_for_london_bst.dueAsLocalDate();
 			task_for_london_bst.setDueAsLocalDate(local_date);
 			Y.Assert.areEqual(task_for_london_bst.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
@@ -243,6 +258,8 @@ testCases.push( function(Y) {
 			// London during winter (GMT) is +0000
 			// 23 February 2010 in London is winter
 			var task_for_london_gmt = new TaskModel({ due: '2010-02-23T00:00:00Z'});
+			task_for_london_gmt.getTimezoneOffset = function(date) { return 0; };
+
 			var local_date = task_for_london_gmt.dueAsLocalDate();
 			Y.Assert.areEqual(23, local_date.getDate(), "Should be 23rd day of month");
 			Y.Assert.areEqual(1, local_date.getMonth(), "Should be February (month index = 1)");
@@ -256,10 +273,14 @@ testCases.push( function(Y) {
 			// 23 February 2010 in London during winter
 
 			var task1 = new TaskModel();
+			task1.getTimezoneOffset = function(date) { return 0; };
+
 			task1.setDueAsLocalDate(Date.parse('2010-02-23T00:01:02Z'));
 			Y.Assert.areEqual('2010-02-23T00:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
 
 			var task2 = new TaskModel();
+			task2.getTimezoneOffset = function(date) { return 0; };
+
 			task2.setDueAsLocalDate(new Date(2010, 01, 23, 00, 01, 02)); // 23 February 2010 at 00:01:02
 			Y.Assert.areEqual('2010-02-23T00:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
 		},
@@ -269,35 +290,12 @@ testCases.push( function(Y) {
 
 			var original_utc_string = '2010-02-23T00:00:00Z'; // 23 February 2010 in London is GMT
 			var task_for_london_gmt = new TaskModel({ due: original_utc_string});
+			task_for_london_gmt.getTimezoneOffset = function(date) { return 0; };
+
 			var local_date = task_for_london_gmt.dueAsLocalDate();
 			task_for_london_gmt.setDueAsLocalDate(local_date);
 			Y.Assert.areEqual(task_for_london_gmt.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
 		}
-		
-		/* testDueDateDuringSummerTime: function() {
-			
-			 [20100321-10:44:46.121000] info: Store.loadAllTasks: Loaded {"localID": 3444, "listID": "11122940", "taskseriesID": "674
-47625", "taskID": "97529399", "name": "Toe tee", "due": "2010-03-31T23:00:00Z", "modified": "2010-03-21T10:17:25Z", "del
-eted": false, "localChanges": [], "completed": false}
-			
-			// During summer time RTM can set a due date as 2010-03-31T23:00:00Z
-			// (Sun 31 March 2010 at 2300hrs) which actually means Mon 1 April 2010
-			// at midnight because of summer time.
-			
-			var task = TaskModel.createFromObject({
-				"listID": "11122940", "taskseriesID": "67447625", "taskID": "97529399",
-				"name": "Toe tee", "due": "2010-03-31T23:00:00Z",
-				"deleted": false, "localChanges": [], "completed": false
-			});
-		}, */
-		
-		/* Test set from Perth:
-		 * 
-		 * [20100322-02:19:21.643094] info: Store.executeInTransaction: Executing SQL insert or replace into tasks (id, json) value
-s (?, ?) and args [3452,{"localID": 3452, "listID": "11122940", "taskseriesID": "67474211", "taskID": "97570964", "name"
-: "Testing from perth", "due": "2010-03-31T16:00:00Z", "modified": "2010-03-21T18:17:22Z", "deleted": false, "localChang
-es": [], "completed": false}]
-		 */
 
 	});
 
