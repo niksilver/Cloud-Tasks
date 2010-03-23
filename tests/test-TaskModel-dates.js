@@ -205,7 +205,7 @@ testCases.push( function(Y) {
 		},
 		
 		testDueAsLocalDateInLondonBST: function() {
-			// London during BST is +0800
+			// London during BST is +0100
 			// 1 April 2010 in London during BST
 			var task_for_london_bst = new TaskModel({ due: '2010-03-31T23:00:00Z'});
 			var local_date = task_for_london_bst.dueAsLocalDate();
@@ -214,6 +214,64 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(2010, local_date.getFullYear(), "Should be 2010");
 			Y.Assert.areEqual(0, local_date.getHours(), "Should be 0 hours (midnight)");
 			Y.Assert.areEqual(0, local_date.getMinutes(), "Should be 0 minutes (midnight exactly)");
+		},
+		
+		testSetDueAsLocalDateLondonBST: function() {
+			// London during BST is +0100
+			// 1 April 2010 in London during BST
+
+			var task1 = new TaskModel();
+			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
+			Y.Assert.areEqual('2010-03-31T23:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+
+			var task2 = new TaskModel();
+			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
+			Y.Assert.areEqual('2010-03-31T23:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+		},
+		
+		testGetAndSetLocalDateInLondonBST: function() {
+			// London is +0100 (hours) or -60 (timezone offset)
+
+			var original_utc_string = '2010-03-31T23:00:00Z'; // 1 April 2010 in London BST
+			var task_for_london_bst = new TaskModel({ due: original_utc_string});
+			var local_date = task_for_london_bst.dueAsLocalDate();
+			task_for_london_bst.setDueAsLocalDate(local_date);
+			Y.Assert.areEqual(task_for_london_bst.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
+		},
+		
+		testDueAsLocalDateInLondonGMT: function() {
+			// London during winter (GMT) is +0000
+			// 23 February 2010 in London is winter
+			var task_for_london_gmt = new TaskModel({ due: '2010-02-23T00:00:00Z'});
+			var local_date = task_for_london_gmt.dueAsLocalDate();
+			Y.Assert.areEqual(23, local_date.getDate(), "Should be 23rd day of month");
+			Y.Assert.areEqual(1, local_date.getMonth(), "Should be February (month index = 1)");
+			Y.Assert.areEqual(2010, local_date.getFullYear(), "Should be 2010");
+			Y.Assert.areEqual(0, local_date.getHours(), "Should be 0 hours (midnight)");
+			Y.Assert.areEqual(0, local_date.getMinutes(), "Should be 0 minutes (midnight exactly)");
+		},
+		
+		testSetDueAsLocalDateLondonGMT: function() {
+			// London during winter (GMT) is +0100
+			// 23 February 2010 in London during winter
+
+			var task1 = new TaskModel();
+			task1.setDueAsLocalDate(Date.parse('2010-02-23T00:01:02Z'));
+			Y.Assert.areEqual('2010-02-23T00:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+
+			var task2 = new TaskModel();
+			task2.setDueAsLocalDate(new Date(2010, 01, 23, 00, 01, 02)); // 23 February 2010 at 00:01:02
+			Y.Assert.areEqual('2010-02-23T00:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+		},
+		
+		testGetAndSetLocalDateInLondonGMT: function() {
+			// London in winter (GMT) is +0100 (hours) or -60 (timezone offset)
+
+			var original_utc_string = '2010-02-23T00:00:00Z'; // 23 February 2010 in London is GMT
+			var task_for_london_gmt = new TaskModel({ due: original_utc_string});
+			var local_date = task_for_london_gmt.dueAsLocalDate();
+			task_for_london_gmt.setDueAsLocalDate(local_date);
+			Y.Assert.areEqual(task_for_london_gmt.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
 		}
 		
 		/* testDueDateDuringSummerTime: function() {
