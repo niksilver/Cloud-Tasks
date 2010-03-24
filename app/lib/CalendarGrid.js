@@ -48,7 +48,7 @@ CalendarGrid.prototype.get = function(row, col) {
 	var date_at_midnight = date.clone().clearTime();
 	return {
 		date: date_at_midnight,
-		dayOfMonth: date.getUTCDate(),
+		dayOfMonth: date.getDate(),
 		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth()),
 		isSelected: (typeof this.selected !== 'undefined' && this.selected.equals(date)),
 		isWeekend: (date.getUTCDay() == 0 || date.getUTCDay() == 6),
