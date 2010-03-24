@@ -159,7 +159,7 @@ testCases.push( function(Y) {
 		},
 
 		testIsInMonth: function() {
-			var month1 = Date.parse('2010-01-05T00:00:00Z');
+			var month1 = new Date(2010, 0, 5); // 5 January 2010
 			var jan_2010_with_monday = new CalendarGrid({
 				month: month1,
 				firstDay: 1,

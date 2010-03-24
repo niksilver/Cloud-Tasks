@@ -21,7 +21,7 @@ function CalendarGrid(config) {
 	
 	// Need to find may days to step back to get to first day of week
 	
-	var days_back = (last_of_prev_month.getUTCDay() - this.firstDay + 7) % 7
+	var days_back = (last_of_prev_month.getDay() - this.firstDay + 7) % 7
 	this.cell00 = last_of_prev_month.clone().add({ days: -1 * days_back });
 }
 
@@ -49,9 +49,9 @@ CalendarGrid.prototype.get = function(row, col) {
 	return {
 		date: date_at_midnight,
 		dayOfMonth: date.getDate(),
-		isInMonth: (date.getUTCMonth() == this.month.getUTCMonth()),
+		isInMonth: (date.getMonth() == this.month.getMonth()),
 		isSelected: (typeof this.selected !== 'undefined' && this.selected.equals(date)),
-		isWeekend: (date.getUTCDay() == 0 || date.getUTCDay() == 6),
+		isWeekend: (date.getDay() == 0 || date.getDay() == 6),
 		isToday: (date_at_midnight.equals(this.today()))
 	};
 }
