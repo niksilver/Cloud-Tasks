@@ -81,9 +81,13 @@ TaskModel.prototype.toObject = function() {
 }
 
 TaskModel.prototype.update = function() {
+	Mojo.Log.info("update: Entering");
 	this.isDueFlag = this.isDue();
+	Mojo.Log.info("update: Set due flag");
 	this.isOverdueFlag = this.isOverdue();
+	Mojo.Log.info("update: set overdue flag");
 	this.hasRRuleFlag = this.isRecurring();
+	Mojo.Log.info("update: set isRecurring");
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
 }
 
@@ -99,9 +103,15 @@ TaskModel.prototype.dueAsUTCString = function() {
  * but you should ignore the timezone.
  * For example, a due date of 2010-03-31T16:00:00Z will return
  * a Date object of 1 April 2010 in Perth (because Perth is timezone +0800).
+ * Will return null if there is no due date.
  */
 TaskModel.prototype.dueAsLocalDate = function() {
 	var date = Date.parse(this.dueUTC);
+	if (!date) {
+		return null;
+	}
+	Mojo.Log.info("this.dueUTC = " + this.dueUTC);
+	Mojo.Log.info("date = " + date);
 	var timezone_offset = this.getTimezoneOffset(date);
 	return date.add({ minutes: -1 * timezone_offset });
 }
@@ -137,7 +147,7 @@ TaskModel.prototype.today = function() {
 }
 
 TaskModel.prototype.isDue = function() {
-	var due_date = Date.parse(this.due);
+	var due_date = this.dueAsLocalDate();
 	if (due_date == null) {
 		return true;
 	}
@@ -148,7 +158,7 @@ TaskModel.prototype.isDue = function() {
 }
 
 TaskModel.prototype.isOverdue = function() {
-	var due_date = Date.parse(this.due);
+	var due_date = this.dueAsLocalDate();
 	if (due_date == null) {
 		return false;
 	}

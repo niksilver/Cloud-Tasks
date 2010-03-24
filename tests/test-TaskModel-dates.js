@@ -50,44 +50,58 @@ testCases.push( function(Y) {
 		},
 		
 		testIsDue: function() {
+			TestUtils.showMojoLog();
 			var task;
-			var today = Date.parse('2009-12-01T00:00:00Z');
+			var today = new Date(2009, 11, 1); // 1 December 2009
+			Mojo.Log.info("Today is " + today);
 			
 			// A task from yesterday is due
-			task = new TaskModel({ due: '2009-11-30T00:00:00Z' });
+			var yesterday_utc_string = (new Date(2009, 10, 30)).toISOString();
+			Mojo.Log.info("yesterday_utc_string is " + yesterday_utc_string);
+			task = new TaskModel({ due: yesterday_utc_string });
+			Mojo.Log.info("Created task");
 			task.today = function() { return today };
 			task.update();
+			Mojo.Log.info("Updated task");
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task from yesterday should be due');
+			Mojo.Log.info("Done yesterday");
 			
 			// A task for today is due
-			task = new TaskModel({ due: '2009-12-01T00:00:00Z' });
+			var today_utc_string = today.toISOString();
+			task = new TaskModel({ due: today_utc_string });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task for today should be due');
+			Mojo.Log.info("Done today");
 			
 			// A task for tomorrow is not due
-			task = new TaskModel({ due: '2009-12-02T00:00:00Z' });
+			var tomorrow_utc_string = (new Date(2009, 11, 2)).toISOString();
+			task = new TaskModel({ due: tomorrow_utc_string });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(false, task.isDueFlag, 'A task for tomorrow should not be due');
+			Mojo.Log.info("Done tomorrow");
 			
 			// A task with no due date set is due
 			task = new TaskModel();
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task with no due date should be due');
+			Mojo.Log.info("Done no due date");
 			
 			// A task with empty due date set is due
 			task = new TaskModel({ due: '' });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task with empty due date should be due');
+			Mojo.Log.info("Done empty due date");
 			
 			// A task with empty object due date set is due
 			task = new TaskModel({ due: {} });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task with empty object due date should be due');
+			Mojo.Log.info("Done empty object as due");
 		},
 
 		testIsOverdue: function() {
