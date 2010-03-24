@@ -81,13 +81,9 @@ TaskModel.prototype.toObject = function() {
 }
 
 TaskModel.prototype.update = function() {
-	Mojo.Log.info("update: Entering");
 	this.isDueFlag = this.isDue();
-	Mojo.Log.info("update: Set due flag");
 	this.isOverdueFlag = this.isOverdue();
-	Mojo.Log.info("update: set overdue flag");
 	this.hasRRuleFlag = this.isRecurring();
-	Mojo.Log.info("update: set isRecurring");
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
 }
 
@@ -110,8 +106,6 @@ TaskModel.prototype.dueAsLocalDate = function() {
 	if (!date) {
 		return null;
 	}
-	Mojo.Log.info("this.dueUTC = " + this.dueUTC);
-	Mojo.Log.info("date = " + date);
 	var timezone_offset = this.getTimezoneOffset(date);
 	return date.add({ minutes: -1 * timezone_offset });
 }
