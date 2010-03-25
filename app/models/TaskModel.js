@@ -178,8 +178,8 @@ TaskModel.prototype.isRecurring = function() {
 }
 
 TaskModel.sortByDueThenName = function(a, b) {
-	if (a.due == b.due) { return TaskModel.sortByName(a, b); }
-	if ((a.due || '') < (b.due || '')) { return -1; }
+	if (a.dueUTC == b.dueUTC) { return TaskModel.sortByName(a, b); }
+	if ((a.dueUTC || '') < (b.dueUTC || '')) { return -1; }
 	return 1;
 };
 

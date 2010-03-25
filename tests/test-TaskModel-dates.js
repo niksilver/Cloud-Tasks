@@ -95,22 +95,22 @@ testCases.push( function(Y) {
 
 		testIsOverdue: function() {
 			var task;
-			var today = Date.parse('2009-12-01T00:00:00Z');
+			var today = Date.parse("1 Dec 2009"); //Date.parse('2009-12-01T00:00:00Z');
 			
 			// A task from yesterday is overdue
-			task = new TaskModel({ due: '2009-11-30T00:00:00Z' });
+			task = new TaskModel({ due: Date.parse("30 Nov 2009").toISOString() });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(true, task.isOverdueFlag, 'A task from yesterday should be overdue');
 			
 			// A task for today is not overdue
-			task = new TaskModel({ due: '2009-12-01T00:00:00Z' });
+			task = new TaskModel({ due: today.toISOString() });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task for today should not be due');
 			
 			// A task for tomorrow is not overdue
-			task = new TaskModel({ due: '2009-12-02T00:00:00Z' });
+			task = new TaskModel({ due: Date.parse("2 Dec 2009").toISOString() });
 			task.today = function() { return today };
 			task.update();
 			Y.Assert.areEqual(false, task.isOverdueFlag, 'A task for tomorrow should not be overdue');
