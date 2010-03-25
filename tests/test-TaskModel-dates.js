@@ -51,10 +51,10 @@ testCases.push( function(Y) {
 		
 		testIsDue: function() {
 			var task;
-			var today = new Date(2009, 11, 1); // 1 December 2009
+			var today = Date.parse("1 Dec 2009");
 			
 			// A task from yesterday is due
-			var yesterday_utc_string = (new Date(2009, 10, 30)).toISOString();
+			var yesterday_utc_string = Date.parse("30 Nov 2009").toISOString();
 			task = new TaskModel({ due: yesterday_utc_string });
 			task.today = function() { return today };
 			task.update();
@@ -68,7 +68,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task for today should be due');
 			
 			// A task for tomorrow is not due
-			var tomorrow_utc_string = (new Date(2009, 11, 2)).toISOString();
+			var tomorrow_utc_string = Date.parse("2 Dec 2009").toISOString();
 			task = new TaskModel({ due: tomorrow_utc_string });
 			task.today = function() { return today };
 			task.update();
