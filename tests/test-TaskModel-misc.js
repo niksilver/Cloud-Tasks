@@ -9,12 +9,12 @@ testCases.push( function(Y) {
 
 	return new Y.Test.Case({
 
-		testConstructorPickedUp: function() {
+		testTaskModelConstructorPickedUp: function() {
 			var task = new TaskModel();
 			Y.Assert.isNotUndefined(task, 'TaskModel constructor failed');
 		},
 		
-		testConstructorProperties: function() {
+		testTaskModelConstructorProperties: function() {
 			var task = new TaskModel({
 				listID: '123456',
 				taskseriesID:'223344',
@@ -32,7 +32,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('667788', task.taskID, "Task ID doesn't get set");
 			Y.assert(task.localID >= 0, "Local ID should be a number");
 			Y.Assert.areEqual('My test task', task.name, "Task name doesn't get set");
-			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Task due date doesn't get set");
+			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.dueAsUTCString(), "Task due date doesn't get set");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time doesn't get set");
 			Y.Assert.areEqual(false, task.deleted, "Task deleted flag not set");
 			Y.Assert.areEqual('Something', task.rrule, "Task rrule not set");
@@ -115,7 +115,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('223344', task.taskseriesID, "Task series ID not created");
 			Y.Assert.areEqual('667788', task.taskID, "Task ID not created");
 			Y.Assert.areEqual('My test task', task.name, "Name not created");
-			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.due, "Due date not created");
+			Y.Assert.areEqual('2008-07-13T00:00:00Z', task.dueAsUTCString(), "Due date not created");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task.modified, "Modified time not created");
 			Y.Assert.areEqual(true, task.deleted, "Deleted flag not created");
 			Y.Assert.areEqual('Something', task.rrule, "Recurrence rule not created");
