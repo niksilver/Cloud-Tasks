@@ -165,23 +165,6 @@ testCases.push( function(Y) {
 					}
 				]
 			);
-		},
-		
-		testGetLatestModifiedWithTimezones: function() {
-			var model;
-			
-			TestUtils.runInSeries(this, 200,
-				[
-					INITIALISE_STORE,
-					function() {
-						model = new TaskListModel(TaskListModel.objectToTaskList(SampleTestData.big_remote_json));
-						model.getTaskList()[2].modified = '2009-11-19T16:58:19+06:00'; // = 10:58Z
-						model.getTaskList()[5].modified = '2009-11-19T16:58:19-04:00'; // = 20:58Z
-						model.getTaskList()[8].modified = '2009-11-19T16:58:19Z';      // = 16:58Z
-						Y.Assert.areEqual('2009-11-19T16:58:19-04:00', model.getLatestModified(), "Timezoned modification not calculated correctly");
-					}
-				]
-			);
 		}
 		
 	});
