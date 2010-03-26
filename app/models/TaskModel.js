@@ -48,7 +48,7 @@ TaskModel.prototype.toString = function() {
 		+ "taskseriesID: " + this.taskseriesID + ", "
 		+ "taskID: " + this.taskID + ", "
 		+ "name: '" + this.name + "', "
-		+ "due: '" + this.due + "', "
+		+ "due: '" + this.dueUTC + "', "
 		+ "deleted: " + this.deleted + ", "
 		+ "rrule: " + this.rrule + ", "
 		+ "completed: " + this.completed + "}";
@@ -71,7 +71,7 @@ TaskModel.prototype.toObject = function() {
 		taskseriesID: this.taskseriesID,
 		taskID: this.taskID,
 		name: this.name,
-		due: this.due,
+		due: this.dueUTC,
 		modified: this.modified,
 		deleted: this.deleted,
 		rrule: Utils.clone(this.rrule),
@@ -196,7 +196,12 @@ TaskModel.sortByName = function(a, b) {
  * @param {Object} value  The value the property should be.
  */
 TaskModel.prototype.setForPush = function(property, value) {
-	this[property] = value;
+	if (property != 'due') {
+		this[property] = value;
+	}
+	else {
+		this.dueUTC = value;
+	}
 	if (this.localChanges.indexOf(property) == -1) {
 		this.localChanges.push(property);
 	}

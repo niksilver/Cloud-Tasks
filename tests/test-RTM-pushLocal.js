@@ -76,7 +76,7 @@ testCases.push( function(Y) {
 				parameters_used = parameters;
 			};
 			var task = new TaskModel({ due: '2010-01-14T00:00:00Z' });
-			Y.assert(Object.keys(task).indexOf('due') >= 0, "Due property not found in task");
+			Y.assert(task.dueAsUTCString(), "Due property not found in task");
 			rtm.pushLocalChange(task, 'due', null, null);
 			Y.assert(Object.keys(parameters_used).indexOf('due') >= 0, "Due property not found in parameters");
 		},
@@ -88,7 +88,7 @@ testCases.push( function(Y) {
 				parameters_used = parameters;
 			};
 			var task = new TaskModel({ due: undefined });
-			Y.assert(Object.keys(task).indexOf('due') >= 0, "Due property not found in task");
+			Y.Assert.isUndefined(task.dueAsUTCString(), "Due value incorrectly set in task");
 			rtm.pushLocalChange(task, 'due', null, null);
 			Y.assert(Object.keys(parameters_used).indexOf('due') == -1, "Due property incorrectly found in parameters");
 		},
@@ -315,7 +315,7 @@ testCases.push( function(Y) {
 						if (property == 'name' && task.name == 'My new task name') {
 							task_2_change_pushed = true;
 						}
-						else if (property == 'due' && task.due == '2010-01-12T12:34:00Z') {
+						else if (property == 'due' && task.dueAsUTCString() == '2010-01-12T12:34:00Z') {
 							task_3_change_pushed = true;
 						}
 						else {
@@ -772,7 +772,7 @@ testCases.push( function(Y) {
 						Y.Assert.areEqual('778899', found_task.taskID, "Task ID not stored");
 						Y.Assert.areEqual('Do testing', found_task.name, "Name not stored");
 						Y.Assert.areEqual(false, found_task.completed, "Completed not stored");
-						Y.Assert.areEqual('2010-01-13T00:00:00Z', found_task.due, "Due date not stored");
+						Y.Assert.areEqual('2010-01-13T00:00:00Z', found_task.dueAsUTCString(), "Due date not stored");
 						Y.Assert.areEqual(false, found_task.hasLocalChanges(), "Local changes not cleared in stored task");
 					}
 				]

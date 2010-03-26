@@ -167,8 +167,12 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('My test task', task_obj.name, "Name not recorded in object");
 			Y.assert(local_id >= 0, "Local ID should be a number");
 			Y.Assert.areEqual(local_id, task_obj.localID, "Local ID not recorded in object");
-			Y.Assert.areEqual(true, task_obj.deleted, "Deleted property not recorded in object");
+			Y.Assert.areEqual('123456', task_obj.listID, "List ID not recorded in object");
+			Y.Assert.areEqual('223344', task_obj.taskseriesID, "Taskseries ID not recorded in object");
+			Y.Assert.areEqual('667788', task_obj.taskID, "Task ID not recorded in object");
+			Y.Assert.areEqual('2008-07-13T00:00:00Z', task_obj.due, "Due date not recorded in object");
 			Y.Assert.areEqual('2008-06-20T21:11:26Z', task_obj.modified, "Modified property not recorded in object");
+			Y.Assert.areEqual(true, task_obj.deleted, "Deleted property not recorded in object");
 			Y.Assert.isNotUndefined(task_obj.rrule, "RRule not recorded in object");
 			Y.Assert.areEqual('0', task_obj.rrule.every, "Every property of rrule not recorded in object");
 			Y.Assert.areEqual('Some $t here', task_obj.rrule['$t'], "$t property of rrule not recorded in object");

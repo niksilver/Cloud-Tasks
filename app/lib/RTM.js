@@ -392,8 +392,8 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			task_id: task.taskID,
 			timeline: this.timeline
 		};
-		if (task.due) {
-			parameters.due = task.dueUTCDateString();
+		if (task.dueAsUTCString()) {
+			parameters.due = task.dueAsUTCString();
 		}
 	}
 	else if (property == 'deleted') {
