@@ -262,7 +262,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('deleted', task.localChanges[1], "Second local change not restored");
 		},
 		
-		testTakeLocalChanges: function() {
+		testTakeLocalChangesWithChangesInBothTasks: function() {
 			var task1 = new TaskModel({
 				name: 'Write report',
 				due: '2009-12-01T00:00:00Z',
@@ -279,6 +279,20 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(true, task1.deleted, "Didn't take deleted as a change");
 			Y.assert(task1.localChanges.indexOf('deleted') >= 0, "Didn't take fact of local change of deleted");
 			Y.Assert.areEqual(true, task1.hasRRuleFlag, "Didn't update hasRRuleFlag");
+		},
+		
+		testTakeLocalChangesWithDueChanged: function() {
+			var task1 = new TaskModel({
+				name: 'Write report',
+				due: '2009-12-01T00:00:00Z'
+			});
+			var task2_with_changes = new TaskModel({
+				due: '2010-01-01T00:00:00Z',
+				localChanges: ['due']
+			});
+			
+			task1.takeLocalChanges(task2_with_changes);
+			Y.Assert.areEqual('2010-01-01T00:00:00Z', task1.dueAsUTCString(), "Didn't take change in due date");
 		}
 
 	});

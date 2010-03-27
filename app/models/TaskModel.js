@@ -233,7 +233,14 @@ TaskModel.prototype.hasLocalChangeOf = function(property) {
 TaskModel.prototype.takeLocalChanges = function(other_task) {
 	for (var i = 0; i < other_task.localChanges.length; i++) {
 		var property = other_task.localChanges[i];
-		this.setForPush(property, other_task[property]);
+		var value;
+		if (property == 'due') {
+			value = other_task.dueAsUTCString();
+		}
+		else {
+			value = other_task[property];
+		}
+		this.setForPush(property, value);
 	}
 	
 	// Copy over the rrule user text and problem fields.
