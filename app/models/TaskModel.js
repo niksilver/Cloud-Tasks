@@ -29,7 +29,7 @@ function TaskModel(properties) {
 		this.taskseriesID = properties.taskseriesID;
 		this.taskID = properties.taskID;
 		this.name = properties.name;
-		this.dueUTC = properties.due;
+		this.due = properties.due;
 		this.modified = properties.modified;
 		this.deleted = properties.deleted || false;
 		this.rrule = properties.rrule;
@@ -48,7 +48,7 @@ TaskModel.prototype.toString = function() {
 		+ "taskseriesID: " + this.taskseriesID + ", "
 		+ "taskID: " + this.taskID + ", "
 		+ "name: '" + this.name + "', "
-		+ "due: '" + this.dueUTC + "', "
+		+ "due: '" + this.due + "', "
 		+ "deleted: " + this.deleted + ", "
 		+ "rrule: " + this.rrule + ", "
 		+ "completed: " + this.completed + "}";
@@ -71,7 +71,7 @@ TaskModel.prototype.toObject = function() {
 		taskseriesID: this.taskseriesID,
 		taskID: this.taskID,
 		name: this.name,
-		due: this.dueUTC,
+		due: this.due,
 		modified: this.modified,
 		deleted: this.deleted,
 		rrule: Utils.clone(this.rrule),
@@ -91,7 +91,7 @@ TaskModel.prototype.update = function() {
  * Return the due date as a UTC-format string
  */
 TaskModel.prototype.dueAsUTCString = function() {
-	return this.dueUTC;
+	return this.due;
 }
 
 /**
@@ -102,7 +102,7 @@ TaskModel.prototype.dueAsUTCString = function() {
  * Will return null if there is no due date.
  */
 TaskModel.prototype.dueAsLocalDate = function() {
-	var date = Date.parse(this.dueUTC);
+	var date = Date.parse(this.due);
 	if (!date) {
 		return null;
 	}
@@ -117,7 +117,7 @@ TaskModel.prototype.dueAsLocalDate = function() {
 TaskModel.prototype.setDueAsLocalDate = function(date) {
 	var timezone_offset = this.getTimezoneOffset(date);
 	var utc_date = date.clone().add({ minutes: timezone_offset });
-	this.dueUTC = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
+	this.due = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
 }
 
 /**
@@ -178,8 +178,8 @@ TaskModel.prototype.isRecurring = function() {
 }
 
 TaskModel.sortByDueThenName = function(a, b) {
-	if (a.dueUTC == b.dueUTC) { return TaskModel.sortByName(a, b); }
-	if ((a.dueUTC || '') < (b.dueUTC || '')) { return -1; }
+	if (a.due == b.due) { return TaskModel.sortByName(a, b); }
+	if ((a.due || '') < (b.due || '')) { return -1; }
 	return 1;
 };
 
@@ -196,12 +196,7 @@ TaskModel.sortByName = function(a, b) {
  * @param {Object} value  The value the property should be.
  */
 TaskModel.prototype.setForPush = function(property, value) {
-	if (property != 'due') {
-		this[property] = value;
-	}
-	else {
-		this.dueUTC = value;
-	}
+	this[property] = value;
 	if (this.localChanges.indexOf(property) == -1) {
 		this.localChanges.push(property);
 	}
@@ -233,13 +228,7 @@ TaskModel.prototype.hasLocalChangeOf = function(property) {
 TaskModel.prototype.takeLocalChanges = function(other_task) {
 	for (var i = 0; i < other_task.localChanges.length; i++) {
 		var property = other_task.localChanges[i];
-		var value;
-		if (property == 'due') {
-			value = other_task.dueAsUTCString();
-		}
-		else {
-			value = other_task[property];
-		}
+		var value = other_task[property];
 		this.setForPush(property, value);
 	}
 	
