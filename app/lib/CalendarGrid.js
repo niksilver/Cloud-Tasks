@@ -11,10 +11,9 @@
  *         The date selected may not be in the given month.
  */
 function CalendarGrid(config) {
-	var midday = { hour: 12, minute: 0, second: 0, millisecond: 0 };
-	this.month = config.month.clone().set(midday);
+	this.month = config.month.clone().clearTime();
 	this.firstDay = config.firstDay;
-	this.selected = config.selected ? config.selected.clone().set(midday) : undefined;
+	this.selected = config.selected ? config.selected.clone().clearTime() : undefined;
 	
 	var first_of_month = this.month.clone().set({ day: 1 });
 	var last_of_prev_month = first_of_month.clone().add({ days: -1 }); // This is on first row, row 0
@@ -44,15 +43,14 @@ CalendarGrid.prototype.getDayOfWeekLetter = function(index) {
  *     - isInMonth  True iff the date is in the month of the CalendarGrid.
  */
 CalendarGrid.prototype.get = function(row, col) {
-	var date = this.cell00.clone().add({ days: 7*row + col });
-	var date_at_midnight = date.clone().clearTime();
+	var date = this.cell00.clone().add({ days: 7*row + col }).clearTime();
 	return {
-		date: date_at_midnight,
+		date: date,
 		dayOfMonth: date.getDate(),
 		isInMonth: (date.getMonth() == this.month.getMonth()),
 		isSelected: (typeof this.selected !== 'undefined' && this.selected.equals(date)),
 		isWeekend: (date.getDay() == 0 || date.getDay() == 6),
-		isToday: (date_at_midnight.equals(this.today()))
+		isToday: (date.equals(this.today()))
 	};
 }
 

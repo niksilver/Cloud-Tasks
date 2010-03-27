@@ -227,6 +227,11 @@
 	font-weight: bold;
 }
 
+#calendar #calendar-grid .date-is-today.selected,        /* Today selected by touch */
+#calendar #calendar-grid .date-is-today.date-is-selected /* Today selected as due date in task */ {
+	color: #faa;
+}
+
 /* ----------------- Auth scene ----------------- */
 
 .blurb {
