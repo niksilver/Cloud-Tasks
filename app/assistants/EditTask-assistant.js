@@ -240,8 +240,9 @@ EditTaskAssistant.prototype.activate = function(event) {
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 	Mojo.Log.info("EditTaskAssistant.updateTaskDueDisplayFromTask: Entering");
 	var due_text;
-	if (task.due) {
-		due_text = Date.parse(task.due).toString('ddd d MMMM yyyy');
+	var due_date = task.dueAsLocalDate();
+	if (due_date) {
+		due_text = due_date.toString('ddd d MMMM yyyy');
 	}
 	else {
 		due_text = 'No due date';
@@ -249,7 +250,7 @@ EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
 	Mojo.Log.info("EditTaskAssistant.updateTaskDueDisplayFromTask: Due text is " + due_text);
 	var element = this.controller.get('TaskDueDisplay');
 	element.update(due_text);
-	this.addOrRemoveClassName(element, !task.due, 'has-no-due-date');
+	this.addOrRemoveClassName(element, !due_date, 'has-no-due-date');
 }
 
 EditTaskAssistant.prototype.addOrRemoveClassName = function(element, condition, className) {
