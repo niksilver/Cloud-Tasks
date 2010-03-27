@@ -221,10 +221,10 @@ testCases.push( function(Y) {
 				for (var i = 1; i < task_list_model.getTaskList().length; i++) {
 					var prev_task  = task_list_model.getTaskList()[i-1];
 					var prev_name = prev_task.name;
-					var prev_due = prev_task.dueAsUTCString();
+					var prev_due = prev_task.due;
 					var curr_task  = task_list_model.getTaskList()[i];
 					var curr_name = curr_task.name;
-					var curr_due = curr_task.dueAsUTCString();
+					var curr_due = curr_task.due;
 					var prev_date = Date.parse(prev_due);
 					var curr_date = Date.parse(curr_due);
 					if (prev_date.isBefore(curr_date)) {

@@ -101,7 +101,7 @@ testCases.push( function(Y) {
 				Y.Assert.isNotUndefined(task.taskID, "Task " + i + " does not have a taskID");
 				Y.Assert.isNotUndefined(task.taskseriesID, "Task " + i + " does not have a taskseriesID");
 				Y.Assert.isNotUndefined(task.name, "Task " + i + " does not have a name");
-				Y.Assert.isNotUndefined(task.dueAsUTCString(), "Task " + i + " does not have a due property");
+				Y.Assert.isNotUndefined(task.due, "Task " + i + " does not have a due property");
 				Y.Assert.isNotUndefined(task.modified, "Task " + i + " does not have a modified time");
 				if (task.taskID == '79139889') {
 					sample_task = task;
@@ -111,7 +111,7 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('2637966', sample_task.listID, "List id not correct");
 			Y.Assert.areEqual('55274651', sample_task.taskseriesID, "Taskseries id not correct");
 			Y.Assert.areEqual('MB, AB - Update on testing companies', sample_task.name, "Task name not correct");
-			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.dueAsUTCString(), "Task due property not correct");
+			Y.Assert.areEqual('2009-12-01T00:00:00Z', sample_task.due, "Task due property not correct");
 			Y.Assert.areEqual('2009-11-17T10:34:49Z', sample_task.modified, "Modified time not correct");			
 		},
 		
@@ -235,11 +235,11 @@ testCases.push( function(Y) {
 			
 			Y.Assert.areEqual('58500785', task_array[0].taskseriesID, "Taskseries ID not picked up for first task");
 			Y.Assert.areEqual('83992704', task_array[0].taskID, "Task ID not picked up for first task");
-			Y.Assert.areEqual('2010-01-04T00:00:00Z', task_array[0].dueAsUTCString(), "Due date not picked up for first task");
+			Y.Assert.areEqual('2010-01-04T00:00:00Z', task_array[0].due, "Due date not picked up for first task");
 
 			Y.Assert.areEqual('58500785', task_array[0].taskseriesID, "Taskseries ID not picked up for second task");
 			Y.Assert.areEqual('83954367', task_array[1].taskID, "Task ID not picked up for second task");
-			Y.Assert.areEqual('2009-12-24T00:00:00Z', task_array[1].dueAsUTCString(), "Due date not picked up for second task");
+			Y.Assert.areEqual('2009-12-24T00:00:00Z', task_array[1].due, "Due date not picked up for second task");
 
 		},
 		
@@ -560,7 +560,7 @@ testCases.push( function(Y) {
 							taskseriesID: original_task.taskseriesID,
 							taskID: original_task.taskID,
 							name: remotely_updated_name,
-							due: original_task.dueAsUTCString()
+							due: original_task.due
 						});
 						original_task_updated_local_id = original_task_updated_remotely.localID;
 						Y.Assert.areNotEqual(original_task_local_id, original_task_updated_local_id, "Newly-generated updated task should not have same local ID");
@@ -588,14 +588,14 @@ testCases.push( function(Y) {
 					},
 					function() {
 						Y.Assert.areEqual(remotely_updated_name, found_task.name, "Did not store updated name in existing task");
-						Y.Assert.areEqual(locally_updated_due, found_task.dueAsUTCString(), "Did not store locally-updated due date in existing task");
+						Y.Assert.areEqual(locally_updated_due, found_task.due, "Did not store locally-updated due date in existing task");
 			
 						found_task = model.getTask({
 							listID: original_task.listID,
 							taskseriesID: original_task.taskseriesID,
 							taskID: original_task.taskID});
 						Y.Assert.areEqual(remotely_updated_name, found_task.name, "Task not updated from merged task");
-						Y.Assert.areEqual(locally_updated_due, found_task.dueAsUTCString(), "Task does not carry locally updated due date");
+						Y.Assert.areEqual(locally_updated_due, found_task.due, "Task does not carry locally updated due date");
 						Y.Assert.areEqual('due', found_task.localChanges[0], "Local change flags are lost");
 						Y.Assert.areEqual(false, found_task.isDueFlag, "Task's due flag not updated");
 						Y.Assert.areEqual(false, found_task.isOverdueFlag, "Task's overdue flag not updated");

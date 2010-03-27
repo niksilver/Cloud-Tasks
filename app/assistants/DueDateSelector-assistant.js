@@ -114,7 +114,7 @@ DueDateSelectorAssistant.prototype.handleCellTapEvent = function(event) {
 	Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Got tap event on cell " + row + ", " + col);
 	var date = this.grid.get(row, col).date;
 	var date_str = date.toISOString();
-	if (date_str != this.task.dueAsUTCString()) {
+	if (date_str != this.task.due) {
 		Mojo.Log.info("DueDateSelectorAssistant.handleCellTapEvent: Setting date " + date_str);
 		this.task.setForPush('due', date_str);
 		this.config.updateTaskDueDisplayFromTask(this.task);
@@ -133,7 +133,7 @@ DueDateSelectorAssistant.prototype.removeHighlightFromPreviouslySelectedCell = f
 
 DueDateSelectorAssistant.prototype.handleNoDueDateEvent = function(event) {
 	this.removeHighlightFromPreviouslySelectedCell();
-	if (this.task.dueAsUTCString()) {
+	if (this.task.due) {
 		this.task.setForPush('due', undefined);
 		this.config.updateTaskDueDisplayFromTask(this.task);
 	}

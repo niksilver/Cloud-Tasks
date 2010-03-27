@@ -158,9 +158,9 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(date_a, undef_a), 'Defined should be after undefined');
 		},
 		
-		testDueAsUTCString: function() {
+		testDue: function() {
 			var task = new TaskModel({ due: '2010-03-31T23:00:00Z'});
-			Y.Assert.areEqual('2010-03-31T23:00:00Z', task.dueAsUTCString(), "Didn't get UTC date string");
+			Y.Assert.areEqual('2010-03-31T23:00:00Z', task.due, "Didn't get UTC date string");
 		},
 
 		/**
@@ -194,12 +194,12 @@ testCases.push( function(Y) {
 			task1.getTimezoneOffset = function(date) { return -480; };
 			
 			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
-			Y.Assert.areEqual('2010-03-31T16:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+			Y.Assert.areEqual('2010-03-31T16:01:02Z', task1.due, "Couldn't set due from string");
 
 			var task2 = new TaskModel();
 			task2.getTimezoneOffset = function(date) { return -480; };
 			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
-			Y.Assert.areEqual('2010-03-31T16:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+			Y.Assert.areEqual('2010-03-31T16:01:02Z', task2.due, "Couldn't set due from Date object");
 		},
 		
 		testGetAndSetLocalDateInPerth: function() {
@@ -211,7 +211,7 @@ testCases.push( function(Y) {
 
 			var local_date = task_for_perth.dueAsLocalDate();
 			task_for_perth.setDueAsLocalDate(local_date);
-			Y.Assert.areEqual(task_for_perth.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
+			Y.Assert.areEqual(task_for_perth.due, original_utc_string, "Date didn't survive round-trip");
 		},
 		
 		testDueAsLocalDateInLondonBST: function() {
@@ -236,13 +236,13 @@ testCases.push( function(Y) {
 			task1.getTimezoneOffset = function(date) { return -60; };
 
 			task1.setDueAsLocalDate(Date.parse('2010-04-01T00:01:02Z'));
-			Y.Assert.areEqual('2010-03-31T23:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+			Y.Assert.areEqual('2010-03-31T23:01:02Z', task1.due, "Couldn't set due from string");
 
 			var task2 = new TaskModel();
 			task2.getTimezoneOffset = function(date) { return -60; };
 
 			task2.setDueAsLocalDate(new Date(2010, 03, 01, 00, 01, 02)); // 1 April 2010 at 00:01:02
-			Y.Assert.areEqual('2010-03-31T23:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+			Y.Assert.areEqual('2010-03-31T23:01:02Z', task2.due, "Couldn't set due from Date object");
 		},
 		
 		testGetAndSetLocalDateInLondonBST: function() {
@@ -254,7 +254,7 @@ testCases.push( function(Y) {
 
 			var local_date = task_for_london_bst.dueAsLocalDate();
 			task_for_london_bst.setDueAsLocalDate(local_date);
-			Y.Assert.areEqual(task_for_london_bst.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
+			Y.Assert.areEqual(task_for_london_bst.due, original_utc_string, "Date didn't survive round-trip");
 		},
 		
 		testDueAsLocalDateInLondonGMT: function() {
@@ -279,13 +279,13 @@ testCases.push( function(Y) {
 			task1.getTimezoneOffset = function(date) { return 0; };
 
 			task1.setDueAsLocalDate(Date.parse('2010-02-23T00:01:02Z'));
-			Y.Assert.areEqual('2010-02-23T00:01:02Z', task1.dueAsUTCString(), "Couldn't set due from string");
+			Y.Assert.areEqual('2010-02-23T00:01:02Z', task1.due, "Couldn't set due from string");
 
 			var task2 = new TaskModel();
 			task2.getTimezoneOffset = function(date) { return 0; };
 
 			task2.setDueAsLocalDate(new Date(2010, 01, 23, 00, 01, 02)); // 23 February 2010 at 00:01:02
-			Y.Assert.areEqual('2010-02-23T00:01:02Z', task2.dueAsUTCString(), "Couldn't set due from Date object");
+			Y.Assert.areEqual('2010-02-23T00:01:02Z', task2.due, "Couldn't set due from Date object");
 		},
 		
 		testGetAndSetLocalDateInLondonGMT: function() {
@@ -297,7 +297,7 @@ testCases.push( function(Y) {
 
 			var local_date = task_for_london_gmt.dueAsLocalDate();
 			task_for_london_gmt.setDueAsLocalDate(local_date);
-			Y.Assert.areEqual(task_for_london_gmt.dueAsUTCString(), original_utc_string, "Date didn't survive round-trip");
+			Y.Assert.areEqual(task_for_london_gmt.due, original_utc_string, "Date didn't survive round-trip");
 		}
 
 	});
