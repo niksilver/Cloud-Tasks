@@ -57,4 +57,4 @@ Done
   - Long routine processing getList response gets killed by webOS. Broken this up
     into several deferred functions.
   - Editing a date but keeping it the same should not create a sync
-  
+  - Handles timezones and daylight saving
