@@ -20,10 +20,11 @@ function DueDateSelectorAssistant(config) {
 	this.task = config.task;
 	this.controller = config.controller;
 	
+	var selected_date = this.task.dueAsLocalDate();
 	this.grid = new CalendarGrid({
 		month: selected_date || Date.today(),
 		firstDay: 1,
-		selected: this.task.dueAsLocalDate() || ''
+		selected: selected_date || ''
 	});
 }
 
