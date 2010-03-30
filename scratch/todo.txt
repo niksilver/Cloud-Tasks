@@ -58,3 +58,4 @@ Done
     into several deferred functions.
   - Editing a date but keeping it the same should not create a sync
   - Handles timezones and daylight saving
+  - No longer gives error when syncing with an empty list on the server.
