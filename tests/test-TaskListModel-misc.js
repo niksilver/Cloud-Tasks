@@ -229,6 +229,12 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(tasks, "Should have got some tasks");
 		},
 		
+		testObjectToTaskListWithNoTasks: function() {
+			var no_tasks_response = {"rsp":{"stat":"ok","tasks":{"rev":"fhinkuq6wlws00c8w0wk48ggs44kssc"}}};
+			var tasks = TaskListModel.objectToTaskList(no_tasks_response);
+			Y.Assert.areEqual(0, tasks.length, "Task list should be empty");
+		},
+		
 		testTaskseriesObjectToTasks: function() {
 			var taskseries_obj = SampleTestData.taskseries_obj_with_multiple_tasks;
 			var task_array = TaskListModel.taskseriesObjectToTasks(taskseries_obj, '11223');

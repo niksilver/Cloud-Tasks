@@ -49,7 +49,7 @@ TaskListModel.objectToTaskList = function(data_obj) {
 	Mojo.Log.info("TaskListModel.objectToTaskList: Entering");
 	var task_list = [];
 	var tasks_obj = data_obj.rsp.tasks;
-	var list_array = Object.isArray(tasks_obj.list) ? tasks_obj.list : [tasks_obj.list];
+	var list_array = TaskListModel.makeArray(tasks_obj.list);
 	list_array.each(function(list_obj) {
 		var list_id = list_obj.id;
 		

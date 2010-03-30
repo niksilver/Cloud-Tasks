@@ -163,7 +163,8 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 					failureCallback(err_msg);
 				}
 				else {
-					//RTM.logGetListResponse(response);
+					// Mojo.Log.info("RTM.callMethod: Response for method " + method_name);
+					// RTM.logResponse(response);
 					successCallback(response);
 				}
 			},
@@ -179,12 +180,6 @@ RTM.prototype.callMethod = function(method_name, param_object, successCallback, 
 			},
 			rtmMethodPurpose: this.methodPurpose[method_name] || 'forOther'
 		});
-}
-
-RTM.logGetListResponse = function() {
-	if (method_name == 'rtm.tasks.getList') {
-		RTM.logResponse(reponse);
-	}
 }
 
 /**
@@ -369,7 +364,7 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 	var parameters;
 	var inst = this;
 	var augmented_success_callback = function(response) {
-		RTM.logResponse(response);
+		// RTM.logResponse(response);
 		task.markNotForPush(property);
 		Mojo.Log.info("RTM.pushLocalChange: Marked not for change property " + property + " of task " + task.name);
 		successCallback(response);
