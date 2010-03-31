@@ -26,7 +26,10 @@ Mojo.Model.Cookie = function(id) {
 };
 Mojo.Model.Cookie.prototype = {
 	put: function(obj) {
-		if (obj instanceof Object) {
+		if (typeof obj === 'undefined') {
+			throw new Error("Storing undefined in Cookie will cause upsets, don't do this");
+		}
+		else if (obj instanceof Object) {
 			for (prop in obj) {
 				if (obj[prop] instanceof Function) {
 					throw new Error("Stub Cookie will not save objects with functions");

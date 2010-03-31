@@ -233,6 +233,12 @@ testCases.push( function(Y) {
 			Y.Assert.isUndefined(rtm.getLatestModified(), "Latest modified not deleted");
 		},
 		
+		testLatestModifiedShouldNotStoreUndefined: function() {
+			var rtm = new RTM();
+			rtm.setLatestModified(undefined);
+			Y.Assert.areEqual('', rtm.getLatestModified(), "Storing undefined should actually store empty string");
+		},
+		
 		testAddTaskCallsAddMethodCorrectly: function() {
 			var rtm = new RTM();
 			rtm.timeline = '87654';

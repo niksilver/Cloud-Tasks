@@ -316,6 +316,9 @@ RTM.prototype.deleteToken = function() {
 
 RTM.prototype.setLatestModified = function(modified) {
 	var modified_cookie = new Mojo.Model.Cookie('latestModified');
+	if (typeof modified === 'undefined') {
+		modified = '';
+	}
 	modified_cookie.put(modified);
 }
 
