@@ -115,6 +115,15 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Just randomly', task.getRecurrenceEditText(), "Problematic rrule should show original user text");
 		},
 		
+		testGetRecurrenceEditTextWhenNotSynced: function() {
+			task = new TaskModel({
+				"rrule": {
+					userText: 'Wednesdays'
+                 }
+			});
+			Y.Assert.areEqual('Wednesdays', task.getRecurrenceEditText(), "Unsynced recurrence should show original user text");
+		},
+		
 		testSetRecurrenceUserTextForPush: function() {
 			var task = new TaskModel({rrule: {problem: true}}); // Pretend there was a problem before
 			task.setRecurrenceUserTextForPush('');

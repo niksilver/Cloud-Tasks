@@ -268,6 +268,9 @@ TaskModel.prototype.getRecurrenceEditText = function() {
 	if (Utils.get(this.rrule, 'problem')) {
 		return this.rrule.userText;
 	}
+	else if (!Utils.get(this.rrule, '$t')) {
+		return Utils.get(this.rrule , 'userText') || '';
+	}
 	else if (this.isRecurring()) {
 		return RecurrenceTranslator.toText(this.rrule);
 	}
