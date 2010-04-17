@@ -150,7 +150,10 @@ EditTaskAssistant.prototype.handleRecurrenceFieldFocusChange = function(node) {
 EditTaskAssistant.prototype.handleDeleteTaskEvent = function(event) {
 	Mojo.Log.info("EditTaskAssistant.handleDeleteTaskEvent: Entering");
 	var choices;
-	if (this.config.task.isRecurring()) {
+	// Deleting all tasks in a series is only useful if the task is
+	// recurring and it's been synced with the remote server and hence
+	// is part of an identifiable series.
+	if (this.config.task.isRecurring() && this.config.task.isSynced()) {
 		choices = [
 			{ label: "Delete just this",     value: 'one',  type: 'negative' },
 			{ label: "Delete entire series", value: 'all',  type: 'negative' },

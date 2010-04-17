@@ -255,7 +255,7 @@ TaskListAssistant.prototype.addNewTask = function(task) {
 }
 
 TaskListAssistant.prototype.hideOrDisplayAuthInstructions = function() {
-	Mojo.Log.info("TaskListAssistance.hideOrDisplayAuthInstructions: Entering");
+	Mojo.Log.info("TaskListAssistant.hideOrDisplayAuthInstructions: Entering");
 
 	var num_tasks = this.taskListModel.getTaskList().length;
 	var is_authorised = this.rtm.getToken();
