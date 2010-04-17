@@ -148,6 +148,25 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task.rrule.problem, "rrule userText should be marked with no problem");
 		},
 		
+		testSetRecurrenceUserTextForPushShouldNotChangeServerDataIfSame: function() {
+			task = new TaskModel({
+				"rrule": {
+                	"every":"1",
+                	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO",
+					userText: 'Every Monday',
+					problem: false
+                 }
+			});
+			Y.Assert.areEqual(true, task.recurrenceUserTextIsSynced(), "Recurrence should be flagged as synced");
+			task.setRecurrenceUserTextForPush('Every Monday');
+			Y.Assert.areEqual(true, task.recurrenceUserTextIsSynced(), "Recurrence should be flagged as still synced");
+			Y.Assert.areEqual('Every Monday', task.rrule.userText, "rrule.userText not set correctly");
+			Y.Assert.areEqual("1", task.rrule.every, "rrule.every not set correctly");
+			Y.Assert.areEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO", task.rrule['$t'], "rrule['$t'] not set correctly");
+			Y.Assert.areEqual(false, task.rrule.problem, "rrule userText should be marked with no problem");
+			Y.Assert.areEqual(false, task.hasLocalChanges(), "No local changes should be marked");
+		},
+		
 		testHandleRRuleResponseBasicCase: function() {
 			var task = new TaskModel({ rrule: { userText: 'Every 2nd Wednesday' }});
 			var rrule_response = {"every":"1","$t":"FREQ=WEEKLY;INTERVAL=2;BYDAY=WE"};

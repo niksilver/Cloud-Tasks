@@ -295,6 +295,10 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 	if (typeof this.rrule !== 'object') {
 		this.rrule = {};
 	}
+	if (this.rrule.userText == user_text) {
+		// User text not changed
+		return;
+	}
 	this.rrule.userText = user_text;
 	this.rrule.every = undefined;
 	this.rrule['$t'] = undefined;
