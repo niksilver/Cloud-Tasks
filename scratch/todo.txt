@@ -7,7 +7,7 @@
   - Have tasks with no due dates appear after overdue tasks
 - Bugs
   - Editing a date but keeping it the same should not create a sync
-  - Editing a recurrence but keeping it the same should note create a sync
+  - Deleting entire series of one unsynced task will delete all unsynced tasks
   
 Done
 ----
@@ -59,3 +59,6 @@ Done
   - Editing a date but keeping it the same should not create a sync
   - Handles timezones and daylight saving
   - No longer gives error when syncing with an empty list on the server.
+  - Can now edit a new task with a recurrence that hasn't been synced
+  - Editing a recurrence but keeping it the same should note create a sync
+  

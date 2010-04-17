@@ -88,6 +88,14 @@ TaskModel.prototype.update = function() {
 }
 
 /**
+ * See if the task has been synced with the remote server
+ * (i.e. if it has a task ID).
+ */
+TaskModel.prototype.isSynced = function() {
+	return !!this.taskID;
+}
+
+/**
  * Return the due date a Date object relative to the current locale
  * but you should ignore the timezone.
  * For example, a due date of 2010-03-31T16:00:00Z will return

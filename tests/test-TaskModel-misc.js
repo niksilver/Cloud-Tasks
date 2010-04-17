@@ -49,6 +49,22 @@ testCases.push( function(Y) {
 			Y.Assert.areNotEqual(task1.localID, task3.localID, "Tasks 1 and 3 should have different local IDs");
 		},
 		
+		testIsSynced: function() {
+			var task = new TaskModel({
+				listID: '123456',
+				taskseriesID:'223344',
+				taskID: '667788',
+				name: 'My test task',
+				due: '2008-07-13T00:00:00Z'
+			});
+			
+			Y.Assert.areEqual(true, task.isSynced(), "Task with a taskID must have been synced");
+			
+			task.taskID = undefined;
+			
+			Y.Assert.areEqual(false, task.isSynced(), "Task with no taskID cannot have been synced");
+	},
+		
 		testSetForPushShouldFlagLocalChanges: function() {
 			var task = new TaskModel({
 				listID: '123456',
