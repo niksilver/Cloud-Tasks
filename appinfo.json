@@ -1,6 +1,6 @@
 {
 	"id": "org.pigsaw.cloudtasks",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"vendor": "Pigsaw Global Commodities plc",
 	"type": "web",
 	"main": "index.html",
