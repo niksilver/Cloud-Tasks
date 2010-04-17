@@ -761,13 +761,21 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(false, task_hash['85270009'].deleted, "Task 85270009 mistakenly deleted");
 			Y.Assert.areEqual(true, task_hash['85270009'].isRecurring(), "Task 85270009 not recurring");
 
-			model.markAsDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });			
+			var marked_tasks = model.markAsDeletedAllTasksInSeries({ listID: '11122940', taskseriesID: '59269686' });
+						
 			Y.Assert.areEqual(false, task_hash['85269951'].deleted, "Task 85269951 mistakenly deleted");
 			Y.Assert.areEqual(false, task_hash['85269908'].deleted, "Task 85269908 mistakenly deleted");
 			Y.Assert.areEqual(true, task_hash['85269921'].deleted, "Task 85269921 not deleted");
 			Y.Assert.areEqual(false, task_hash['85269921'].isRecurring(), "Task 85269921 shouldn't be recurring");
 			Y.Assert.areEqual(true, task_hash['85270009'].deleted, "Task 85270009 not deleted");
 			Y.Assert.areEqual(false, task_hash['85270009'].isRecurring(), "Task 85270009 shouldn't be recurring");
+			
+			// Check return value
+			
+			Y.Assert.areEqual(2, marked_tasks.length, "Should have two tasks marked as deleted");
+			var marked_ids = [marked_tasks[0].taskID, marked_tasks[1].taskID];
+			Y.assert(marked_ids.indexOf('85269921') >= 0 , "Task 85269921 should be listed as marked for deletion");
+			Y.assert(marked_ids.indexOf('85270009') >= 0 , "Task 85270009 should be listed as marked for deletion");
 			
 			// Check the rrule's userText is updated
 			Y.Assert.areEqual('', task_hash['85269921'].rrule.userText, "Task 85269921 rrule.userText set appropriately");

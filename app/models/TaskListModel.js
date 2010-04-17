@@ -378,15 +378,19 @@ TaskListModel.prototype.getAllTasksInSeries = function(spec) {
  * Mark for deletion all the tasks in the series specified.
  * @param {Object} spec  The specification of the taskseries to delete.
  *     A hash with properties listID and taskseriesID.
+ * @return  An array of the tasks which have been marked for deletion.
  */
 TaskListModel.prototype.markAsDeletedAllTasksInSeries = function(spec) {
 	Mojo.Log.info("TaskListModel.markAsDeletedAllTasksInSeries: Entering with listID=" + spec.listID + ", taskseriesID=" + spec.taskseriesID);
+	var marked_tasks = [];
 	for (var i = 0; i < this._task_list.length; i++) {
 		var task = this._task_list[i];
 		if (task.listID == spec.listID && task.taskseriesID == spec.taskseriesID) {
 			task.setRecurrenceUserTextForPush('');
 			task.setForPush('deleted', true);
+			marked_tasks.push(task);
 			Mojo.Log.info("TaskListModel.markAsDeletedAllTasksInSeries: Marked " + task.toSummaryString());
 		}
 	}
+	return marked_tasks;
 }
