@@ -124,10 +124,26 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Wednesdays', task.getRecurrenceEditText(), "Unsynced recurrence should show original user text");
 		},
 		
-		testSetRecurrenceUserTextForPush: function() {
+		testSetRecurrenceUserTextForPushShouldClearProblem: function() {
 			var task = new TaskModel({rrule: {problem: true}}); // Pretend there was a problem before
 			task.setRecurrenceUserTextForPush('');
 			Y.Assert.areEqual('', task.rrule.userText, "rrule.userText not set correctly");
+			Y.Assert.areEqual('rrule', task.localChanges[0], "rrule not marked to be pushed");
+			Y.Assert.areEqual(false, task.rrule.problem, "rrule userText should be marked with no problem");
+		},
+		
+		testSetRecurrenceUserTextForPushShouldClearSyncStatus: function() {
+			task = new TaskModel({
+				"rrule": {
+                	"every":"1",
+                	"$t":"FREQ=WEEKLY;INTERVAL=1;BYDAY=MO",
+					userText: 'Every Monday'
+                 }
+			});
+			Y.Assert.areEqual(true, task.recurrenceUserTextIsSynced(), "Recurrence should be flagged as synced");
+			task.setRecurrenceUserTextForPush('Every Tuesday');
+			Y.Assert.areEqual(false, task.recurrenceUserTextIsSynced(), "Recurrence should be flagged as unsynced");
+			Y.Assert.areEqual('Every Tuesday', task.rrule.userText, "rrule.userText not set correctly");
 			Y.Assert.areEqual('rrule', task.localChanges[0], "rrule not marked to be pushed");
 			Y.Assert.areEqual(false, task.rrule.problem, "rrule userText should be marked with no problem");
 		},

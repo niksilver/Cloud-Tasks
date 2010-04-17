@@ -268,7 +268,7 @@ TaskModel.prototype.getRecurrenceEditText = function() {
 	if (Utils.get(this.rrule, 'problem')) {
 		return this.rrule.userText;
 	}
-	else if (!Utils.get(this.rrule, '$t')) {
+	else if (!this.recurrenceUserTextIsSynced()) {
 		return Utils.get(this.rrule , 'userText') || '';
 	}
 	else if (this.isRecurring()) {
@@ -277,6 +277,13 @@ TaskModel.prototype.getRecurrenceEditText = function() {
 	else {
 		return '';
 	}
+}
+
+/**
+ * See if the recurrence user text has synced with the remote server.
+ */
+TaskModel.prototype.recurrenceUserTextIsSynced = function() {
+	return !!Utils.get(this.rrule, '$t');
 }
 
 /**
@@ -289,6 +296,8 @@ TaskModel.prototype.setRecurrenceUserTextForPush = function(user_text) {
 		this.rrule = {};
 	}
 	this.rrule.userText = user_text;
+	this.rrule.every = undefined;
+	this.rrule['$t'] = undefined;
 	this.rrule.problem = false;
 	this.setForPush('rrule', this.rrule);
 }
