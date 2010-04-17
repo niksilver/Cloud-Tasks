@@ -7,7 +7,6 @@
   - Have tasks with no due dates appear after overdue tasks
 - Bugs
   - Editing a date but keeping it the same should not create a sync
-  - Deleting entire series of one unsynced task will delete all unsynced tasks
   
 Done
 ----
@@ -17,6 +16,8 @@ Done
 - Deleting tasks
   - Allow purging of deleted tasks after pushing out changes
   - Allow optional deletion of all tasks in a series
+  - When deleting a new, recurring but unsynced task you are no longer
+    asked if you want to delete the entire series.
 - Recurring tasks
   - Indicate recurring tasks in task list
 - Auth screen:
@@ -61,4 +62,7 @@ Done
   - No longer gives error when syncing with an empty list on the server.
   - Can now edit a new task with a recurrence that hasn't been synced
   - Editing a recurrence but keeping it the same should note create a sync
+  - Deleting entire series of one unsynced task will delete all unsynced tasks
+  - When deleting a series of tasks only the original task's change will
+    be persisted in the database.
   

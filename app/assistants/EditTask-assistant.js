@@ -188,11 +188,11 @@ EditTaskAssistant.prototype.handleDeleteTaskConfirmation = function(choice) {
 	}
 	else if (choice == 'all'){
 		Mojo.Log.info("EditTaskAssistant.handleDeleteTaskConfirmation: Confirmed deletion of all in series");
-		this.config.taskListModel.markAsDeletedAllTasksInSeries({
+		var marked_tasks = this.config.taskListModel.markAsDeletedAllTasksInSeries({
 			listID: task.listID,
 			taskseriesID: task.taskseriesID
 		});
-		this.popScene(false); // Wasn't cancelled (i.e. false)
+		this.popScene(false, marked_tasks); // Wasn't cancelled (i.e. false)
 	}
 }
 
@@ -216,7 +216,7 @@ EditTaskAssistant.prototype.handleCommand = function(event){
 	}
 }
 
-EditTaskAssistant.prototype.popScene = function(wasCancelled) {
+EditTaskAssistant.prototype.popScene = function(wasCancelled, tasks_marked_for_deletion) {
 	Mojo.Log.info("EditTaskAssistant.popScene: Entering");
 	if (this.config.task.name == '') {
 		// Don't allow a blank name to be entered
@@ -227,7 +227,8 @@ EditTaskAssistant.prototype.popScene = function(wasCancelled) {
 		lastScene: 'EditTask',
 		task: this.config.task,
 		isNew: this.config.isNew,
-		wasCancelled: wasCancelled
+		wasCancelled: wasCancelled,
+		tasksMarkedForDeletion: tasks_marked_for_deletion
 	});
 }
 

@@ -215,23 +215,46 @@ TaskListAssistant.prototype.activate = function(returnValue) {
 		return;
 	}
 	
-	if (returnValue.lastScene == 'EditTask'
-		&& returnValue.task
-		&& returnValue.task.name
-		&& returnValue.task.localChanges.length > 0) {
-		var task = returnValue.task;
-		Mojo.Log.info("TaskListAssistant.activate: Task changed");
-		if (task.hasLocalChangeOf('name') || task.hasLocalChangeOf('due')) {
-			this.taskListModel.sort();
-		}
-		this.onTaskListModelChange();
-		Store.saveTask(task);
+	if (returnValue.lastScene == 'EditTask') {
+		this.handleReturnFromEditTaskScene(returnValue);
 	}
 	else if (returnValue.lastScene == 'Auth') {
 		Mojo.Log.info("TaskListAssistant.activate: Returning from Auth");
 		this.rtm.fireNextEvent();
 	}
 	Mojo.Log.info("TaskListAssistant.activate: Exiting");
+}
+
+TaskListAssistant.prototype.handleReturnFromEditTaskScene = function(returnValue) {
+	Mojo.Log.info("TaskListAssistant.handleReturnFromEditTaskScene: Entering");
+	var task = returnValue.task;
+	if (!task) {
+		return;
+	}
+	if (!task.name) {
+		return;
+	}
+	if (!task.hasLocalChanges()) {
+		return;
+	}
+
+	Mojo.Log.info("TaskListAssistant.handleReturnFromEditTaskScene: Task changed");
+	if (task.hasLocalChangeOf('name') || task.hasLocalChangeOf('due')) {
+		this.taskListModel.sort();
+	}
+	this.onTaskListModelChange();
+	
+	tasks_marked_for_deletion = returnValue.tasksMarkedForDeletion;
+	if (tasks_marked_for_deletion) {
+		Mojo.Log.info("TaskListAssistant.handleReturnFromEditTaskScene: Saving tasks marked for deletion");
+		tasks_marked_for_deletion.each(function(task) {
+			Store.saveTask(task);
+		})
+	}
+	else {
+		Mojo.Log.info("TaskListAssistant.handleReturnFromEditTaskScene: Saving changed tasks");
+		Store.saveTask(task);
+	}
 }
 
 TaskListAssistant.prototype.setUpNetworkIndicator = function(){
