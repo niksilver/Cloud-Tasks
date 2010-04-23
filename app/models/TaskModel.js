@@ -85,6 +85,7 @@ TaskModel.prototype.update = function() {
 	this.isOverdueFlag = this.isOverdue();
 	this.hasRRuleFlag = this.isRecurring();
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
+	this.dueFormatted = this.dueDateFormatter();
 }
 
 /**

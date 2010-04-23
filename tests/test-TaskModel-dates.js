@@ -135,6 +135,66 @@ testCases.push( function(Y) {
 
 		},
 		
+		testDueFormatted: function() {
+			var task;
+			var today = Date.parse("1 Dec 2009");
+			var today_fn = function() { return today };
+			var timezone_fn = function(utc_string) { return 0 };
+			
+			// A task from yesterday
+			var yesterday_utc_string = Date.parse("30 Nov 2009").toISOString();
+			task = new TaskModel({ due: yesterday_utc_string });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('Mon 30 Nov', task.dueFormatted, 'Task from yesterday should appear as date');
+			
+			// A task for today
+			var today_utc_string = today.toISOString();
+			task = new TaskModel({ due: today_utc_string });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('Today', task.dueFormatted, 'A task for today should appear as Today');
+			
+			// A task for tomorrow
+			var tomorrow_utc_string = Date.parse("2 Dec 2009").toISOString();
+			task = new TaskModel({ due: tomorrow_utc_string });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('Tomorrow', task.dueFormatted, 'A task for tomorrow should appear as Tomorrow');
+			
+			// A task for later this week
+			var yesterday_utc_string = Date.parse("4 Dec 2009").toISOString();
+			task = new TaskModel({ due: yesterday_utc_string });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('Fri', task.dueFormatted, 'Task for later this week should appear as its day');
+			
+			// A task with no due date
+			task = new TaskModel();
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('', task.dueFormatted, 'A task with no due date should appear blank');
+			
+			// A task with empty due date
+			task = new TaskModel({ due: '' });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('', task.dueFormatted, 'A task with an empty due date should appear blank');
+			
+			// A task with empty object
+			task = new TaskModel({ due: {} });
+			task.today = today_fn;
+			task.getTimezoneOffset = timezone_fn;
+			task.update();
+			Y.Assert.areEqual('', task.dueFormatted, 'A task with due as an empty object should appear blank');
+		},
+		
 		testSortByDueThenName: function(){
 			var nov30 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'B' });
 			var nov30_2 = new TaskModel({ due: '2009-11-30T00:00:00Z', name: 'A' });
@@ -362,10 +422,10 @@ testCases.push( function(Y) {
 				"taskseriesID": "71074058",
 				"taskID": "103163757",
 				"name": "Test 2",
-				"due": "2010-04-24T01:00:00Z",
+				"due": "2010-04-24T01:00:00Z", // 8pm today, 23 April 2010
 				"modified": "2010-04-23T16:29:58Z",
 				"deleted": false, 
-				"completed": false}); // 8pm today, 23 April 2010
+				"completed": false});
 			task_for_mexico_city.today = function() {
 				return Date.parse('23 Apr 2010');
 			};
