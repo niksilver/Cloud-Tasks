@@ -85,7 +85,7 @@ TaskModel.prototype.update = function() {
 	this.isOverdueFlag = this.isOverdue();
 	this.hasRRuleFlag = this.isRecurring();
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
-	this.dueFormatted = this.dueDateFormatter();
+	this.dueFormatted = this.formattedDueDate();
 }
 
 /**
@@ -172,7 +172,7 @@ TaskModel.prototype.isoStringDateFormatter = function(utc_string) {
 	return utc_date.toString('ddd d MMM yyyy');
 }
 
-TaskModel.prototype.dueDateFormatter = function(){
+TaskModel.prototype.formattedDueDate = function(){
 	return this.isoStringDateFormatter(this.due);
 }
 

@@ -415,8 +415,10 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Mon 5 Apr', task.isoStringDateFormatter('2010-04-04T23:00:00Z'), 'Daylight saving date');
 		},
 		
-		testDueDateFormatter8pmBug: function() {
-			Mojo.Log.info("testDueDateFormatter8pmBug: Entering");
+		// Testing for bug described at
+		// http://forums.precentral.net/homebrew-apps/236177-cloud-tasks-2.html#post2397300
+		//
+		testFormattedDueDate8pmBug: function() {
 			var task_for_mexico_city = new TaskModel({
 				"listID": "13008814",
 				"taskseriesID": "71074058",
@@ -431,7 +433,7 @@ testCases.push( function(Y) {
 			};
 			task_for_mexico_city.getTimezoneOffset = function(date) { return +6*60; };
 
-			Y.Assert.areEqual('Today', task_for_mexico_city.dueDateFormatter(), '8pm today in Mexico City should be today');
+			Y.Assert.areEqual('Today', task_for_mexico_city.formattedDueDate(), '8pm today in Mexico City should be today');
 		}
 
 	});
