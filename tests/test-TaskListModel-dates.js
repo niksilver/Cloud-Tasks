@@ -115,6 +115,26 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual('Mon 5 Apr', model.dueDateFormatter('2010-04-04T23:00:00Z'), 'Daylight saving date');
 		},
 		
+		testDueDateFormatter8pmBug: function() {
+			var model = new TaskListModel();
+			model.today = function() {
+				return Date.parse('23 Apr 2010');
+			};
+			var task_for_mexico_city = new TaskModel({
+				"listID": "13008814",
+				"taskseriesID": "71074058",
+				"taskID": "103163757",
+				"name": "Test 2",
+				"due": "2010-04-24T01:00:00Z",
+				"modified": "2010-04-23T16:29:58Z",
+				"deleted": false, 
+				"completed": false}); // 8pm today, 23 April 2010
+			task_for_mexico_city.getTimezoneOffset = function(date) { return +6*60; };
+			task_for_mexico_city.today = model.today;
+
+			Y.Assert.areEqual('Today', model.dueDateFormatter(task_for_mexico_city.due), '8pm today in Mexico City should be today');
+		},
+		
 		testGetLatestModified: function() {
 			var model;
 			
