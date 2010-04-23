@@ -41,16 +41,15 @@ testCases.push( function(Y) {
 
 		testOverdueTasksFlagged: function() {
 			var model = new TaskListModel();
-			model.today = function() {
-				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
-			};
 
 			// NB: Remote tasks are in GMT timezone
 			var tasks = TaskListModel.objectToTaskList(SampleTestData.remote_json_with_overdue_tasks);
 
 			var task_hash = {};
 			tasks.each(function(task) {
-				task.today = model.today; // Force today calculation
+				task.today = function() {
+					return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+				}; // Force today calculation
 				task.getTimezoneOffset = function(date) { return 0 }; // Force GMT for these tasks
 				task.update(); // Force overdue calculations based on forced idea of today
 				task_hash[task.taskID] = task;

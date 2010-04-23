@@ -143,10 +143,6 @@ TaskListModel.prototype.sort = function() {
 	this._task_list.sort(TaskModel.sortByDueThenName);
 }
 
-TaskListModel.prototype.today = function() {
-	return Date.today();
-}
-
 /**
  * Load the persisted task list.
  * The tasks will also get sorted.
