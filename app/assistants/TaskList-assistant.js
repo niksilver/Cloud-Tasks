@@ -81,8 +81,8 @@ TaskListAssistant.prototype.setUpTaskListWidget = function(){
 	var listInfo = {
 		attributes: {
 			itemTemplate: "TaskList/TaskList-item",
-			listTemplate: "TaskList/TaskList-container",
-			formatters: { due: this.taskListModel.dueDateFormatter.bind(this.taskListModel) }
+			listTemplate: "TaskList/TaskList-container" /*,
+			formatters: { due: this.taskListModel.dueDateFormatter.bind(this.taskListModel) } */
 		},
 		model: this.taskListWidgetModel,
 		elementId: "TaskList",

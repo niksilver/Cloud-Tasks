@@ -495,7 +495,8 @@ testCases.push( function(Y) {
 			
 						// Make make a task model that thinks it is the due date
 						TaskModelExtended = TestUtils.extend(TaskModel, {
-							today: function() { return Date.parse(existing_task.due) }
+							today: function() { return Date.parse(existing_task.due) },
+							getTimezoneOffset: function(date) { return 0 }
 						});
 						updated_name = existing_task.name + " again";
 						existing_task_updated = new TaskModelExtended({

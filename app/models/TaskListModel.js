@@ -147,45 +147,6 @@ TaskListModel.prototype.today = function() {
 	return Date.today();
 }
 
-TaskListModel.prototype.dueDateFormatter = function(utc_string) {
-	var utc_date = Date.parse(utc_string);
-	if (utc_date == null) {
-		return '';
-	}
-	
-	// For safety around daylight savings, add 1 hour
-	// For conformance and equality tests reset time to midnight
-	utc_date.add({ hours: 1 });
-	utc_date.set({ hour: 0, minute: 0, second: 0});
-
-	var today = this.today();
-	if (Date.equals(today, utc_date)) {
-		return 'Today';
-	}
-	
-	var tomorrow = today.clone().add({ days: 1 });
-	if (Date.equals(tomorrow, utc_date)) {
-		return 'Tomorrow';
-	}
-	
-	var end_of_week = today.clone().add({ days: 6 });
-	if (utc_date.between(today, end_of_week)) {
-		return utc_date.toString('ddd');
-	}
-	
-	var end_of_12_months = today.clone().add({ years: 1, days: -1 });
-	if (utc_date.between(today, end_of_12_months)) {
-		return utc_date.toString('ddd d MMM');
-	}
-	
-	// Overdue dates
-	if (utc_date.isBefore(today)) {
-		return utc_date.toString('ddd d MMM');
-	}
-
-	return utc_date.toString('ddd d MMM yyyy');
-}
-
 /**
  * Load the persisted task list.
  * The tasks will also get sorted.

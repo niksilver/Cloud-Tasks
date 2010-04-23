@@ -96,14 +96,25 @@ TaskModel.prototype.isSynced = function() {
 }
 
 /**
- * Return the due date a Date object relative to the current locale
+ * Return the due date as a Date object relative to the current locale
  * but you should ignore the timezone.
  * For example, a due date of 2010-03-31T16:00:00Z will return
  * a Date object of 1 April 2010 in Perth (because Perth is timezone +0800).
  * Will return null if there is no due date.
  */
 TaskModel.prototype.dueAsLocalDate = function() {
-	var date = Date.parse(this.due);
+	return this.utcStringAsLocalDate(this.due);
+}
+
+/**
+ * Return some UTC date string as a Date object relative to the current locale
+ * but you should ignore the timezone.
+ * For example, a due date of 2010-03-31T16:00:00Z will return
+ * a Date object of 1 April 2010 in Perth (because Perth is timezone +0800).
+ * Will return null if there is no due date.
+ */
+TaskModel.prototype.utcStringAsLocalDate = function(utc_string) {
+	var date = Date.parse(utc_string);
 	if (!date) {
 		return null;
 	}
@@ -119,6 +130,49 @@ TaskModel.prototype.setDueAsLocalDate = function(date) {
 	var timezone_offset = this.getTimezoneOffset(date);
 	var utc_date = date.clone().add({ minutes: timezone_offset });
 	this.due = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
+}
+
+TaskModel.prototype.utcStringDateFormatter = function(utc_string) {
+	var utc_date = this.utcStringAsLocalDate(utc_string);
+	if (utc_date == null) {
+		return '';
+	}
+	
+	// For safety around daylight savings, add 1 hour
+	// For conformance and equality tests reset time to midnight
+	//utc_date.add({ hours: 1 });
+	utc_date.set({ hour: 0, minute: 0, second: 0});
+
+	var today = this.today();
+	if (Date.equals(today, utc_date)) {
+		return 'Today';
+	}
+	
+	var tomorrow = today.clone().add({ days: 1 });
+	if (Date.equals(tomorrow, utc_date)) {
+		return 'Tomorrow';
+	}
+	
+	var end_of_week = today.clone().add({ days: 6 });
+	if (utc_date.between(today, end_of_week)) {
+		return utc_date.toString('ddd');
+	}
+	
+	var end_of_12_months = today.clone().add({ years: 1, days: -1 });
+	if (utc_date.between(today, end_of_12_months)) {
+		return utc_date.toString('ddd d MMM');
+	}
+	
+	// Overdue dates
+	if (utc_date.isBefore(today)) {
+		return utc_date.toString('ddd d MMM');
+	}
+
+	return utc_date.toString('ddd d MMM yyyy');
+}
+
+TaskModel.prototype.dueDateFormatter = function(){
+	return this.utcStringDateFormatter(this.due);
 }
 
 /**

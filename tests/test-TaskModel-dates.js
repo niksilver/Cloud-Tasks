@@ -298,6 +298,80 @@ testCases.push( function(Y) {
 			var local_date = task_for_london_gmt.dueAsLocalDate();
 			task_for_london_gmt.setDueAsLocalDate(local_date);
 			Y.Assert.areEqual(task_for_london_gmt.due, original_utc_string, "Date didn't survive round-trip");
+		},
+
+		testUtcStringDateFormatter: function() {
+			var task = new TaskModel();
+			task.today = function() {
+				return Date.parse('1 Dec 2009'); // 1st Dec 2009 is a Tuesday
+			};
+			task.getTimezoneOffset = function(all_these_dates) { return 0 };
+			
+			// Various forms of today (Tue)
+			Y.Assert.areEqual('Today', task.utcStringDateFormatter('2009-12-01T00:00:00Z'), 'Test today 1');
+			Y.Assert.areEqual('Today', task.utcStringDateFormatter('2009-12-01T13:27:08Z'), 'Test today 2');
+			
+			// Various forms of tomorrow (Wed)
+			Y.Assert.areEqual('Tomorrow', task.utcStringDateFormatter('2009-12-02T00:00:00Z'), 'Test tomorrow 1');
+			Y.Assert.areEqual('Tomorrow', task.utcStringDateFormatter('2009-12-02T14:54:22Z'), 'Test tomorrow 2');
+			
+			// Dates within the next week (Thu to Mon)
+			Y.Assert.areEqual('Thu', task.utcStringDateFormatter('2009-12-03T14:54:22Z'), 'Test Thu');
+			Y.Assert.areEqual('Fri', task.utcStringDateFormatter('2009-12-04T14:54:22Z'), 'Test Fri');
+			Y.Assert.areEqual('Sat', task.utcStringDateFormatter('2009-12-05T14:54:22Z'), 'Test Sat');
+			Y.Assert.areEqual('Sun', task.utcStringDateFormatter('2009-12-06T14:54:22Z'), 'Test Sun');
+			Y.Assert.areEqual('Mon', task.utcStringDateFormatter('2009-12-07T14:54:22Z'), 'Test Mon');
+			
+			// Dates with the next 12 months
+			Y.Assert.areEqual('Fri 8 Jan', task.utcStringDateFormatter('2010-01-08T14:54:22Z'), 'Test year 1');
+			Y.Assert.areEqual('Mon 12 Jul', task.utcStringDateFormatter('2010-07-12T14:54:22Z'), 'Test year 2');
+			Y.Assert.areEqual('Tue 30 Nov', task.utcStringDateFormatter('2010-11-30T14:54:22Z'), 'Test year 3');
+			
+			// Dates beyond next 12 months
+			Y.Assert.areEqual('Wed 1 Dec 2010', task.utcStringDateFormatter('2010-12-01T14:54:22Z'), 'Test over year 1');
+			Y.Assert.areEqual('Thu 2 Dec 2010', task.utcStringDateFormatter('2010-12-02T14:54:22Z'), 'Test over year 2');
+			Y.Assert.areEqual('Fri 25 Feb 2011', task.utcStringDateFormatter('2011-02-25T14:54:22Z'), 'Test over year 3');
+			
+			// Non-times should give empty string
+			Y.Assert.areEqual('', task.utcStringDateFormatter(''), 'Test none-time 1');
+			Y.Assert.areEqual('', task.utcStringDateFormatter('xxx'), 'Test none-time 2');
+			Y.Assert.areEqual('', task.utcStringDateFormatter({}), 'Test none-time 3');
+			Y.Assert.areEqual('', task.utcStringDateFormatter(), 'Test none-time 4');
+			
+			// Overdue dates
+			Y.Assert.areEqual('Sun 22 Nov', task.utcStringDateFormatter('2009-11-22T14:54:22Z'), 'Test overdue 1');
+			task.getTimezoneOffset = function(this_next_date) { return -60 };
+			Y.Assert.areEqual('Mon 2 Jun', task.utcStringDateFormatter('2008-06-02T14:54:22Z'), 'Test overdue 2');
+		},
+		
+		testUtcStringFormatterWithDayLightSaving: function() {
+			var task = new TaskModel();
+			task.today = function() {
+				return Date.parse('20 Mar 2010');
+			};
+			task.getTimezoneOffset = function(fourth_may) { return -60 };
+
+			// Actual due date returned by RTM which the website interprets as Mon 5 April 2010
+			Y.Assert.areEqual('Mon 5 Apr', task.utcStringDateFormatter('2010-04-04T23:00:00Z'), 'Daylight saving date');
+		},
+		
+		testDueDateFormatter8pmBug: function() {
+			Mojo.Log.info("testDueDateFormatter8pmBug: Entering");
+			var task_for_mexico_city = new TaskModel({
+				"listID": "13008814",
+				"taskseriesID": "71074058",
+				"taskID": "103163757",
+				"name": "Test 2",
+				"due": "2010-04-24T01:00:00Z",
+				"modified": "2010-04-23T16:29:58Z",
+				"deleted": false, 
+				"completed": false}); // 8pm today, 23 April 2010
+			task_for_mexico_city.today = function() {
+				return Date.parse('23 Apr 2010');
+			};
+			task_for_mexico_city.getTimezoneOffset = function(date) { return +6*60; };
+
+			Y.Assert.areEqual('Today', task_for_mexico_city.dueDateFormatter(), '8pm today in Mexico City should be today');
 		}
 
 	});
