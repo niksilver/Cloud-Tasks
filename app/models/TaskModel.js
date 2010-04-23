@@ -103,17 +103,17 @@ TaskModel.prototype.isSynced = function() {
  * Will return null if there is no due date.
  */
 TaskModel.prototype.dueAsLocalDate = function() {
-	return this.utcStringAsLocalDate(this.due);
+	return this.isoStringAsLocalDate(this.due);
 }
 
 /**
- * Return some UTC date string as a Date object relative to the current locale
+ * Return some ISO date string as a Date object relative to the current locale
  * but you should ignore the timezone.
  * For example, a due date of 2010-03-31T16:00:00Z will return
  * a Date object of 1 April 2010 in Perth (because Perth is timezone +0800).
  * Will return null if there is no due date.
  */
-TaskModel.prototype.utcStringAsLocalDate = function(utc_string) {
+TaskModel.prototype.isoStringAsLocalDate = function(utc_string) {
 	var date = Date.parse(utc_string);
 	if (!date) {
 		return null;
@@ -132,8 +132,8 @@ TaskModel.prototype.setDueAsLocalDate = function(date) {
 	this.due = utc_date.toString("yyyy-MM-ddTHH:mm:ssZ");
 }
 
-TaskModel.prototype.utcStringDateFormatter = function(utc_string) {
-	var utc_date = this.utcStringAsLocalDate(utc_string);
+TaskModel.prototype.isoStringDateFormatter = function(utc_string) {
+	var utc_date = this.isoStringAsLocalDate(utc_string);
 	if (utc_date == null) {
 		return '';
 	}
@@ -172,7 +172,7 @@ TaskModel.prototype.utcStringDateFormatter = function(utc_string) {
 }
 
 TaskModel.prototype.dueDateFormatter = function(){
-	return this.utcStringDateFormatter(this.due);
+	return this.isoStringDateFormatter(this.due);
 }
 
 /**
