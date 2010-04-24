@@ -65,4 +65,6 @@ Done
   - Deleting entire series of one unsynced task will delete all unsynced tasks
   - When deleting a series of tasks only the original task's change will
     be persisted in the database.
+  - Date in task list now handles timezones.
+  
   

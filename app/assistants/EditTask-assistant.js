@@ -237,8 +237,6 @@ EditTaskAssistant.prototype.activate = function(event) {
 	   example, key handlers that are observing the document */
 
 	this.updateTaskDueDisplayFromTask(this.config.task);
-	// this.updateTaskRecurrenceDisplay();
-	//this.controller.get('TaskName').mojo.focus(); // TEST ONLY
 }
 
 EditTaskAssistant.prototype.updateTaskDueDisplayFromTask = function(task) {
