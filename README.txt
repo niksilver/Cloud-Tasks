@@ -11,13 +11,12 @@ Running the tests
 -----------------
 
 There are automated tests to check all the non-UI code. You can
-run the tests by firing up Safari and pointing it to the file
+run the tests by firing up Chrome and pointing it to the file
 tests/all-tests.html.
 
-Unfortunately you will need Safari rather than any other browser,
-even on Windows, because only Safari has the HTML5 SQL database
-installed and enabled. If you can find another browser that supports
-this, however, then that should also work.
+I use Chrome because it has the HTML5 SQL database
+installed and enabled. However any other browser that supports
+this should also work.
 
 all-tests.html relies on the YUI test framework which is called in
 dynamically each time the tests are run, so you will need a network
