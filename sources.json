@@ -26,5 +26,9 @@
     {
         "scenes": "EditTask",
         "source": "app/assistants/EditTask-assistant.js"
+    },
+    {
+        "scenes": "LastError",
+        "source": "app/assistants/LastError-assistant.js"
     }
 ]

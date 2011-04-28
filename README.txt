@@ -52,7 +52,15 @@ Secrets = {
 }
 
 To package the application you'll want to exclude the tests and the
-various scratch files from the distribution. So use somethig like this:
+various scratch files from the distribution. So use something like this:
 
-palm-package --exclude=tests --exclude=scratch "Cloud Tasks"
+palm-package --exclude=tests --exclude=scratch "Cloud-Tasks"
+
+To install it on the emulator, use something like this:
+
+palm-install --device=tcp org.pigsaw.cloudtasks_1.0.4_all.ipk
+
+To tail the log file:
+
+palm-log --device=tcp -f org.pigsaw.cloudtasks
 

@@ -25,6 +25,7 @@ function TaskListAssistant(config) {
 			{ label: "Sync now", command: 'do-sync', disabled: !this.rtm.getToken() },
 			{ label: "Authorise...", command: 'do-authorise' },
 			{ label: "Deauthorise", command: 'do-deauthorise', disabled: !this.rtm.getToken() },
+			{ label: "Last Error", command: 'do-last-error' },
 			{ label: "Help", command: 'do-help' },
 		]
 	};
@@ -121,6 +122,10 @@ TaskListAssistant.prototype.handleCommand = function(event) {
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-sync");
 				this.rtm.resetPullEventSpacer();
 				this.rtm.fireNextEvent();
+				break;
+			case 'do-last-error':
+				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-last-error");
+				Mojo.Controller.stageController.pushScene('LastError', this.config);
 				break;
 			case 'do-help':
 				Mojo.Log.info("TaskListAssistant.handleCommand: Case do-help");
