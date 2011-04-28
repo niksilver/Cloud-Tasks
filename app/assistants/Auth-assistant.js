@@ -54,7 +54,7 @@ AuthAssistant.prototype.handleGoTap = function(event){
 			inst.makeAuthRequest(auth_url);
 		}, function(err_msg){
 			Mojo.Log.info("AuthAssistant.handleGoTap: Error: " + err_msg);
-			ErrorHandler.notify(err_msg);
+			ErrorHandler.notify(err_msg, "AuthAssistant.handleGoTap");
 			// Make the Go button available again
 			inst.updateButtons(true, false, false, false);
 		}
@@ -132,7 +132,7 @@ AuthAssistant.prototype.handleFinishTap = function(event){
 			Mojo.Log.info("AuthAssistant.handleFinishTap: Error: " + err_msg);
 			// Make the Finish button available again
 			inst.updateButtons(false, false, true, false);
-			ErrorHandler.notify(err_msg);
+			ErrorHandler.notify(err_msg, "AuthAssistant.handleFinishTap");
 		}
 	);
 };

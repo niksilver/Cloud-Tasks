@@ -3,11 +3,13 @@
 
 ErrorHandler = {
 	
-	lastErrorText: "No error recorded",
+	lastErrorText: undefined,
+	lastErrorLocation: undefined,
 		
-	notify: function(err_msg) {
+	notify: function(err_msg, location) {
 		Mojo.Log.info("ErrorHandler.notify: Error: " + err_msg);
 		this.lastErrorText = err_msg;
+		this.lastErrorLocation = location;
 		Mojo.Controller.getAppController().showBanner(err_msg, {}, 'org.pigsaw.cloudtasks');
 	}
 }

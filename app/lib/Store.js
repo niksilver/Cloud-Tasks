@@ -17,7 +17,7 @@ var Store = {
 	 */
 	initialise: function(onSuccess) {
 		if (!Store.database) {
-			ErrorHandler.notify("No database available");
+			ErrorHandler.notify("No database available", "Store.initalise");
 			return;
 		}
 		onSuccess = onSuccess || function(){};
@@ -53,7 +53,7 @@ var Store = {
 				Mojo.Log.error("Store.execute: Failed " + sql_detail
 					+ " with db message '" + error.message + "', user message '"
 					+ onFailureString + "'");
-				ErrorHandler.notify(onFailureString);
+				ErrorHandler.notify(onFailureString, "Store.executeInTransaction");
 			}.bind(this)
 		);
 	}, 
@@ -67,7 +67,7 @@ var Store = {
 	saveTask: function(task, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.saveTask: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.saveTask");
 			return;
 		}
 		var obj = task.toObject();
@@ -91,7 +91,7 @@ var Store = {
 		Mojo.Log.info("Store.loadTask: Entering with local ID " + local_id);
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.loadTask: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.loadTask");
 			return;
 		}
 		onSuccess = onSuccess || function(){};
@@ -131,7 +131,7 @@ var Store = {
 	removeTaskByLocalID: function(local_id, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.removeTaskByLocalID: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.removeTaskByLocalID");
 			return;
 		}
 		onSuccess = onSuccess || function(){};
@@ -152,7 +152,7 @@ var Store = {
 	loadAllTasks: function(onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.loadAllTasks: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.loadAllTasks");
 			return;
 		}
 		Store.execute(
@@ -182,7 +182,7 @@ var Store = {
 	removeAllTasks: function(onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.removeAllTasks: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.removeAllTasks");
 			return;
 		}
 		onSuccess = onSuccess || function(){};
@@ -203,7 +203,7 @@ var Store = {
 	replaceAllTasks: function(task_list, onSuccess) {
 		if (!Store.isInitialised) {
 			Mojo.Log.error("Store.replaceAllTasks: Database not initialised");
-			ErrorHandler.notify("Database not initialised");
+			ErrorHandler.notify("Database not initialised", "Store.replaceAllTasks");
 			return;
 		}
 		onSuccess = onSuccess || function(){};
@@ -244,7 +244,7 @@ var Store = {
 		handleEvent: function(error) {
 			var str = "Error " + error.code + ": " + error.message;
 			Mojo.Log.error("Store.SQLTransactionErrorCallback.handleEvent: " + str);
-			ErrorHandler.notify(str);
+			ErrorHandler.notify(str, "Store.SQLTransactionErrorCallback");
 		}
 	}
 

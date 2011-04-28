@@ -22,14 +22,16 @@ LastErrorAssistant.prototype.setup = function() {
 	Mojo.Log.info("LastErrorAssistant.setup: Entering");
 	
 	var error_text_attributes = {
-		modelProperty: 'lastErrorText',
 		hintText: 'No error reported',
 		multiline: true,
-		autoFocus: true,
-		enterSubmits: false,
-		requiresEnterKey: true
+		autoFocus: true
 	};
-	this.controller.setupWidget('ErrorText', error_text_attributes, ErrorHandler);
+	this.controller.setupWidget(
+		'ErrorText',
+		error_text_attributes,
+		{ value : ErrorHandler.lastErrorText +
+		        "\n\nAt: " + ErrorHandler.lastErrorLocation
+		});
 
 }
 

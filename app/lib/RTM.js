@@ -342,7 +342,7 @@ RTM.prototype.createTimeline = function() {
 			inst.fireNextEvent();
 		},
 		function(err_msg) {
-			ErrorHandler.notify(err_msg);
+			ErrorHandler.notify(err_msg, "RTM.createTimeline");
 		}
 	);
 }
