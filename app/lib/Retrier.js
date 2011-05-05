@@ -131,7 +131,8 @@ Retrier.prototype.pullTasks = function() {
 		this.getListOnSuccessCallback.bind(this),
 		function(err_msg) {
 			Mojo.Log.info("Retrier.pullTasks: Error: " + err_msg);
-			ErrorHandler.notify(err_msg, "Retrier.pullTasks");
+			ErrorHandler.notify(err_msg + "\nLast Ajax response: " + this.rtm.lastAjaxResponse,
+					"Retrier.pullTasks");
 		}
 	);
 }

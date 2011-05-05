@@ -46,6 +46,10 @@ RTM.prototype.rawAjaxRequest = function(url, options) {
 	new Ajax.Request(url, options);
 }
 
+/** Last response from the server.
+ */
+RTM.prototype.lastAjaxResponse = undefined;
+
 /**
  * An ajax request, which will also ensure network activity is monitored.
  * This wraps rawAjaxRequest().
@@ -60,6 +64,7 @@ RTM.prototype.ajaxRequest = function(url, options) {
 	var wrapped_options = Object.clone(options);
 	var inst = this;
 	options.onSuccess = function(response) {
+		inst.lastAjaxResponse = response;
 		Mojo.Log.info("RTM.ajaxRequest.onSuccess: Entering for URL " + url);
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
@@ -69,6 +74,7 @@ RTM.prototype.ajaxRequest = function(url, options) {
 		inst.onNetworkRequestsChange(old_counters, inst.numNetworkRequests);
 	};
 	options.onFailure = function(response) {
+		inst.lastAjaxResponse = response;
 		Mojo.Log.info("RTM.ajaxRequest.onFailure: Entering for URL " + url);
 		var old_counters = Object.clone(inst.numNetworkRequests);
 		--inst.numNetworkRequests[options.rtmMethodPurpose];
