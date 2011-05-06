@@ -58,7 +58,7 @@ palm-package --exclude=tests --exclude=scratch "Cloud-Tasks"
 
 To install it on the emulator, use something like this:
 
-palm-install --device=tcp org.pigsaw.cloudtasks_1.0.4_all.ipk
+palm-install --device=tcp org.pigsaw.cloudtasks_1.0.5_all.ipk
 
 To tail the log file:
 

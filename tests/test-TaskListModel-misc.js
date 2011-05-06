@@ -229,6 +229,11 @@ testCases.push( function(Y) {
 			Y.Assert.isNotUndefined(tasks, "Should have got some tasks");
 		},
 		
+		testProblemResponseMay2011: function() {
+			var tasks = TaskListModel.objectToTaskList(SampleTestData.response_with_problems_may_2011);
+			Y.Assert.isNotUndefined(tasks, "Should have got some tasks");
+		},
+		
 		testObjectToTaskListWithNoTasks: function() {
 			var no_tasks_response = {"rsp":{"stat":"ok","tasks":{"rev":"fhinkuq6wlws00c8w0wk48ggs44kssc"}}};
 			var tasks = TaskListModel.objectToTaskList(no_tasks_response);

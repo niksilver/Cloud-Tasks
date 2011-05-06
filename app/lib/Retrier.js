@@ -126,12 +126,13 @@ Retrier.prototype.firePullTasksSequence = function() {
 
 Retrier.prototype.pullTasks = function() {
 	Mojo.Log.info("Retrier.pullTasks: Pulling tasks");
+	var inst = this;
 	this.rtm.callMethod('rtm.tasks.getList',
 		this.getListParameters(),
 		this.getListOnSuccessCallback.bind(this),
 		function(err_msg) {
 			Mojo.Log.info("Retrier.pullTasks: Error: " + err_msg);
-			ErrorHandler.notify(err_msg + "\nLast Ajax response: " + this.rtm.lastAjaxResponse,
+			ErrorHandler.notify(err_msg + "\nLast Ajax response: " + Object.toJSON(inst.rtm.lastAjaxResponse),
 					"Retrier.pullTasks");
 		}
 	);

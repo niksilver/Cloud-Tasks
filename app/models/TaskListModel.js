@@ -66,7 +66,7 @@ TaskListModel.objectToTaskList = function(data_obj) {
 		taskseries_array = TaskListModel.makeArray(taskseries_elt);
 		taskseries_array.each(function(taskseries_obj) {
 			var taskseries_id = taskseries_obj.id;
-			var task_obj = taskseries_obj.task;
+			var task_obj = taskseries_obj.task || taskseries_obj.tasks;
 			var task_id = task_obj.id;
 			var modified = task_obj.deleted;
 			var task = new TaskModel({

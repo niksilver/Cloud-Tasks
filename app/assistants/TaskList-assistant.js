@@ -25,7 +25,7 @@ function TaskListAssistant(config) {
 			{ label: "Sync now", command: 'do-sync', disabled: !this.rtm.getToken() },
 			{ label: "Authorise...", command: 'do-authorise' },
 			{ label: "Deauthorise", command: 'do-deauthorise', disabled: !this.rtm.getToken() },
-			{ label: "Last Error", command: 'do-last-error' },
+			//{ label: "Last Error", command: 'do-last-error' },
 			{ label: "Help", command: 'do-help' },
 		]
 	};
