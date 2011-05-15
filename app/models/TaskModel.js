@@ -215,6 +215,8 @@ TaskModel.prototype.isDue = function() {
 	if (due_date == null) {
 		return true;
 	}
+	
+	due_date.clearTime();
 	if (due_date.isAfter(this.today())) {
 		return false;
 	}

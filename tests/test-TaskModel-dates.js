@@ -67,6 +67,13 @@ testCases.push( function(Y) {
 			task.update();
 			Y.Assert.areEqual(true, task.isDueFlag, 'A task for today should be due');
 			
+			// A task for today (but not midnight) is due
+			var later_today_utc_string = today.clone().add({ hours: 1 }).toISOString();
+			task = new TaskModel({ due: later_today_utc_string });
+			task.today = function() { return today };
+			task.update();
+			Y.Assert.areEqual(true, task.isDueFlag, 'A task for later on today should be due');
+			
 			// A task for tomorrow is not due
 			var tomorrow_utc_string = Date.parse("2 Dec 2009").toISOString();
 			task = new TaskModel({ due: tomorrow_utc_string });
