@@ -85,6 +85,7 @@ TaskModel.prototype.update = function() {
 	this.isOverdueFlag = this.isOverdue();
 	this.hasRRuleFlag = this.isRecurring();
 	this.hasRRuleProblemFlag = !!Utils.get(this, 'rrule', 'problem');
+	this.dueLocalWithoutTime = this.dueDateStringWithoutTime();
 	this.dueFormatted = this.formattedDueDate();
 }
 
@@ -184,6 +185,18 @@ TaskModel.prototype.isoStringDateFormatter = function(utc_string) {
 	}
 
 	return utc_date.toString('ddd d MMM yyyy');
+}
+
+
+TaskModel.prototype.dueDateStringWithoutTime = function(){
+	if (!this.due) {
+		return '';
+	}
+	var local_due_date = this.isoStringAsLocalDate(this.due);
+	if (!local_due_date) {
+		return '';
+	}
+	return local_due_date.toString('yyyy-MM-dd');
 }
 
 TaskModel.prototype.formattedDueDate = function(){

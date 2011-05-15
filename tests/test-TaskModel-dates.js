@@ -142,6 +142,31 @@ testCases.push( function(Y) {
 
 		},
 		
+		testDueLocalWithoutTime: function() {
+			var task;
+			var today = Date.parse("15 May 2011");
+			
+			// A task set for 15 May 2011 midnight is 14 May at 2300hrs in UTC
+			// time, but should still be 15 May locally
+			task = new TaskModel({ due: "2011-05-14T23:00:00Z" });
+			task.getTimezoneOffset = function() { return -60 };
+			task.today = function() { return today };
+			task.update();
+			Y.Assert.areEqual("2011-05-15", task.dueLocalWithoutTime, 'Midnight BST time in London has wrong date');
+			
+			// A task with empty string due date should have the empty string as
+			// its due local date string
+			task = new TaskModel({ due: '' });
+			task.update();
+			Y.Assert.areEqual('', task.dueLocalWithoutTime, 'Empty-string due date not handled');
+			
+			// A task with no due date should have the empty string as
+			// its due local date string
+			task = new TaskModel( {} );
+			task.update();
+			Y.Assert.areEqual('', task.dueLocalWithoutTime, 'Empty-string due date not handled');
+		},
+		
 		testDueFormatted: function() {
 			var task;
 			var today = Date.parse("1 Dec 2009");
