@@ -397,7 +397,8 @@ RTM.prototype.pushLocalChange = function(task, property, successCallback, failur
 			timeline: this.timeline
 		};
 		if (task.due) {
-			parameters.due = task.due;
+			// setDueDate requires the due date to be in local time
+			parameters.due = task.dueAsLocalIsoString();
 		}
 	}
 	else if (property == 'deleted') {

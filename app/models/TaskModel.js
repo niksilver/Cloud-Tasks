@@ -108,6 +108,20 @@ TaskModel.prototype.dueAsLocalDate = function() {
 }
 
 /**
+ * Return the due date as an ISO 8601 string relative to the current locale.
+ * For example, a due date of 2011-05-11T23:00:00Z (that's UTC) in
+ * London will return the string "2011-05-12T00:00:00" (local time)
+ * because London is -1 hour GMT during summer time.
+ * Will return null if there is no due date.
+ */
+TaskModel.prototype.dueAsLocalIsoString = function() {
+	if (!this.due) {
+		return null;
+	}
+	return this.isoStringAsLocalDate(this.due).toString("yyyy-MM-ddTHH:mm:ss");
+}
+
+/**
  * Return some ISO date string as a Date object relative to the current locale
  * but you should ignore the timezone.
  * For example, a due date of 2010-03-31T16:00:00Z will return

@@ -331,6 +331,22 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(0, local_date.getMinutes(), "Should be 0 minutes (midnight exactly)");
 		},
 		
+		testDueAsLocalIsoStringInLondonBST: function() {
+			// London is +0100 (hours) or -60 (timezone offset)
+
+			var original_utc_string = '2011-05-11T23:00:00Z'; // 11 May 2011 midnight in London BST
+			var task_for_london_bst = new TaskModel({ due: original_utc_string});
+			task_for_london_bst.getTimezoneOffset = function(date) { return -60; };
+
+			var local_iso_string = task_for_london_bst.dueAsLocalIsoString();
+			Y.Assert.areEqual(local_iso_string, '2011-05-12T00:00:00', "Local date not extracted correctly");
+		},
+		
+		testDueAsLocalIsoStringReturnsNullIfNoDueDate: function() {
+			var task = new TaskModel( {} );
+			Y.Assert.areEqual(task.dueAsLocalIsoString(), null, "Due date should be null");
+		},
+		
 		testSetDueAsLocalDateLondonGMT: function() {
 			// London during winter (GMT) is +0000
 			// 23 February 2010 in London is during winter

@@ -81,6 +81,20 @@ testCases.push( function(Y) {
 			Y.assert(Object.keys(parameters_used).indexOf('due') >= 0, "Due property not found in parameters");
 		},
 		
+		testPushLocalChangeCallsSetDueDateWithLocalTimezone: function() {
+			var rtm = new RTM();
+			var parameters_used;
+			rtm.callMethod = function(url, parameters, onSuccess, onFailure) {
+				parameters_used = parameters;
+			};
+			// The time used here is actually midnight 12 May 2011 local time
+			var task = new TaskModel({ due: '2011-05-11T23:00:00Z' });
+			Y.assert(task.due, "Due property not found in task");
+			rtm.pushLocalChange(task, 'due', null, null);
+			Y.assert(Object.keys(parameters_used).indexOf('due') >= 0, "Due property not found in parameters");
+			Y.Assert.areEqual(parameters_used.due, "2011-05-12T00:00:00", "Timezone not corrected");
+		},
+		
 		testPushLocalChangeAllowsDueDateToBeUnset: function() {
 			var rtm = new RTM();
 			var parameters_used;
@@ -351,7 +365,7 @@ testCases.push( function(Y) {
 						else if (params.task_id == task_3_task_id) {
 							// Task 3
 							Y.Assert.areEqual('rtm.tasks.setDueDate', method, "Not calling setDueDate for task 3");
-							Y.Assert.areEqual('2010-01-12T12:34:00Z', params.due, "Not setting due date for task 3");
+							Y.Assert.areEqual('2010-01-12T12:34:00', params.due, "Not setting (localised) due date for task 3");
 						}
 						else {
 							Y.Assert.fail("Calling method '" + method + "' on task '" + params.task_id + "',"
