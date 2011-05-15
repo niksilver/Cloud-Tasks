@@ -250,6 +250,28 @@ testCases.push( function(Y) {
 			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(date_a, undef_a), 'Defined should be after undefined');
 		},
 		
+		testSortByDueThenNameHandlesVariableTimes: function(){
+			var may30 = new TaskModel({ due: '2009-05-29T23:00:00Z', name: 'B' });
+			var may30_2 = new TaskModel({ due: '2009-05-30T00:00:00Z', name: 'A' });
+			var may30_3 = new TaskModel({ due: '2009-05-30T01:00:00Z', name: 'C' });
+			var may30_3_again = new TaskModel({ due: '2009-05-30T02:00:00Z', name: 'C' });
+			
+			may30.getTimezoneOffset = function() { return -60; }
+			may30_2.getTimezoneOffset = function() { return -60; }
+			may30_3.getTimezoneOffset = function() { return -60; }
+			may30_3_again.getTimezoneOffset = function() { return -60; }
+			
+			may30.update();
+			may30_2.update();
+			may30_3.update();
+			may30_3_again.update();
+			
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(may30_2, may30), 'May 30 A should be before May 30 B');
+			Y.Assert.areEqual(-1, TaskModel.sortByDueThenName(may30_2, may30_3), 'May 30 A should be before May 30 C');
+			Y.Assert.areEqual(1, TaskModel.sortByDueThenName(may30_3, may30_2), 'May 30 C should be after May 30 A');
+			Y.Assert.areEqual(0, TaskModel.sortByDueThenName(may30_3, may30_3_again), 'The two May 30 Cs should be the same');
+		},
+		
 		testDue: function() {
 			var task = new TaskModel({ due: '2010-03-31T23:00:00Z'});
 			Y.Assert.areEqual('2010-03-31T23:00:00Z', task.due, "Didn't get UTC date string");
